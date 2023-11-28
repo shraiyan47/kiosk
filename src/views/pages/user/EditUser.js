@@ -59,23 +59,11 @@ const CustomCloseButton = styled(IconButton)(({ theme }) => ({
   }
 }))
 
-const AddUserDrawer = props => {
-  const { toggle, userTypeChoosed } = props
-  // const { fcontrols, ferrors } = useFormContext();
+const EditUserDrawer = param => {
+  
+  const data = param?.data
 
-  // ** States
-  const [show, setShow] = useState(false)
-
-  const handleShow = () => {
-    // Only call the setShow() function if the state needs to be changed
-    if (!show) {
-      setShow(true)
-    }
-  } 
-
-  const { randomString, generateRandomString } = useRandomString(4); // if you are wishing to gereate random string //
-
-  const { password, generateRandomPassword } = useRandomPassword()
+  const [show, setShow] = useState(param?.show)
 
   const {
     reset,
@@ -84,49 +72,59 @@ const AddUserDrawer = props => {
     formState: { errors },
     getValues,
     watch,
-    setValue 
+    setValue
   } = useForm({
     mode: 'onSubmit'
   })
 
-  const userRole = watch('userrole')
+  //   const userRole = watch('userrole')
+  console.log("boom ----> ",watch('userrole'), control._formValues.userrole)
+  const [userRole, setUserRole] = useState(watch('userrole'))
+  const [userMemberId, setUserMemberId] = useState()
+
   useEffect(() => {
-    console.log(userRole)
-    if(userRole !== "Student"){
+    if (!show & !!data) {
+      setShow(true)
+    }
+    setUserRole(data?.userrole)
+    setUserMemberId(data?.MemberId?.toString())
+    console.log(' data?.MemberId?.toString() -> ', data?.MemberId?.toString())
+  }, [data,])
+
+  useEffect(() => {
+    // console.log(userRole)
+    if (userRole !== 'Student') {
       const inputClear = ['Class', 'grade']
-      inputClear.forEach((fieldName)=>{
+      inputClear.forEach(fieldName => {
         setValue(fieldName, null)
       })
     }
-  }, [userRole]);
+  }, [userRole])
 
   const auth = useAuth()
   const entryPerson = !!auth?.user ? auth?.user.userId : 'unauthorizedEntry'
+  const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/User` //////
 
-  // console.log(' entry Person => ', entryPerson)
-  // console.log(' Form Val => ', control._formValues)
-  useEffect(() => {
-    generateRandomString()
-    generateRandomPassword() // it will generate 8 char random password - minimum a small letter, a capital letter, a number and a special character
-  }, [])
-
-  const onSubmit = data => {
-    const randomPassword = password
+  const onSubmit = dataX => { 
 
     const userAddData = {
-      MemberId: data.Member,
-      userrole: data.userrole,
-      username: data.username,
-      EntryBy: entryPerson,
-      email: data.email,
-      userId: 'null',
-      password: randomPassword,
-      PIN: randomString,
+      Id: data.Id,
+      UserId: data.userid,
+      MemberId: dataX.Member,
+      UserRole: dataX.userrole,
+      PIN: data.PIN,
+      UserName: dataX.username,
+      Password: data.password,
+      email: dataX.email,
+      UpdateBy: entryPerson,
       UserProfiles: {
-        fullname: data.fullname,
-        Class: (data.Class)?data.Class:null,
-        grade: (data.grade)?data.grade:null,
-        EntryBy: entryPerson
+        Id: data.ProfileId,
+        UserAccountId: data.Id,
+        UserId: data.userid,
+        FullName: dataX.fullname,
+        Class: !!dataX.Class ? dataX.Class : "null",
+        Grade: !!dataX.grade ? dataX.grade : "null",
+        UpdateBy: entryPerson
       }
     }
 
@@ -134,30 +132,30 @@ const AddUserDrawer = props => {
 
     postData(userAddData)
   }
-  const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/User` ////// 
 
-  const postData = async param => {
+  const postData = async userUpdatedData => {
     const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'application/json')
 
     // myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'))
 
     const requestOptions = {
-      method: 'POST',
+      method: 'PUT',
       headers: myHeaders,
-      body: JSON.stringify(param),
+      body: JSON.stringify(userUpdatedData),
       redirect: 'follow'
     }
 
-    console.log(requestOptions)
+    console.log(' requestOptions => ', requestOptions)
 
     const res = await fetch(my_url, requestOptions)
     const data = await res.json()
     if (res.ok) {
-
-        // dispatch(usersList(userDispatch))
+      // dispatch(usersList(userDispatch))
+      alert('Success')
       setShow(false)
-      toggle(true)
+      // console.log("first", param)
+      param.onSuccess(data)
 
       return { ok: true, data }
     } else {
@@ -175,12 +173,6 @@ const AddUserDrawer = props => {
 
   return (
     <Card>
-      <br/>
-      <Button onClick={handleShow} variant='contained' sx={{ '& svg': { mr: 2 } }}>
-        <Icon fontSize='1.125rem' icon='tabler:plus' />
-        Add New User
-      </Button>
-
       <Dialog
         fullWidth
         open={show}
@@ -204,7 +196,7 @@ const AddUserDrawer = props => {
             </CustomCloseButton>
             <Box sx={{ mb: 8, textAlign: 'center' }}>
               <Typography variant='h3' sx={{ mb: 3 }}>
-                Add User
+                Edit User
               </Typography>
             </Box>
             <Grid container spacing={6}>
@@ -214,6 +206,7 @@ const AddUserDrawer = props => {
                   name='fullname'
                   control={control}
                   rules={{ required: true }}
+                  defaultValue={data?.fullname}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
@@ -234,6 +227,7 @@ const AddUserDrawer = props => {
                   name='username'
                   control={control}
                   rules={{ required: true }}
+                  defaultValue={data?.username}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
@@ -254,6 +248,7 @@ const AddUserDrawer = props => {
                   name='email'
                   control={control}
                   rules={{ required: true }}
+                  defaultValue={data?.email}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
@@ -274,7 +269,7 @@ const AddUserDrawer = props => {
                   name='userrole'
                   control={control}
                   rules={{ required: true }}
-                  defaultValue={userTypeChoosed}
+                  defaultValue={data?.userrole}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       select
@@ -294,9 +289,7 @@ const AddUserDrawer = props => {
                       <option value='null'>User Role</option>
                       <option value='Admin'>Admin</option>
                       <option value='Teacher'>Teacher</option>
-                      <option value='Student'>
-                        Student
-                      </option>
+                      <option value='Student'>Student</option>
                     </CustomTextField>
                   )}
                 />
@@ -305,6 +298,7 @@ const AddUserDrawer = props => {
                 <Controller
                   name='Member'
                   control={control}
+                  defaultValue={userMemberId}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       select
@@ -329,12 +323,13 @@ const AddUserDrawer = props => {
                   )}
                 />
               </Grid>
-              {userRole === 'Student' && (
+              {(userRole === 'Student' || control._formValues.userrole=== 'Student') && (
                 <>
                   <Grid item sm={6} xs={12}>
                     <Controller
                       name='Class'
                       control={control}
+                      defaultValue={data?.Class}
                       render={({ field: { value, onChange } }) => (
                         <CustomTextField
                           fullWidth
@@ -351,6 +346,7 @@ const AddUserDrawer = props => {
                     <Controller
                       name='grade'
                       control={control}
+                      defaultValue={data?.grade}
                       render={({ field: { value, onChange } }) => (
                         <CustomTextField
                           fullWidth
@@ -387,4 +383,4 @@ const AddUserDrawer = props => {
   )
 }
 
-export default AddUserDrawer
+export default EditUserDrawer

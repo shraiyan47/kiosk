@@ -26,8 +26,11 @@ import TableHeader from '../../views/pages/user/TableHeader'
 // ** STATE MANAGEMENT
 import { useSelector, useDispatch } from 'react-redux'
 import { usersList } from '../../redux/user/userSlice'
+
 import QrGen from '../../views/pages/user/QrGen'
 
+import ProfileSummery from "src/views/pages/profile/Summery"
+import EditUserDrawer from 'src/views/pages/user/EditUser'
 // import QRCode from 'qrcode.react'
 
 const demoData = {
@@ -68,31 +71,49 @@ const CustomCloseButton = styled(IconButton)(({ theme }) => ({
 }))
 
 const UserList = () => {
-  const [qr, setQr] = useState('')
-  const [show, setShow] = useState(false)
 
-  const RowOptions = ({ id, email }) => {
+  const [qr, setQr] = useState('') 
+  const [viewData, setViewData] = useState('')
+  const [editData, setEditData] = useState('')
+  const [show, setShow] = useState(false)
+  const [success, setSuccess] = useState('')
+
+  const onSuccessHandler = (x) => {
+    setSuccess(x)
+    console.log("Success Table of User -> ", x)
+  }
+
+  const RowOptions = ({ id, email, dataUser }) => {
+
+    const qrHandler = ({email, dataUser}) => {
+      setQr({email, dataUser})
+      setShow(true)
+    }
+
     const viewHandler = event => {
-      alert(`View -> ${event}`)
+      // alert(`View -> ${event}`)
+      setShow(true)
+      setViewData(dataUser)
     }
 
     const editHandler = event => {
-      alert(`Edit -> ${event}`)
+      // alert(`Edit -> ${event}`)
+
+      setShow(true)
+      setEditData(dataUser)
     }
 
     const deleteHandler = event => {
+
+      
+
       alert(`Delete -> ${event}`)
     }
 
     return (
       <>
         <ButtonGroup variant='contained' aria-label='outlined primary button group'>
-          <Button
-            onClick={() => {
-              setQr(email)
-              setShow(true)
-            }}
-          >
+          <Button onClick={() => qrHandler({email, dataUser})}>
             <Icon icon='tabler:qrcode' />
           </Button>
           <Button onClick={() => viewHandler(id)}>
@@ -193,7 +214,7 @@ const UserList = () => {
       field: 'actions',
       headerName: 'Actions',
 
-      renderCell: ({ row }) => <RowOptions id={row.id} email={row.email} />
+      renderCell: ({ row }) => <RowOptions id={row.id} email={row.email} dataUser={row} />
     }
   ]
 
@@ -214,7 +235,8 @@ const UserList = () => {
   // get User from API
   useEffect(() => {
     fetchData()
-  }, [])
+    console.log("success ----> ", success)
+  }, [success])
 
   async function fetchData() {
     const myHeaders = new Headers()
@@ -287,11 +309,7 @@ const UserList = () => {
 
   return (
     <Grid container spacing={6.5}>
-      <Grid item xs={12}>
-        <Card>
-          <QrGen qr={qr} />
-        </Card>
-      </Grid>
+      
 
       <Grid item xs={12}>
         <Card>
@@ -308,6 +326,16 @@ const UserList = () => {
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
           />
+        </Card>
+      </Grid>
+      <Grid item xs={12}>
+        <Card>
+          
+          <ProfileSummery data={viewData} show={show}  />
+
+          <EditUserDrawer data={editData} show={show} onSuccess={onSuccessHandler} />
+          
+          <QrGen qr={qr.email} userData={qr.dataUser} show={show} />
         </Card>
       </Grid>
     </Grid>

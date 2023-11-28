@@ -4,7 +4,8 @@ export function useRandomString(length) { // It will generate a random string wh
   const [randomString, setRandomString] = useState('');
 
   const generateRandomString = () => {
-    const charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+=-][}{|":?><,./;\'`~';
+    const charset = '0123456789';
+    // const charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+=-][}{|":?><,./;\'`~';
     let generatedString = '';
 
     for (let i = 0; i < length; i++) {

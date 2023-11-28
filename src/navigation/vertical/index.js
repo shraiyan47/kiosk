@@ -20,9 +20,9 @@ const navigation = () => {
       icon: 'tabler:settings',
       children: [
         {
-          title: 'Section',
+          title: 'Master Data',
           icon: 'tabler:layout-grid',
-          path: '/setup/section',
+          path: '/masterdata',
         }
       ]
     },

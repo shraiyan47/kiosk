@@ -1,5 +1,5 @@
 export default {
-  meEndpoint: '/auth/me',
+  meEndpoint: '/api/tokenvalidate',
   loginEndpoint: '/jwt/login',
   registerEndpoint: '/jwt/register',
   storageTokenKeyName: 'accessToken',

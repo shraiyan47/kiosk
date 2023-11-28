@@ -1,6 +1,5 @@
 // ** React Imports
 import { useState, forwardRef, useEffect } from 'react'
-import { useRandomPassword, useRandomString } from 'src/hooks/useRandom'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -13,8 +12,7 @@ import Card from '@mui/material/Card'
 import Dialog from '@mui/material/Dialog'
 import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
-
-// import MenuItem from '@mui/material/MenuItem'
+import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import Fade from '@mui/material/Fade'
 import DialogContent from '@mui/material/DialogContent'
@@ -31,14 +29,13 @@ import Icon from 'src/@core/components/icon'
 
 // ** Form
 import { Controller, useForm } from 'react-hook-form'
-import { useAuth } from 'src/hooks/useAuth'
 
-// ** STATE MANAGEMENT
+// ** STATE MANAGEMENT 
 // import { useDispatch } from 'react-redux'
 // import {  } from '../redux/state/counterSlice'
 
 // import * as yup from 'yup'
-// import { yupResolver } from '@hookform/resolvers/yup'
+// import { yupResolver } from '@hookform/resolvers/yup' 
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
@@ -59,10 +56,10 @@ const CustomCloseButton = styled(IconButton)(({ theme }) => ({
   }
 }))
 
-const AddUserDrawer = props => {
-  const { toggle, userTypeChoosed } = props
-  // const { fcontrols, ferrors } = useFormContext();
-
+const AddMasterdataDrawer = props => {
+  const { toggle } = props  
+  const { masterid } = props
+  console.log("props add", masterid)
   // ** States
   const [show, setShow] = useState(false)
 
@@ -71,124 +68,96 @@ const AddUserDrawer = props => {
     if (!show) {
       setShow(true)
     }
-  } 
-
-  const { randomString, generateRandomString } = useRandomString(4); // if you are wishing to gereate random string //
-
-  const { password, generateRandomPassword } = useRandomPassword()
+  }
 
   const {
     reset,
     control,
+    setValue,
+    setError,
     handleSubmit,
-    formState: { errors },
-    getValues,
-    watch,
-    setValue 
+    formState: { errors }
   } = useForm({
-    mode: 'onSubmit'
+    mode: 'onChange'
   })
 
-  const userRole = watch('userrole')
   useEffect(() => {
-    console.log(userRole)
-    if(userRole !== "Student"){
-      const inputClear = ['Class', 'grade']
-      inputClear.forEach((fieldName)=>{
-        setValue(fieldName, null)
-      })
-    }
-  }, [userRole]);
-
-  const auth = useAuth()
-  const entryPerson = !!auth?.user ? auth?.user.userId : 'unauthorizedEntry'
-
-  // console.log(' entry Person => ', entryPerson)
-  // console.log(' Form Val => ', control._formValues)
-  useEffect(() => {
-    generateRandomString()
-    generateRandomPassword() // it will generate 8 char random password - minimum a small letter, a capital letter, a number and a special character
-  }, [])
+    console.log("Boom ---> ",toggle)
+  }, [control]);
 
   const onSubmit = data => {
-    const randomPassword = password
+    console.log(" Form => ",data)
 
-    const userAddData = {
-      MemberId: data.Member,
-      userrole: data.userrole,
-      username: data.username,
-      EntryBy: entryPerson,
-      email: data.email,
-      userId: 'null',
-      password: randomPassword,
-      PIN: randomString,
-      UserProfiles: {
-        fullname: data.fullname,
-        Class: (data.Class)?data.Class:null,
-        grade: (data.grade)?data.grade:null,
-        EntryBy: entryPerson
-      }
-    }
+    // if (store.allData.some(u => u.email === data.email || u.username === data.username)) {
+    //   store.allData.forEach(u => {
+    //     if (u.email === data.email) {
+    //       setError('email', {
+    //         message: 'Email already exists!'
+    //       })
+    //     }
+    //     if (u.username === data.username) {
+    //       setError('username', {
+    //         message: 'Username already exists!'
+    //       })
+    //     }
+    //   })
+    // } else {
+ 
+      
+      toggle()
+      reset()
 
-    console.log('userAddData ===> ', userAddData)
-
-    postData(userAddData)
-  }
-  const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/User` ////// 
-
-  const postData = async param => {
-    const myHeaders = new Headers()
-    myHeaders.append('Content-Type', 'application/json')
-
-    // myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'))
-
-    const requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: JSON.stringify(param),
-      redirect: 'follow'
-    }
-
-    console.log(requestOptions)
-
-    const res = await fetch(my_url, requestOptions)
-    const data = await res.json()
-    if (res.ok) {
-
-        // dispatch(usersList(userDispatch))
-      setShow(false)
-      toggle(true)
-
-      return { ok: true, data }
-    } else {
-      console.log('ERROR => ', data.error)
-
-      return { ok: false, err: res, data }
-    }
+    // }
   }
 
-  const handleClose = () => {
+  const handleClose = () => { 
     setShow(false)
+    //setValue('contact', Number(''))
+    //toggle()
     reset()
-    // toggle
+  }
+
+  const demoData = {
+    userid: '1699036939',
+    userrole: 'admin', //
+    PIN: 4567,
+    MemberId: 1,
+    Member: 'Non member', //
+    fullname: 'Test User', //
+    password: '1234',
+    nickname: null, //
+    Class: 'B', //
+    grade: '9', //
+    filepath: null,
+    filename: null,
+    Id: 1,
+    EntryDt: '2023-11-04T00:00:00',
+    EntryBy: 'sysadmin',
+    UpdateDt: '2023-11-04T01:58:42.783',
+    UpdateBy: 'sysadmin',
+    IsActive: true,
+    Remarks: null
   }
 
   return (
     <Card>
-      <br/>
       <Button onClick={handleShow} variant='contained' sx={{ '& svg': { mr: 2 } }}>
         <Icon fontSize='1.125rem' icon='tabler:plus' />
-        Add New User
+        Add Master Data
       </Button>
 
       <Dialog
+        disableEscapeKeyDown
         fullWidth
         open={show}
         maxWidth='md'
         scroll='body'
-        onClose={() => setShow(false)}
-        TransitionComponent={Transition}
-        // onBackdropClick={() => setShow(false)}
+        onClose={(event, reason) => {
+            if (reason !== 'backdropClick') {
+              handleClose()
+            }
+          }}
+        TransitionComponent={Transition}     
         sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -211,7 +180,7 @@ const AddUserDrawer = props => {
               <Grid item sm={8} xs={12}>
                 {/* <CustomTextField fullWidth label='Full Name' placeholder='John' /> */}
                 <Controller
-                  name='fullname'
+                  name='filename'
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
@@ -219,11 +188,11 @@ const AddUserDrawer = props => {
                       fullWidth
                       value={value}
                       sx={{ mb: 4 }}
-                      label='Full Name'
+                      label='Name'
                       onChange={onChange}
-                      placeholder='John Doe'
-                      error={Boolean(errors.fullname)}
-                      {...(errors.fullname && { helperText: errors.fullname.message })}
+                      placeholder='Master Data Name'
+                      error={Boolean(errors.filename)}
+                      {...(errors.filename && { helperText: errors.filename.message })}
                     />
                   )}
                 />
@@ -231,7 +200,7 @@ const AddUserDrawer = props => {
 
               <Grid item sm={4} xs={12}>
                 <Controller
-                  name='username'
+                  name='nickname'
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
@@ -239,47 +208,47 @@ const AddUserDrawer = props => {
                       fullWidth
                       value={value}
                       sx={{ mb: 4 }}
-                      label='User Name'
+                      label='Nick Name'
                       onChange={onChange}
                       placeholder='Rayan'
-                      error={Boolean(errors.username)}
-                      {...(errors.username && { helperText: errors.username.message })}
+                      error={Boolean(errors.nickname)}
+                      {...(errors.nickname && { helperText: errors.nickname.message })}
                     />
                   )}
                 />
               </Grid>
 
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
+                <CustomTextField fullWidth label='Username' placeholder='johnDoe' />
+
                 <Controller
-                  name='email'
+                  name='nickname'
                   control={control}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { value, onChange } }) => ( 
                     <CustomTextField
                       fullWidth
                       value={value}
                       sx={{ mb: 4 }}
-                      label='Email'
+                      label='Nick Name'
                       onChange={onChange}
-                      placeholder='john@xyz.com'
-                      error={Boolean(errors.email)}
-                      {...(errors.email && { helperText: errors.email.message })}
+                      placeholder='Rayan'
+                      error={Boolean(errors.nickname)}
+                      {...(errors.nickname && { helperText: errors.nickname.message })}
                     />
                   )}
                 />
-              </Grid>
+              </Grid> */}
 
               <Grid item sm={6} xs={12}>
                 <Controller
                   name='userrole'
                   control={control}
                   rules={{ required: true }}
-                  defaultValue={userTypeChoosed}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       select
-                      value={value}
-                      onChange={onChange}
+                      defaultValue='Student'
                       fullWidth
                       id='userrole-select'
                       label='User Role'
@@ -287,16 +256,12 @@ const AddUserDrawer = props => {
                       error={Boolean(errors.userrole)}
                       aria-describedby='validation-userrole-select'
                       {...(errors.userrole && { helperText: errors.userrole.message })}
-                      SelectProps={{
-                        native: true // For Material-UI native Select
-                      }}
+                      SelectProps={{ value: value, onChange: e => onChange(e) }}
                     >
-                      <option value='null'>User Role</option>
-                      <option value='Admin'>Admin</option>
-                      <option value='Teacher'>Teacher</option>
-                      <option value='Student'>
-                        Student
-                      </option>
+                      <MenuItem value=''>User Role</MenuItem>
+                      <MenuItem value='Admin'>Admin</MenuItem>
+                      <MenuItem value='Teacher'>Teacher</MenuItem>
+                      <MenuItem value='Student'>Student</MenuItem>
                     </CustomTextField>
                   )}
                 />
@@ -305,66 +270,69 @@ const AddUserDrawer = props => {
                 <Controller
                   name='Member'
                   control={control}
+                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       select
+                      defaultValue='Non-member'
                       fullWidth
                       id='Member-select'
                       label='Member'
-                      value={value}
-                      onChange={onChange}
                       sx={{ mb: 4 }}
                       error={Boolean(errors.Member)}
                       aria-describedby='validation-Member-select'
                       {...(errors.Member && { helperText: errors.Member.message })}
-                      SelectProps={{ native: true }}
+                      SelectProps={{ value: value, onChange: e => onChange(e) }}
                     >
-                      <option value='null'>Program</option>{' '}
+                      <MenuItem value='Program'>Program</MenuItem>{' '}
                       {/* Non-member / Silver member / Gold member / Platinum member */}
-                      <option value='1'>Non-member</option>
-                      <option value='2'>Silver member</option>
-                      <option value='3'>Gold member</option>
-                      <option value='4'>Platinum member</option>
+                      <MenuItem value='Non-member'>Non-member</MenuItem>
+                      <MenuItem value='Silver-member'>Silver member</MenuItem>
+                      <MenuItem value='Gold-member'>Gold member</MenuItem>
+                      <MenuItem value='Platinum-member'>Platinum member</MenuItem>
                     </CustomTextField>
                   )}
                 />
               </Grid>
-              {userRole === 'Student' && (
-                <>
-                  <Grid item sm={6} xs={12}>
-                    <Controller
-                      name='Class'
-                      control={control}
-                      render={({ field: { value, onChange } }) => (
-                        <CustomTextField
-                          fullWidth
-                          value={value}
-                          sx={{ mb: 4 }}
-                          label='Class'
-                          onChange={onChange}
-                          placeholder='A'
-                        />
-                      )}
+
+              <Grid item sm={6} xs={12}>
+                <Controller
+                  name='Class'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      fullWidth
+                      value={value}
+                      sx={{ mb: 4 }}
+                      label='Class'
+                      onChange={onChange}
+                      placeholder='A'
+                      error={Boolean(errors.Class)}
+                      {...(errors.Class && { helperText: errors.Class.message })}
                     />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    <Controller
-                      name='grade'
-                      control={control}
-                      render={({ field: { value, onChange } }) => (
-                        <CustomTextField
-                          fullWidth
-                          value={value}
-                          sx={{ mb: 4 }}
-                          label='Grade'
-                          onChange={onChange}
-                          placeholder='1'
-                        />
-                      )}
+                  )}
+                />
+              </Grid>
+              <Grid item sm={6} xs={12}>
+              <Controller
+                  name='Grade'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      fullWidth
+                      value={value}
+                      sx={{ mb: 4 }}
+                      label='Grade'
+                      onChange={onChange}
+                      placeholder='1'
+                      error={Boolean(errors.Grade)}
+                      {...(errors.Grade && { helperText: errors.Grade.message })}
                     />
-                  </Grid>
-                </>
-              )}
+                  )}
+                /> 
+              </Grid>
             </Grid>
           </DialogContent>
           <DialogActions
@@ -374,12 +342,12 @@ const AddUserDrawer = props => {
               pb: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
             }}
           >
-            <Button type='submit' variant='contained' sx={{ mr: 1 }}>
+            <Button type='submit' variant='contained' sx={{ mr: 1 }} onClick={() => setShow(false)}>
               Submit
             </Button>
             <Button variant='tonal' color='secondary' onClick={handleClose}>
               Discard
-            </Button>
+            </Button>            
           </DialogActions>
         </form>
       </Dialog>
@@ -387,4 +355,4 @@ const AddUserDrawer = props => {
   )
 }
 
-export default AddUserDrawer
+export default AddMasterdataDrawer

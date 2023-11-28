@@ -1,31 +1,14 @@
-// ** React Imports
-// import { useState } from 'react'
 
-// ** Next Imports
-// import Link from 'next/link'
-
-// ** MUI Components
-import Button from '@mui/material/Button'
-import Stack from '@mui/material/Stack'
-import Alert from '@mui/material/Alert'
-import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, useTheme } from '@mui/material/styles'
-import MuiFormControlLabel from '@mui/material/FormControlLabel'
 
 // ** Third Party Imports
 import * as yup from 'yup'
-import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
 
 // ** Hooks
-import { useAuth } from 'src/hooks/useAuth'
-import useBgColor from 'src/@core/hooks/useBgColor'
+// import { useAuth } from 'src/hooks/useAuth'
 import { useSettings } from 'src/@core/hooks/useSettings'
-
-// ** Configs
-import themeConfig from 'src/configs/themeConfig'
 
 // ** Layout Import
 import BlankLayout from 'src/@core/layouts/BlankLayout'
@@ -34,15 +17,6 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 import { useState } from 'react'
 import StudentLogin from './StudentLogin'
-
-// ** Next Imports
-import Link from 'next/link'
-
-
-const LinkStyled = styled(Link)(({ theme }) => ({
-  textDecoration: 'none',
-  color: `${theme.palette.primary.main} !important`
-}))
 
 const LoginIllustration = styled('img')(({ theme }) => ({
   zIndex: 2,
@@ -70,17 +44,12 @@ const RightWrapper = styled(Box)(({ theme }) => ({
   }
 }))
 
-const schema = yup.object().shape({
-  email: yup.string().email().required(),
-  password: yup.string().min(5).required()
-})
 
 const LoginPage = () => {
   // ** Hooks
   // const auth = useAuth()
  
   const theme = useTheme()
-  const bgColors = useBgColor()
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
   const [activeLogin, setActiveLogin] = useState('')

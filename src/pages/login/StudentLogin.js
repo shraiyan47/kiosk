@@ -2,12 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Html5QrcodeScanner } from 'html5-qrcode'
 import axios from 'axios'
 import { Box } from '@mui/system'
-import { Controller } from 'react-hook-form'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import { Icon, IconButton, InputAdornment } from '@mui/material'
-import { redirect } from 'next/dist/server/api-utils'
-
-import Typography from '@mui/material/Typography'
 import { styled, useTheme } from '@mui/material/styles'
 import Divider from '@mui/material/Divider'
 
@@ -50,29 +46,10 @@ export default function QrCodeScanner() {
         .then(response => setData(response.data))
 
       //   alert('Get Lol')
-
-      document
-        .getElementById('html5-qrcode-button-camera-permission')
-        .classList.add(
-          'MuiButtonBase-root',
-          'MuiButton-root',
-          'MuiButton-contained',
-          'MuiButton-containedPrimary',
-          'MuiButton-sizeMedium',
-          'MuiButton-containedSizeMedium',
-          'MuiButton-fullWidth',
-          'MuiButton-root',
-          'MuiButton-contained',
-          'MuiButton-containedPrimary',
-          'MuiButton-sizeMedium',
-          'MuiButton-containedSizeMedium',
-          'MuiButton-fullWidth',
-          'css-1yg2td1-MuiButtonBase-root-MuiButton-root'
-        )
     }
 
     function error(err) {
-      //console.warn(err)
+      console.warn(err)
     }
   }, [])
 
@@ -152,14 +129,19 @@ export default function QrCodeScanner() {
           )}
         </>
       ) : (
-        <div id='reader'></div>
+        <div style={{position:" relative ", width:" 100% ", maxWidth:" 600px ", margin:" 0 auto ",}}>
+          <div style={{position: "absolute ", top: "2px", left: "4px", width: "98% ", height: "21px ", backgroundColor: "#ffffff ", zIndex: "3"}}></div>
+
+          {/* <div id='reader'  style={{position: "relative", padding: "10px", border: "1px solid #ccc", width: "100%", maxWidth: "600px", margin: "0 auto", { #reader__dashboard_section { display:"none" } }}}></div> */}
+          <div id='reader'></div>
+        </div>
       )}
 
-      <Divider>
+      {/* <Divider>
         <Button fullWidth type='submit' variant='contained' sx={{ mb: 4 }}>
           Login
         </Button>
-      </Divider>
+      </Divider> */}
     </>
   )
 }
