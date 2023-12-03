@@ -1,9 +1,18 @@
 const navigation = () => {
   return [
     {
+      title: 'Dashboard',
+      path: '/dashboard',
+      icon: 'clarity:dashboard-line',
+      action: 'read',
+      subject: 'dashboard'
+    },
+    {
       title: 'Home',
       path: '/home',
       icon: 'tabler:smart-home',
+      action: 'read',
+      subject: 'home-page'
     },
     {
       title: 'User',
@@ -14,6 +23,8 @@ const navigation = () => {
       title: 'Weekly Duch',
       path: '/weekly-duch',
       icon: 'tabler:text-wrap-disabled',
+      action: 'read',
+      subject: 'weekly-duch',
     },
     {
       title: 'Setup',
@@ -23,22 +34,21 @@ const navigation = () => {
           title: 'Master Data',
           icon: 'tabler:layout-grid',
           path: '/masterdata',
+        },
+        {
+          title: 'Section',
+          icon: 'tabler:layout-grid',
+          path: '/section',
         }
       ]
-    },
-    {
-
-      title: 'Second Page',
-      path: '/second-page',
-      icon: 'tabler:mail',
     },
     {
       path: '/acl',
       action: 'read',
       subject: 'acl-page',
-      title: 'Access Control',
       icon: 'tabler:shield',
-    }
+      title: 'Access Control'
+    },
   ]
 }
 

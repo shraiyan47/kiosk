@@ -3,7 +3,7 @@ import QRCode from 'qrcode.react'
 import { useEffect, useState } from 'react'
 
 export default function QrGen(param) {
-  // console.log("QR GEN",param)
+  console.log("QR GEN",param)
   // console.debug(param)
   const qrData = param?.qr
   const [show, setShow] = useState(param?.show)
@@ -75,9 +75,10 @@ export default function QrGen(param) {
             </Card>
           </Grid>
           <Grid item xs={7}>
-            <p>Email: {param?.qr}</p>
+            <p>Email: {param?.userData?.email}</p>
             <p>User ID: {param.userData?.userid}</p>
             <p>Password: {param.userData?.password}</p>
+            <p>PIN: {param.userData?.PIN}</p>
           </Grid>
         </Grid>
       </Dialog>

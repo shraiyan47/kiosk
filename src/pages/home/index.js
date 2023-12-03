@@ -17,7 +17,7 @@ import Profile from '../components/Profile'
 // import Counter from '../Counter/index'
 
 const Home = () => {
-  
+
 const LoginIllustration = styled('img')(({ theme }) => ({
   zIndex: 2,
   maxWidth: 150
@@ -36,7 +36,7 @@ const Illustration = styled('img')(({ theme }) => ({
 //  var userData_custom = window.localStorage.getItem('userData')
 const auth = useAuth()
  if(auth.user.userrole === 'admin'){
-  return (    
+  return (
     <Grid container spacing={12}>
     <Grid item xs={12} sm={12} md={12}>
       <Card>
@@ -53,7 +53,7 @@ const auth = useAuth()
         }}>
           Congratulations {auth.user.fullname}! 🎉
         </Typography>
-      </Card>       
+      </Card>
     </Grid>
     <Grid item xs={12} sm={12} md={12}>
       <Card>
@@ -69,14 +69,14 @@ const auth = useAuth()
           mb: 0.5
         }}>
           {/* <Provider store={store}> */}
-             <Counter />   
-           
+             <Counter />
+
              {/* </Provider> */}
         </Typography>
-      </Card>       
+      </Card>
     </Grid>
   </Grid>
-  
+
 )
  }
  else if(auth.user.userrole === 'student'){
@@ -89,15 +89,15 @@ const auth = useAuth()
           textAlign: 'center'
         }}
          title='Welcome to You Create Holiness: Student Panel 🚀'></CardHeader>
-         
-        <Typography variant='h5' sx={{ 
+
+        <Typography variant='h5' sx={{
           textAlign: 'center',
           mb: 0.5 }}>
           Congratulations {auth.user.fullname}! 🎉
         </Typography>
-        <Typography variant='h4' sx={{ 
+        <Typography variant='h4' sx={{
           textAlign: 'center',
-          mb: 0.75, 
+          mb: 0.75,
           color: 'primary.main',
           margin: theme => theme.spacing(2, 2, 8, 2)
           }}
@@ -109,6 +109,10 @@ const auth = useAuth()
     </Grid>
   )
 }
+}
+Home.acl = {
+  action: 'read',
+  subject: 'home-page'
 }
 
 export default Home

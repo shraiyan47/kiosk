@@ -583,5 +583,9 @@ const StepperLinearWithValidation = () => {
     </Card>
   )
 }
+StepperLinearWithValidation.acl = {
+  action: 'read',
+  subject: 'weekly-duch'
+}
 
 export default StepperLinearWithValidation

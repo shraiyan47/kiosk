@@ -56,9 +56,15 @@ const CustomCloseButton = styled(IconButton)(({ theme }) => ({
   }
 }))
 
+const defaultValues = {
+  Name: ''    
+}
+
 const AddMasterdataDrawer = props => {
-  const { toggle } = props  
-  const { masterid } = props
+  const { toggle,masterid,datastate } = props  
+  
+  console.log('add master data datastate', datastate)
+  //const { masterid } = props
   console.log("props add", masterid)
   // ** States
   const [show, setShow] = useState(false)
@@ -71,44 +77,61 @@ const AddMasterdataDrawer = props => {
   }
 
   const {
-    reset,
-    control,
+    reset,   
     setValue,
-    setError,
-    handleSubmit,
-    formState: { errors }
+    setError    
   } = useForm({
+    defaultValues,
     mode: 'onChange'
   })
-
-  useEffect(() => {
-    console.log("Boom ---> ",toggle)
-  }, [control]);
+  
+  const { control, handleSubmit, formState: { errors }, getValues } = useForm({
+    mode: 'onSubmit'    
+  });
+  // useEffect(() => {
+  //   console.log("Boom ---> ",toggle)
+  // }, [control]);
 
   const onSubmit = data => {
-    console.log(" Form => ",data)
+    console.log(" data ",data)
+    data.MasterId = masterid;
+    console.log(" final data ",data) 
+    postData(data) ;
+  } 
+  
+  const my_url = `https://vehayamachanechakadosh.com:8080/api/MasterChild` ////// Leads Company Admin
+  
+  const postData = async (param) => {
+    
+    const myHeaders = new Headers()
+    myHeaders.append('Content-Type', 'application/json')
 
-    // if (store.allData.some(u => u.email === data.email || u.username === data.username)) {
-    //   store.allData.forEach(u => {
-    //     if (u.email === data.email) {
-    //       setError('email', {
-    //         message: 'Email already exists!'
-    //       })
-    //     }
-    //     if (u.username === data.username) {
-    //       setError('username', {
-    //         message: 'Username already exists!'
-    //       })
-    //     }
-    //   })
-    // } else {
- 
+    // myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'))
+
+    const requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(param),
+      redirect: 'follow'
+    }
+
+    console.log(requestOptions)
+
+    const res = await fetch(my_url, requestOptions)
+    const data = await res.json()
+    if (res.ok) {
       
-      toggle()
-      reset()
+        // dispatch(usersList(userDispatch))
+      setShow(false)      
 
-    // }
-  }
+      return { ok: true, data }
+    } else {
+      console.log('ERROR => ', data.error)
+
+      return { ok: false, err: res, data }
+    }
+  
+}
 
   const handleClose = () => { 
     setShow(false)
@@ -116,28 +139,7 @@ const AddMasterdataDrawer = props => {
     //toggle()
     reset()
   }
-
-  const demoData = {
-    userid: '1699036939',
-    userrole: 'admin', //
-    PIN: 4567,
-    MemberId: 1,
-    Member: 'Non member', //
-    fullname: 'Test User', //
-    password: '1234',
-    nickname: null, //
-    Class: 'B', //
-    grade: '9', //
-    filepath: null,
-    filename: null,
-    Id: 1,
-    EntryDt: '2023-11-04T00:00:00',
-    EntryBy: 'sysadmin',
-    UpdateDt: '2023-11-04T01:58:42.783',
-    UpdateBy: 'sysadmin',
-    IsActive: true,
-    Remarks: null
-  }
+  
 
   return (
     <Card>
@@ -177,22 +179,22 @@ const AddMasterdataDrawer = props => {
               </Typography>
             </Box>
             <Grid container spacing={6}>
-              <Grid item sm={8} xs={12}>
+              <Grid item sm={4} xs={12}>
                 {/* <CustomTextField fullWidth label='Full Name' placeholder='John' /> */}
                 <Controller
-                  name='filename'
+                  name='Name'
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
-                      fullWidth
+                      fullWidth                      
                       value={value}
                       sx={{ mb: 4 }}
-                      label='Name'
+                      label='Item Name'
                       onChange={onChange}
-                      placeholder='Master Data Name'
-                      error={Boolean(errors.filename)}
-                      {...(errors.filename && { helperText: errors.filename.message })}
+                      placeholder='Item Name'
+                      error={Boolean(errors.fullname)}
+                      {...(errors.Name && { helperText: errors.Name.message })}
                     />
                   )}
                 />
@@ -200,7 +202,7 @@ const AddMasterdataDrawer = props => {
 
               <Grid item sm={4} xs={12}>
                 <Controller
-                  name='nickname'
+                  name='Accesskey'
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
@@ -208,21 +210,21 @@ const AddMasterdataDrawer = props => {
                       fullWidth
                       value={value}
                       sx={{ mb: 4 }}
-                      label='Nick Name'
+                      label='Access key'
                       onChange={onChange}
-                      placeholder='Rayan'
-                      error={Boolean(errors.nickname)}
-                      {...(errors.nickname && { helperText: errors.nickname.message })}
+                      placeholder='Access key'
+                      error={Boolean(errors.username)}
+                      {...(errors.Accesskey && { helperText: errors.Accesskey.message })}
                     />
                   )}
                 />
               </Grid>
 
-              {/* <Grid item xs={12}>
-                <CustomTextField fullWidth label='Username' placeholder='johnDoe' />
+              <Grid item sm={4} xs={12}>
+                
 
                 <Controller
-                  name='nickname'
+                  name='Value'
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => ( 
@@ -230,109 +232,16 @@ const AddMasterdataDrawer = props => {
                       fullWidth
                       value={value}
                       sx={{ mb: 4 }}
-                      label='Nick Name'
+                      label='Value'
                       onChange={onChange}
-                      placeholder='Rayan'
-                      error={Boolean(errors.nickname)}
-                      {...(errors.nickname && { helperText: errors.nickname.message })}
+                      placeholder='Value'
+                      error={Boolean(errors.email)}
+                      {...(errors.Value && { helperText: errors.Value.message })}
                     />
                   )}
                 />
-              </Grid> */}
-
-              <Grid item sm={6} xs={12}>
-                <Controller
-                  name='userrole'
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      select
-                      defaultValue='Student'
-                      fullWidth
-                      id='userrole-select'
-                      label='User Role'
-                      sx={{ mb: 4 }}
-                      error={Boolean(errors.userrole)}
-                      aria-describedby='validation-userrole-select'
-                      {...(errors.userrole && { helperText: errors.userrole.message })}
-                      SelectProps={{ value: value, onChange: e => onChange(e) }}
-                    >
-                      <MenuItem value=''>User Role</MenuItem>
-                      <MenuItem value='Admin'>Admin</MenuItem>
-                      <MenuItem value='Teacher'>Teacher</MenuItem>
-                      <MenuItem value='Student'>Student</MenuItem>
-                    </CustomTextField>
-                  )}
-                />
-              </Grid>
-              <Grid item sm={6} xs={12}>
-                <Controller
-                  name='Member'
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      select
-                      defaultValue='Non-member'
-                      fullWidth
-                      id='Member-select'
-                      label='Member'
-                      sx={{ mb: 4 }}
-                      error={Boolean(errors.Member)}
-                      aria-describedby='validation-Member-select'
-                      {...(errors.Member && { helperText: errors.Member.message })}
-                      SelectProps={{ value: value, onChange: e => onChange(e) }}
-                    >
-                      <MenuItem value='Program'>Program</MenuItem>{' '}
-                      {/* Non-member / Silver member / Gold member / Platinum member */}
-                      <MenuItem value='Non-member'>Non-member</MenuItem>
-                      <MenuItem value='Silver-member'>Silver member</MenuItem>
-                      <MenuItem value='Gold-member'>Gold member</MenuItem>
-                      <MenuItem value='Platinum-member'>Platinum member</MenuItem>
-                    </CustomTextField>
-                  )}
-                />
-              </Grid>
-
-              <Grid item sm={6} xs={12}>
-                <Controller
-                  name='Class'
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      sx={{ mb: 4 }}
-                      label='Class'
-                      onChange={onChange}
-                      placeholder='A'
-                      error={Boolean(errors.Class)}
-                      {...(errors.Class && { helperText: errors.Class.message })}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={6} xs={12}>
-              <Controller
-                  name='Grade'
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      sx={{ mb: 4 }}
-                      label='Grade'
-                      onChange={onChange}
-                      placeholder='1'
-                      error={Boolean(errors.Grade)}
-                      {...(errors.Grade && { helperText: errors.Grade.message })}
-                    />
-                  )}
-                /> 
-              </Grid>
+              </Grid> 
+             
             </Grid>
           </DialogContent>
           <DialogActions
@@ -342,12 +251,12 @@ const AddMasterdataDrawer = props => {
               pb: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
             }}
           >
-            <Button type='submit' variant='contained' sx={{ mr: 1 }} onClick={() => setShow(false)}>
+            <Button type='submit' variant='contained' sx={{ mr: 1 }}>
               Submit
             </Button>
             <Button variant='tonal' color='secondary' onClick={handleClose}>
               Discard
-            </Button>            
+            </Button>
           </DialogActions>
         </form>
       </Dialog>

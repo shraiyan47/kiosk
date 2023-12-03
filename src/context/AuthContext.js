@@ -5,7 +5,7 @@ import { createContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 
 // ** Axios
-import axios, { Axios } from 'axios'
+import axios from 'axios'
 
 // ** Config
 import authConfig from 'src/configs/auth'
@@ -36,12 +36,14 @@ const AuthProvider = ({ children }) => {
         await axios
           .get(authConfig.meEndpoint, {
             headers: {
-              Authorization: storedToken
+              Authorization: `Bearer ${storedToken}`,
+              'Content-Type': 'application/json'
             }
           })
           .then(async response => {
+            response.data.role = response.data.userrole;
             setLoading(false)
-            setUser({ ...response.data.userData })
+            setUser({ ...response.data })
           })
           .catch(() => {
             localStorage.removeItem('userData')
@@ -60,17 +62,15 @@ const AuthProvider = ({ children }) => {
     initAuth()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  
-  const handleLogin = (params, errorCallback) => {  
-    console.log("public url",process.env.NEXT_PUBLIC_BASE_URL)  
-    
+
+  const handleLogin = (params, errorCallback) => {
+    console.log(params.email)
     axios
-      .post(process.env.NEXT_PUBLIC_BASE_URL+ 'api/token', {
+      .post(authConfig.loginEndpoint, {
         email:params.email,
         password:params.password
-      })    
+      })
       .then(async response => {
-       
         response.data.userData.role = response.data.userData.userrole;      
      
         const params = new URLSearchParams([['UserId', response.data.userData.userId]]);       
@@ -78,18 +78,16 @@ const AuthProvider = ({ children }) => {
         
         response.data.userData.Member = res.data.Member;
         response.data.userData.fullname = res.data.fullname;
-        
-        params.rememberMe
-          ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
-          : null
+        window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
+
         const returnUrl = router.query.returnUrl       
         setUser({ ...response.data.userData })        
-        params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.userData)) : null
+        window.localStorage.setItem('userData', JSON.stringify(response.data.userData))
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'        
+
         router.replace(redirectURL)
       })
       .catch(err => {
-        console.log("error",err)
         if (errorCallback) errorCallback(err)
       })
   }
