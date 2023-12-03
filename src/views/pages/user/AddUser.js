@@ -92,7 +92,7 @@ const AddUserDrawer = props => {
   const userRole = watch('userrole')
   useEffect(() => {
     console.log(userRole)
-    if(userRole !== "Student"){
+    if(userRole !== "student"){
       const inputClear = ['Class', 'grade']
       inputClear.forEach((fieldName)=>{
         setValue(fieldName, null)
@@ -292,9 +292,9 @@ const AddUserDrawer = props => {
                       }}
                     >
                       <option value='null'>User Role</option>
-                      <option value='Admin'>Admin</option>
-                      <option value='Teacher'>Teacher</option>
-                      <option value='Student'>
+                      <option value='admin'>Admin</option>
+                      <option value='teacher'>Teacher</option>
+                      <option value='student'>
                         Student
                       </option>
                     </CustomTextField>
@@ -329,7 +329,7 @@ const AddUserDrawer = props => {
                   )}
                 />
               </Grid>
-              {userRole === 'Student' && (
+              {userRole === 'student' && (
                 <>
                   <Grid item sm={6} xs={12}>
                     <Controller

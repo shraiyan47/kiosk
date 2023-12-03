@@ -282,7 +282,7 @@ const UserList = () => {
   const [allUsers, setAllUsers] = useState([])
   const [allUsers2, setAllUsers2] = useState([])
 
-  const my_url = `https://vehayamachanechakadosh.com:8080/api/GetAllUserInfo?Stauts=all` ////// Leads Company Admin
+  const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/GetAllUserInfo?Stauts=all` ////// Leads Company Admin
 
   const userStateData = useSelector(state => state.users.data)
 

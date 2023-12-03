@@ -61,7 +61,7 @@ const TableHeader = props => {
             name='userrole'
             control={control}
             rules={{ required: true }}
-            defaultValue={'Student'}
+            defaultValue={'student'}
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 select
@@ -77,9 +77,9 @@ const TableHeader = props => {
                 }}
               >
                 {/* <option value='null'>User Role</option> */}
-                <option value='Admin'>Admin</option>
-                <option value='Teacher'>Teacher</option>
-                <option value='Student'>Student</option>
+                <option value='admin'>Admin</option>
+                <option value='teacher'>Teacher</option>
+                <option value='student'>Student</option>
               </CustomTextField>
             )}
           />

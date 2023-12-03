@@ -62,7 +62,7 @@ export default function QrCodeScanner() {
       scanner.clear()
       setScanResult(result)
       axios
-        .get(`https://vehayamachanechakadosh.com:8080/api/GetUserInfoByUserId?UserId=${result}`)
+        .get(`${process.env.NEXT_PUBLIC_BASE_URL}api/GetUserInfoByUserId?UserId=${result}`)
         .then(response => setData(response.data))
 
       //   alert('Get Lol')
@@ -83,8 +83,8 @@ export default function QrCodeScanner() {
     const val = Number(x.target.value)
     if (val === data.PIN) {
       setSucc(true)
-      const { userid, password } = data
-      const email = userid
+      const { email, password } = data
+       
       auth.login({ email, password }, () => {
         setError('email', {
           type: 'manual',

@@ -88,12 +88,12 @@ const EditUserDrawer = param => {
     }
     setUserRole(data?.userrole)
     setUserMemberId(data?.MemberId?.toString())
-    console.log(' data?.MemberId?.toString() -> ', data?.MemberId?.toString())
+    console.log(' data -> ', data)
   }, [data,])
 
   useEffect(() => {
     // console.log(userRole)
-    if (userRole !== 'Student') {
+    if (userRole !== 'student') {
       const inputClear = ['Class', 'grade']
       inputClear.forEach(fieldName => {
         setValue(fieldName, null)
@@ -287,9 +287,9 @@ const EditUserDrawer = param => {
                       }}
                     >
                       <option value='null'>User Role</option>
-                      <option value='Admin'>Admin</option>
-                      <option value='Teacher'>Teacher</option>
-                      <option value='Student'>Student</option>
+                      <option value='admin'>Admin</option>
+                      <option value='teacher'>Teacher</option>
+                      <option value='student'>Student</option>
                     </CustomTextField>
                   )}
                 />
@@ -323,7 +323,7 @@ const EditUserDrawer = param => {
                   )}
                 />
               </Grid>
-              {(userRole === 'Student' || control._formValues.userrole=== 'Student') && (
+              {(userRole === 'student' || control._formValues.userrole=== 'student') && (
                 <>
                   <Grid item sm={6} xs={12}>
                     <Controller
