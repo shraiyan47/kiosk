@@ -24,16 +24,9 @@ import toast from 'react-hot-toast'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
-
 // ** Custom Components Imports
-import StepperCustomDot from './StepperCustomDot'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import CustomCheckboxBasic from 'src/@core/components/custom-checkbox/basic'
-
-// ** Styled Components
-import StepperWrapper from 'src/@core/styles/mui/stepper'
 
 const steps = [{}, {}, {}, {}, {}, {}, {}]
 
@@ -129,6 +122,39 @@ const data7 = [
     title: 'I attended maagalim this week',
     value: 'option 1'
   }
+]
+
+const icons = [
+  { icon: 'tabler:folder', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } },
+  { icon: 'tabler:ban', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } },
+  { icon: 'tabler:lock', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } },
+  { icon: 'tabler:folder', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } }
+]
+
+const icons2 = [
+  { icon: 'tabler:ban', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } },
+  { icon: 'tabler:lock', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } }
+]
+
+const icons3 = [
+  { icon: 'tabler:ban', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } }
+]
+
+const icons4 = [
+  { icon: 'tabler:ban', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } },
+  { icon: 'tabler:lock', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } }
+]
+
+const icons5 = [
+  { icon: 'tabler:ban', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } }
+]
+
+const icons6 = [
+  { icon: 'tabler:ban', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } }
+]
+
+const icons7 = [
+  { icon: 'tabler:ban', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } }
 ]
 
 const StepperLinearWithValidation = () => {
@@ -266,18 +292,8 @@ const StepperLinearWithValidation = () => {
   const onSubmit = () => {
     setActiveStep(activeStep + 1)
     if (activeStep === steps.length - 1) {
-      toast.success('Form Submitted')
+      toast.success('Draft Saved')
     }
-  }
-
-  // Handle Password
-  const handleClickShowPassword = () => {
-    // setState({ ...state, showPassword: !state.showPassword })
-  }
-
-  // Handle Confirm Password
-  const handleClickShowConfirmPassword = () => {
-    // setState({ ...state, showPassword2: !state.showPassword2 })
   }
 
   const getStepContent = step => {
@@ -308,10 +324,11 @@ const StepperLinearWithValidation = () => {
                   key={index}
                   data={data[index]}
                   selected={selected}
+                  icon={icons[index] ? icons[index].icon : ''}
                   handleChange={handleChange}
                   name='custom-checkbox-basic'
                   gridProps={{ sm: 6, xs: 12 }}
-                  sx={{ margin: '50px' }}
+                  iconProps={icons[index] ? icons[index].iconProps : {}}
                 />
               ))}
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -330,7 +347,7 @@ const StepperLinearWithValidation = () => {
           <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
             <Grid container spacing={5}>
               <Grid item xs={12}>
-                <label>Daughters of Digninty</label>
+                <label>Daughters of Dignity</label>
               </Grid>
               {data2.map((item2, index2) => (
                 <CustomCheckboxBasic
@@ -340,6 +357,8 @@ const StepperLinearWithValidation = () => {
                   handleChange={handleChange2}
                   name='custom-checkbox-basic'
                   gridProps={{ sm: 6, xs: 12 }}
+                  icon={icons2[index2] ? icons2[index2].icon : ''}
+                  iconProps={icons2[index2] ? icons2[index2].iconProps : {}}
                 />
               ))}
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -368,6 +387,8 @@ const StepperLinearWithValidation = () => {
                   handleChange={handleChange3}
                   name='custom-checkbox-basic'
                   gridProps={{ xs: 12 }}
+                  icon={icons3[index3] ? icons3[index3].icon : ''}
+                  iconProps={icons3[index3] ? icons3[index3].iconProps : {}}
                 />
               ))}
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -396,6 +417,8 @@ const StepperLinearWithValidation = () => {
                   handleChange={handleChange4}
                   name='custom-checkbox-basic'
                   gridProps={{ sm: 6, xs: 12 }}
+                  icon={icons4[index4] ? icons4[index4].icon : ''}
+                  iconProps={icons4[index4] ? icons4[index4].iconProps : {}}
                 />
               ))}
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -435,6 +458,8 @@ const StepperLinearWithValidation = () => {
                         handleChange={handleChange5}
                         name='custom-checkbox-basic'
                         gridProps={{ xs: 12 }}
+                        icon={icons5[index5] ? icons5[index5].icon : ''}
+                        iconProps={icons5[index5] ? icons5[index5].iconProps : {}}
                       />
                     ))}
                   </CardContent>
@@ -484,6 +509,8 @@ const StepperLinearWithValidation = () => {
                         handleChange={handleChange6}
                         name='custom-checkbox-basic'
                         gridProps={{ xs: 12 }}
+                        icon={icons6[index6] ? icons6[index6].icon : ''}
+                        iconProps={icons6[index6] ? icons6[index6].iconProps : {}}
                       />
                     ))}
                   </CardContent>
@@ -508,14 +535,16 @@ const StepperLinearWithValidation = () => {
                 <label>Geder Moments</label>
               </Grid>
 
-              {data5.map((item5, index5) => (
+              {data5.map((item7, index7) => (
                 <CustomCheckboxBasic
-                  key={index5}
-                  data={data5[index5]}
-                  selected={selected5}
-                  handleChange={handleChange5}
+                  key={index7}
+                  data={data5[index7]}
+                  selected={selected7}
+                  handleChange={handleChange7}
                   name='custom-checkbox-basic'
                   gridProps={{ xs: 12 }}
+                  icon={icons7[index7] ? icons7[index7].icon : ''}
+                  iconProps={icons7[index7] ? icons7[index7].iconProps : {}}
                 />
               ))}
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -523,7 +552,7 @@ const StepperLinearWithValidation = () => {
                   Back
                 </Button>
                 <Button type='submit' variant='contained'>
-                  Submit
+                  Proceed
                 </Button>
               </Grid>
             </Grid>
@@ -538,11 +567,19 @@ const StepperLinearWithValidation = () => {
     if (activeStep === steps.length) {
       return (
         <Fragment>
-          <Typography>All steps are completed!</Typography>
-          <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
+          <Typography>Summary of the Submitted Data will be visible here..</Typography>
+          <Box sx={{ mt: 4, display: 'flex', justifyContent: 'space-between' }}>
             <Button variant='contained' onClick={handleReset}>
               Reset
             </Button>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Button variant='contained' onClick={handleBack} sx={{ marginRight: '10px' }} color='warning'>
+                Review
+              </Button>
+              <Button variant='contained' onClick={handleReset} color='success'>
+                Submit
+              </Button>
+            </Box>
           </Box>
         </Fragment>
       )

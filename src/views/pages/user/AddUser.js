@@ -32,6 +32,7 @@ import Icon from 'src/@core/components/icon'
 // ** Form
 import { Controller, useForm } from 'react-hook-form'
 import { useAuth } from 'src/hooks/useAuth'
+import { useSelector } from 'react-redux'
 
 // ** STATE MANAGEMENT
 // import { useDispatch } from 'react-redux'
@@ -66,14 +67,40 @@ const AddUserDrawer = props => {
   // ** States
   const [show, setShow] = useState(false)
 
+  const userRoleStateData = useSelector(state => state.userRoles.data)
+  const userProgramStateData = useSelector(state => state.userPrograms.programData[0])
+
+  // console.log("userProgramStateData --> ",userProgramStateData)
+
+  const NOUS = Number(userRoleStateData.length)
+  // const NOPS = Number(userProgramStateData.length)
+  const userroleSV = userRoleStateData[NOUS-1]
+  // const userprogramSV = userProgramStateData[NOPS-1]
+
+  const renderUserRoleOptions = () => {
+    return userroleSV.map((item) => (
+      <option key={item.Id} value={item.Name}>
+        {item.Name}
+      </option>
+    ));
+  };
+
+  const renderUserProgramOptions = () => {
+    return userProgramStateData.map((item) => (
+      <option key={item.Id} value={item.Id}>
+        {item.Name}
+      </option>
+    ));
+  };
+
   const handleShow = () => {
     // Only call the setShow() function if the state needs to be changed
     if (!show) {
       setShow(true)
     }
-  } 
+  }
 
-  const { randomString, generateRandomString } = useRandomString(4); // if you are wishing to gereate random string //
+  const { randomString, generateRandomString } = useRandomString(4) // if you are wishing to gereate random string //
 
   const { password, generateRandomPassword } = useRandomPassword()
 
@@ -84,21 +111,22 @@ const AddUserDrawer = props => {
     formState: { errors },
     getValues,
     watch,
-    setValue 
+    setValue
   } = useForm({
     mode: 'onSubmit'
   })
 
-  const userRole = watch('userrole')
+  const userRole = (!watch('userrole'))? 'student' : watch('userrole')
+
   useEffect(() => {
-    console.log(userRole)
+    // console.log(userRole)
     if(userRole !== "student"){
       const inputClear = ['Class', 'grade']
-      inputClear.forEach((fieldName)=>{
+      inputClear.forEach(fieldName => {
         setValue(fieldName, null)
       })
     }
-  }, [userRole]);
+  }, [userRole])
 
   const auth = useAuth()
   const entryPerson = !!auth?.user ? auth?.user.userId : 'unauthorizedEntry'
@@ -114,27 +142,29 @@ const AddUserDrawer = props => {
     const randomPassword = password
 
     const userAddData = {
-      MemberId: data.Member,
-      userrole: data.userrole,
-      username: data.username,
+      MemberId: (data?.Member !== 'null' ? '1' : data?.Member),
+      userrole: data?.userrole,
+      username: data?.username,
       EntryBy: entryPerson,
-      email: data.email,
+      email: data?.email,
       userId: 'null',
       password: randomPassword,
       PIN: randomString,
       UserProfiles: {
-        fullname: data.fullname,
-        Class: (data.Class)?data.Class:null,
-        grade: (data.grade)?data.grade:null,
+        fullname: data?.firstname+" "+data?.lastname,
+        firstname: data?.firstname,
+        lastname: data?.lastname,
+        Class: (data?.Class)?data?.Class:null,
+        grade: (data?.grade)?data?.grade:null,
         EntryBy: entryPerson
       }
     }
 
-    console.log('userAddData ===> ', userAddData)
+    // console.log('userAddData ===> ', userAddData)
 
     postData(userAddData)
   }
-  const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/User` ////// 
+  const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/User` //////
 
   const postData = async param => {
     const myHeaders = new Headers()
@@ -149,15 +179,15 @@ const AddUserDrawer = props => {
       redirect: 'follow'
     }
 
-    console.log(requestOptions)
+    // console.log(requestOptions)
 
     const res = await fetch(my_url, requestOptions)
     const data = await res.json()
     if (res.ok) {
-
-        // dispatch(usersList(userDispatch))
+      // dispatch(usersList(userDispatch))
       setShow(false)
       toggle(true)
+      handleClose()
 
       return { ok: true, data }
     } else {
@@ -171,12 +201,12 @@ const AddUserDrawer = props => {
     setShow(false)
     reset()
     // toggle
+    props.onSuccess('ADD CLOSE')
   }
 
   return (
-    <Card>
-      <br/>
-      <Button onClick={handleShow} variant='contained' sx={{ '& svg': { mr: 2 } }}>
+    <Card sx={{ boxShadow: 'none' }}>
+      <Button onClick={handleShow} variant='contained' sx={{ '& svg': { mr: 2 }, marginTop: '20px' }}>
         <Icon fontSize='1.125rem' icon='tabler:plus' />
         Add New User
       </Button>
@@ -192,13 +222,7 @@ const AddUserDrawer = props => {
         sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
-          <DialogContent
-            sx={{
-              pb: theme => `${theme.spacing(8)} !important`,
-              px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-              pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-            }}
-          >
+          <DialogContent sx={{   pb: theme => `${theme.spacing(8)} !important`,   px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],   pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`] }}>
             <CustomCloseButton onClick={() => setShow(false)}>
               <Icon icon='tabler:x' fontSize='1.25rem' />
             </CustomCloseButton>
@@ -208,10 +232,10 @@ const AddUserDrawer = props => {
               </Typography>
             </Box>
             <Grid container spacing={6}>
-              <Grid item sm={8} xs={12}>
-                {/* <CustomTextField fullWidth label='Full Name' placeholder='John' /> */}
+
+              <Grid item sm={6} xs={12}>
                 <Controller
-                  name='fullname'
+                  name='firstname'
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
@@ -219,19 +243,19 @@ const AddUserDrawer = props => {
                       fullWidth
                       value={value}
                       sx={{ mb: 4 }}
-                      label='Full Name'
+                      label='First Name'
                       onChange={onChange}
-                      placeholder='John Doe'
-                      error={Boolean(errors.fullname)}
-                      {...(errors.fullname && { helperText: errors.fullname.message })}
+                      placeholder=''
+                      error={Boolean(errors.firstname)}
+                      {...(errors.firstname && { helperText: errors.firstname.message })}
                     />
                   )}
                 />
               </Grid>
 
-              <Grid item sm={4} xs={12}>
+              <Grid item sm={6} xs={12}>
                 <Controller
-                  name='username'
+                  name='lastname'
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
@@ -239,11 +263,11 @@ const AddUserDrawer = props => {
                       fullWidth
                       value={value}
                       sx={{ mb: 4 }}
-                      label='User Name'
+                      label='Last Name'
                       onChange={onChange}
                       placeholder='Rayan'
-                      error={Boolean(errors.username)}
-                      {...(errors.username && { helperText: errors.username.message })}
+                      error={Boolean(errors.lastname)}
+                      {...(errors.lastname && { helperText: errors.lastname.message })}
                     />
                   )}
                 />
@@ -274,7 +298,7 @@ const AddUserDrawer = props => {
                   name='userrole'
                   control={control}
                   rules={{ required: true }}
-                  defaultValue={userTypeChoosed}
+                  defaultValue={'student'}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       select
@@ -290,17 +314,17 @@ const AddUserDrawer = props => {
                       SelectProps={{
                         native: true // For Material-UI native Select
                       }}
-                    >
-                      <option value='null'>User Role</option>
-                      <option value='admin'>Admin</option>
-                      <option value='teacher'>Teacher</option>
-                      <option value='student'>
-                        Student
-                      </option>
+                      >
+                      <option>Select User Role</option>
+                      {renderUserRoleOptions()}
+                      
                     </CustomTextField>
                   )}
                 />
+
+                
               </Grid>
+
               <Grid item sm={6} xs={12}>
                 <Controller
                   name='Member'
@@ -320,11 +344,7 @@ const AddUserDrawer = props => {
                       SelectProps={{ native: true }}
                     >
                       <option value='null'>Program</option>{' '}
-                      {/* Non-member / Silver member / Gold member / Platinum member */}
-                      <option value='1'>Non-member</option>
-                      <option value='2'>Silver member</option>
-                      <option value='3'>Gold member</option>
-                      <option value='4'>Platinum member</option>
+                      {renderUserProgramOptions()}
                     </CustomTextField>
                   )}
                 />

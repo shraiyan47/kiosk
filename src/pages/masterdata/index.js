@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 // ** React Imports
 import { useState, useEffect, useCallback } from 'react'
 
@@ -108,8 +107,8 @@ const Masterdata = () => {
   const [Namevalue, setNamevalue] = useState('')
   const [Accesskeyvalue, setAccesskeyvalue] = useState('')
   const [Editvalue, setEditvalue] = useState('')
-  //const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild?Stauts=all&MasterId=1` ////// Leads Company Admin
-  const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild` ////// Leads Company Admin
+  //const my_url = `https://vehayamachanechakadosh.com:8080/api/MasterChild?Stauts=all&MasterId=1` ////// Leads Company Admin
+  const my_url = `https://vehayamachanechakadosh.com:8080/api/MasterChild` ////// Leads Company Admin
   const userStateData = useSelector(state => state.users.data)
   //console.log('User State Data => ', userStateData)
   //const dispatch = useDispatch()
@@ -209,14 +208,14 @@ const Masterdata = () => {
   }
   // get User from API
   useEffect(() => {
-        fetchData(masterid)      
+        fetchData(masterid)
   }, [])
 
   async function fetchData(masterid) {
     const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'application/json')
+
     // myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'))
-    
     const params = {
       Stauts: 'all',
       MasterId: masterid
@@ -228,7 +227,6 @@ const Masterdata = () => {
       redirect: 'follow',
       body: JSON.stringify(params)  
     }
-
     const res = await axios.get(my_url,{params})    
     const data = await res.data
     console.log("reponse",res)
@@ -277,7 +275,6 @@ const Masterdata = () => {
     // const lol = userStateDatacolumns
 
     // Filter the `allUser` array based on the search query
-    
     const filteredUsers = allUsers2.filter(user => {   
       console.log(user)  
       
@@ -287,11 +284,11 @@ const Masterdata = () => {
         user.Value.toLowerCase().includes(searchQuery.toLowerCase())      
       )
     })
+
     setAllUsers(filteredUsers)
   }, [value])  
 
-  const handleFilter = useCallback(val => {
-   
+  const handleFilter = useCallback(val => {   
     setValue(val)
   }, [])
 
@@ -303,9 +300,10 @@ const Masterdata = () => {
     event.preventDefault() 
     console.log(event)   
     console.log(event.target.Name)  
-    setShow(false)    
+    setShow(false)
+    
   }
-
+  
   const onSubmit = data => {
     console.log(" data ",data)
     data.MasterId = masterid;
@@ -318,11 +316,13 @@ const Masterdata = () => {
     setMasterid(val)
     fetchData(val);
    // setValue(val)
-   //react-hooks/exhaustive-deps
   }, [])
-
- 
-
+  
+  const masterdatastatusOnChange = (masterdatastatus) => {
+      alert("status",masterdatastatus);
+      console.log("master data status", masterdatastatus)
+  }
+  
   return (
     <>
     <Grid container spacing={6.5}>
@@ -330,7 +330,7 @@ const Masterdata = () => {
         <Card>
           <CardHeader title='Master Item List' />
           <Divider sx={{ m: '0 !important' }} />
-          <TableHeader masterid={masterid} value={value} handleFilter={handleFilter} ProgramType={userListHandler} />
+          <TableHeader masterid={masterid} value={value} handleaddmasterdatastatus={masterdatastatusOnChange} handleFilter={handleFilter} ProgramType={userListHandler} />
           <DataGrid
             autoHeight
             rowHeight={62}
@@ -342,9 +342,7 @@ const Masterdata = () => {
             onPaginationModelChange={setPaginationModel}
           />
         </Card>
-      </Grid>
-      
-    
+      </Grid>    
     </Grid>
     <Dialog
         disableEscapeKeyDown

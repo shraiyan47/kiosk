@@ -1,5 +1,0 @@
-username,password,userrole,email,MemberId,fullname,Grade,Class
-test_uname,9fw9ef,Admin,test1@gmail.com,3,Mr Test 1,null,0
-test2_uname,9fw9rw3e,Teacher,test2@gmail.com,3,Mr Test 2,null,0
-test3_uname,9fw93r2e,Student,test3@gmail.com,3,Mr Test 3,C,2
-test4_uname,9fw9e3r,Teacher,test4@gmail.com,3,Mr Test 4,null,0

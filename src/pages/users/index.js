@@ -26,34 +26,36 @@ import TableHeader from '../../views/pages/user/TableHeader'
 // ** STATE MANAGEMENT
 import { useSelector, useDispatch } from 'react-redux'
 import { usersList } from '../../redux/user/userSlice'
+import { userRolesList } from '../../redux/user/userRoleSlice'
+import { userProgramsList } from '../../redux/user/userProgramSlice'
 
 import QrGen from '../../views/pages/user/QrGen'
 
-import ProfileSummery from "src/views/pages/profile/Summery"
+import ProfileSummery from 'src/views/pages/profile/Summery'
 import EditUserDrawer from 'src/views/pages/user/EditUser'
 import { useAuth } from 'src/hooks/useAuth'
 // import QRCode from 'qrcode.react'
 
 const demoData = {
-  userid: '1699036939',
-  userrole: 'admin',
-  PIN: 4567,
-  MemberId: 1,
-  Member: 'Non member',
-  fullname: 'Test User',
-  password: '1234',
-  nickname: null,
-  Class: 'B',
-  grade: '9',
-  filepath: null,
-  filename: null,
-  Id: 1,
-  EntryDt: '2023-11-04T00:00:00',
-  EntryBy: 'sysadmin',
-  UpdateDt: '2023-11-04T01:58:42.783',
-  UpdateBy: 'sysadmin',
-  IsActive: true,
-  Remarks: null
+  "id": 36,
+  "Id": 36,
+  "MemberId": 2,
+  "ProfileId": 16,
+  "Member": null,
+  "userId": "chaim.levilev@gmail.com",
+  "userrole": "admin",
+  "PIN": 12345678,
+  "firstname": null,
+  "lastname": null,
+  "fullname": "Chaim Lavilev",
+  "Class": "A",
+  "grade": "9",
+  "filepath": null,
+  "filename": null,
+  "userstatus": "NEW",
+  "IsActive": true,
+  "email": "chaim.levilev@gmail.com",
+  "password": "87654321"
 }
 
 const CustomCloseButton = styled(IconButton)(({ theme }) => ({
@@ -79,92 +81,73 @@ const UserList = () => {
   const [qr, setQr] = useState('')
   const [viewData, setViewData] = useState('')
   const [editData, setEditData] = useState('')
-  const [show, setShow] = useState(false)
+  const [showView, setShowView] = useState(false)
+  const [showEdit, setShowEdit] = useState(false)
   const [showQR, setShowQR] = useState(false)
   const [success, setSuccess] = useState('')
 
-  const onSuccessHandler = (x) => {
-    setSuccess(x)
-    setShow(false)
-    console.log("Success Table of User -> ", x)
+  const onSuccessHandler = x => {
+    setSuccess(!!x && x)
+    setShowView(false)
+    setShowEdit(false)
+    setShowQR(false)
+    setQr('')
+    setViewData('')
+    setEditData('')
+    // console.log('Success Table of User -> ', x)
   }
 
   const RowOptions = ({ id, email, userId, dataUser }) => {
-
-    const qrHandler = ({userId}) => {
-      console.log("userId->",userId)
-      setQr({userId, dataUser})
+    const qrHandler = ({ userId }) => {
+      // console.log('userId->', userId)
+      setQr({ userId, dataUser })
       setShowQR(true)
     }
 
     const viewHandler = event => {
       // alert(`View -> ${event}`)
-      setShow(true)
+      setShowView(true)
       setViewData(dataUser)
     }
 
     const editHandler = event => {
       // alert(`Edit -> ${event}`)
 
-      setShow(true)
+      setShowEdit(true)
       setEditData(dataUser)
     }
 
     const deleteHandler = async event => {
-      const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/User` //////
+      const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/User?UserAccId=${event.Id}` //////
 
-      console.log("User Info -> ",event)
-
-      const deleteUserData = {
-        Id: event.Id,
-        UserId: event.userid,
-        MemberId: event.MemberId,
-        UserRole: event.userrole,
-        PIN: event.PIN,
-        UserName: event.username,
-        Password: event.password,
-        email: event.email,
-        UpdateBy: entryPerson,
-        UserProfiles: {
-          Id: event.ProfileId,
-          UserAccountId: event.Id,
-          UserId: event.userid,
-          FullName: event.fullname,
-          Class: !!event.Class ? event.Class : "null",
-          Grade: !!event.grade ? event.grade : "null",
-          UpdateBy: entryPerson
-        }
-
-      }
-
+      //console.log('User Info -> ', event.Id)
 
       const myHeaders = new Headers()
       myHeaders.append('Content-Type', 'application/json')
 
       const requestOptions = {
         method: 'DELETE',
-        headers: myHeaders,
-        body: JSON.stringify(deleteUserData),
+        headers: myHeaders, 
         redirect: 'follow'
       }
 
-      console.log(' requestOptions => ', requestOptions)
+      //console.log(' requestOptions => ', requestOptions)
 
       const res = await fetch(my_url, requestOptions)
       const data = await res.json()
       if (res.ok) {
         // dispatch(usersList(userDispatch))
-        // alert('Success') 
-        // console.log("first", param) 
-        alert(`Delete -> ${event}`)
+        // alert('Success')
+        // console.log("first", param)
+        alert(`Delete Successful -> ${event.Id}`)
+        onSuccessHandler("DELETE SUCCESS")
 
         return { ok: true, data }
       } else {
-        console.log('ERROR => ', data.error)
+        //console.log('ERROR => ', data.error)
 
         return { ok: false, err: res, data }
       }
-
     }
 
     return (
@@ -199,7 +182,7 @@ const UserList = () => {
       headerName: 'User',
 
       renderCell: ({ row }) => {
-        const { fullname, userid } = row
+        const { fullname, userId } = row
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -209,7 +192,7 @@ const UserList = () => {
                 {fullname}
               </Typography>
               <Typography noWrap variant='body2' sx={{ color: 'text.disabled' }}>
-                {userid}
+                {userId}
               </Typography>
             </Box>
           </Box>
@@ -271,7 +254,7 @@ const UserList = () => {
       field: 'actions',
       headerName: 'Actions',
 
-      renderCell: ({ row }) => <RowOptions id={row.id} email={row.email} userId={row.userid} dataUser={row} />
+      renderCell: ({ row }) => <RowOptions id={row.id} email={row.email} userId={row.userId} dataUser={row} />
     }
   ]
 
@@ -282,20 +265,24 @@ const UserList = () => {
   const [allUsers, setAllUsers] = useState([])
   const [allUsers2, setAllUsers2] = useState([])
 
-  const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/GetAllUserInfo?Stauts=all` ////// Leads Company Admin
+  const AllUsersURL = `${process.env.NEXT_PUBLIC_BASE_URL}api/GetAllUserInfo?Stauts=all` ////// All Users
+  const UserRoleURL = `${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?MasterId=2&Accesskey=UR` ////// All User Roles
+  const UserProgramURL = `${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?MasterId=1&Accesskey=TM` ////// All User Program
 
-  const userStateData = useSelector(state => state.users.data)
-
-  // console.log('User State Data => ', userStateData)
+  // const userStateData = useSelector(state => state.users.data)
+  // const userRoleStateData = useSelector(state => state.userRoles.data)
+  // console.log('User Role State Data => ', userRoleStateData)
   const dispatch = useDispatch()
 
   // get User from API
   useEffect(() => {
-    fetchData()
-    console.log("success ----> ", success)
+    fetchAllUsers()
+    fetchUserRoles()
+    fetchUserPrograms()
+    console.log('success ----> ', success)
   }, [success])
 
-  async function fetchData() {
+  async function fetchAllUsers() {
     const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'application/json')
 
@@ -307,23 +294,81 @@ const UserList = () => {
       redirect: 'follow'
     }
 
-    const res = await fetch(my_url, requestOptions)
+    const res = await fetch(AllUsersURL, requestOptions)
     const data = await res.json()
     if (res.ok) {
-      const formattedData = Object.values(data).map((row, index) => ({
+      const formattedData = Object.values(data).map((row) => ({
         id: row.Id, // You can use a different logic for generating unique IDs if needed
         ...row
       }))
 
-      console.log(formattedData)
-      setAllUsers(formattedData)
-      setAllUsers2(formattedData)
+      // console.log("Formated Filter Data => ",formattedData.filter(x => x.IsActive))
+      setAllUsers(formattedData.filter(x => x.IsActive))
+      setAllUsers2(formattedData.filter(x => x.IsActive))
 
       const userDispatch = {
-        data: formattedData
+        data: formattedData.filter(x => x.IsActive)
       }
 
       dispatch(usersList(userDispatch))
+
+      return { ok: true, data }
+    } else {
+      constole.log('ERROR => ', data.error)
+
+      return { ok: false, err: res, data }
+    }
+  }
+
+  async function fetchUserRoles() {
+    const myHeaders = new Headers()
+    myHeaders.append('Content-Type', 'application/json')
+    // myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'))
+
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    }
+
+    const res = await fetch(UserRoleURL, requestOptions)
+    const data = await res.json()
+    if (res.ok) {
+      const userRoleDispatch = {
+        data: data
+      }
+
+      // console.log(" userRoleDispatch -> ", userRoleDispatch)
+      dispatch(userRolesList(userRoleDispatch))
+
+      return { ok: true, data }
+    } else {
+      constole.log('ERROR => ', data.error)
+
+      return { ok: false, err: res, data }
+    }
+  }
+
+  async function fetchUserPrograms() {
+    const myHeaders = new Headers()
+    myHeaders.append('Content-Type', 'application/json')
+    // myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'))
+
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    }
+    
+    const res = await fetch(UserProgramURL, requestOptions)
+    const data = await res.json()
+    if (res.ok) {
+      const userProgramDispatch = {
+        programData: data
+      }
+      dispatch(userProgramsList(userProgramDispatch))
+
+      console.log("userProgramDispatch -> ",userProgramDispatch)
 
       return { ok: true, data }
     } else {
@@ -340,16 +385,17 @@ const UserList = () => {
     const filteredUsers = allUsers2.filter(user => {
       if (!user) return false
 
-      const { fullname = '', userid = '', userrole = '', Class = '', grade = '' } = user
+      const { fullname = '', userId = '', userrole = '', Class = '', grade = '', IsActive } = user
 
       const lowercaseQuery = searchQuery ? searchQuery.toLowerCase() : ''
 
       return (
+
         (fullname && fullname.toLowerCase().includes(lowercaseQuery)) ||
-        (userid && userid.toLowerCase().includes(lowercaseQuery)) ||
+        (userId && userId.toLowerCase().includes(lowercaseQuery)) ||
         (userrole && userrole.toLowerCase().includes(lowercaseQuery)) ||
         (Class && Class.toLowerCase().includes(lowercaseQuery)) ||
-        (grade && grade.toLowerCase().includes(lowercaseQuery))
+        (grade && grade.toLowerCase().includes(lowercaseQuery))  
       )
     })
 
@@ -366,13 +412,11 @@ const UserList = () => {
 
   return (
     <Grid container spacing={6.5}>
-
-
       <Grid item xs={12}>
         <Card>
           <CardHeader title='User List' />
           <Divider sx={{ m: '0 !important' }} />
-          <TableHeader value={value} handleFilter={handleFilter} userType={setValue} userAdded={fetchData} />
+          <TableHeader value={value} handleFilter={handleFilter} userType={setValue} userAdded={fetchAllUsers} onSuccess={onSuccessHandler} />
           <DataGrid
             autoHeight
             rowHeight={62}
@@ -387,12 +431,11 @@ const UserList = () => {
       </Grid>
       <Grid item xs={12}>
         <Card>
+          <ProfileSummery data={viewData} show={showView} onSuccess={onSuccessHandler} />
 
-          <ProfileSummery data={viewData} show={show} />
+          <EditUserDrawer data={editData} show={showEdit} onSuccess={onSuccessHandler} />
 
-          <EditUserDrawer data={editData} show={show} onSuccess={onSuccessHandler} />
-
-          <QrGen qr={qr.userId} userData={qr.dataUser} show={showQR} />
+          <QrGen qr={qr.userId} userData={qr.dataUser} show={showQR} onSuccess={onSuccessHandler} />
         </Card>
       </Grid>
     </Grid>

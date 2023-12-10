@@ -32,6 +32,7 @@ import Icon from 'src/@core/components/icon'
 // ** Form
 import { Controller, useForm } from 'react-hook-form'
 import { useAuth } from 'src/hooks/useAuth'
+import { useSelector } from 'react-redux'
 
 // ** STATE MANAGEMENT
 // import { useDispatch } from 'react-redux'
@@ -60,7 +61,6 @@ const CustomCloseButton = styled(IconButton)(({ theme }) => ({
 }))
 
 const EditUserDrawer = param => {
-  
   const data = param?.data
 
   const [show, setShow] = useState(param?.show)
@@ -77,39 +77,52 @@ const EditUserDrawer = param => {
     mode: 'onSubmit'
   })
 
-  //   const userRole = watch('userrole')
-  // console.log("boom ----> ",watch('userrole'), control._formValues.userrole)
-  const [userRole, setUserRole] = useState(watch('userrole'))
-  const [userMemberId, setUserMemberId] = useState()
+  const userRoleVal = !watch('userrole') ? data.userrole : watch('userrole')
+
+  const [userMemberId, setUserMemberId] = useState('')
 
   useEffect(() => {
     if (!show & !!data) {
       setShow(true)
     }
-    setUserRole(data?.userrole)
     setUserMemberId(data?.MemberId?.toString())
-    console.log(' data -> ', data)
-  }, [data,])
+    console.log(' Edit data -> ', data)
+  }, [data])
 
-  useEffect(() => {
-    // console.log(userRole)
-    if (userRole !== 'student') {
-      const inputClear = ['Class', 'grade']
-      inputClear.forEach(fieldName => {
-        setValue(fieldName, null)
-      })
-    }
-  }, [userRole])
+  const userRoleStateData = useSelector(state => state.userRoles.data)
+  const userProgramStateData = useSelector(state => state.userPrograms.programData[0])
+
+  // console.log("userProgramStateData --> ",userProgramStateData)
+
+  const NOUS = Number(userRoleStateData.length)
+  // const NOPS = Number(userProgramStateData.length)
+  const userroleSV = userRoleStateData[NOUS - 1]
+  // const userprogramSV = userProgramStateData[NOPS-1]
+
+  const renderUserRoleOptions = () => {
+    return userroleSV.map(item => (
+      <option key={item.Id} value={item.Name}>
+        {item.Name}
+      </option>
+    ))
+  }
+
+  const renderUserProgramOptions = () => {
+    return userProgramStateData.map(item => (
+      <option key={item.Id} value={item.Id}>
+        {item.Name}
+      </option>
+    ))
+  }
 
   const auth = useAuth()
   const entryPerson = !!auth?.user ? auth?.user.userId : 'unauthorizedEntry'
   const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/User` //////
 
-  const onSubmit = dataX => { 
-
+  const onSubmit = dataX => {
     const userAddData = {
       Id: data.Id,
-      UserId: data.userid,
+      UserId: data.userId,
       MemberId: dataX.Member,
       UserRole: dataX.userrole,
       PIN: data.PIN,
@@ -120,10 +133,12 @@ const EditUserDrawer = param => {
       UserProfiles: {
         Id: data.ProfileId,
         UserAccountId: data.Id,
-        UserId: data.userid,
-        FullName: dataX.fullname,
-        Class: !!dataX.Class ? dataX.Class : "null",
-        Grade: !!dataX.grade ? dataX.grade : "null",
+        UserId: data.userId,
+        FullName: dataX.firstname + ' ' + dataX.lastname,
+        firstname: dataX.firstname,
+        lastname: dataX.lastname,
+        Class: !!dataX.Class ? dataX.Class : 'null',
+        Grade: !!dataX.grade ? dataX.grade : 'null',
         UpdateBy: entryPerson
       }
     }
@@ -152,10 +167,10 @@ const EditUserDrawer = param => {
     const data = await res.json()
     if (res.ok) {
       // dispatch(usersList(userDispatch))
-      alert('Success')
-      setShow(false)
+      alert('Edit Success')
+      handleClose()
       // console.log("first", param)
-      param.onSuccess(data)
+      // param.onSuccess(data)
 
       return { ok: true, data }
     } else {
@@ -168,6 +183,7 @@ const EditUserDrawer = param => {
   const handleClose = () => {
     setShow(false)
     reset()
+    param.onSuccess('EDIT CLOSE')
     // toggle
   }
 
@@ -178,9 +194,9 @@ const EditUserDrawer = param => {
         open={show}
         maxWidth='md'
         scroll='body'
-        onClose={() => setShow(false)}
+        onClose={() => handleClose()}
         TransitionComponent={Transition}
-        // onBackdropClick={() => setShow(false)}
+        onBackdropClick={() => handleClose()}
         sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -191,7 +207,7 @@ const EditUserDrawer = param => {
               pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
             }}
           >
-            <CustomCloseButton onClick={() => setShow(false)}>
+            <CustomCloseButton onClick={() => handleClose()}>
               <Icon icon='tabler:x' fontSize='1.25rem' />
             </CustomCloseButton>
             <Box sx={{ mb: 8, textAlign: 'center' }}>
@@ -199,169 +215,168 @@ const EditUserDrawer = param => {
                 Edit User
               </Typography>
             </Box>
-            <Grid container spacing={6}>
-              <Grid item sm={8} xs={12}>
-                {/* <CustomTextField fullWidth label='Full Name' placeholder='John' /> */}
-                <Controller
-                  name='fullname'
-                  control={control}
-                  rules={{ required: true }}
-                  defaultValue={data?.fullname}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      sx={{ mb: 4 }}
-                      label='Full Name'
-                      onChange={onChange}
-                      placeholder='John Doe'
-                      error={Boolean(errors.fullname)}
-                      {...(errors.fullname && { helperText: errors.fullname.message })}
-                    />
-                  )}
-                />
-              </Grid>
-
-              <Grid item sm={4} xs={12}>
-                <Controller
-                  name='username'
-                  control={control}
-                  rules={{ required: true }}
-                  defaultValue={data?.username}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      sx={{ mb: 4 }}
-                      label='User Name'
-                      onChange={onChange}
-                      placeholder='Rayan'
-                      error={Boolean(errors.username)}
-                      {...(errors.username && { helperText: errors.username.message })}
-                    />
-                  )}
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <Controller
-                  name='email'
-                  control={control}
-                  rules={{ required: true }}
-                  defaultValue={data?.email}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      sx={{ mb: 4 }}
-                      label='Email'
-                      onChange={onChange}
-                      placeholder='john@xyz.com'
-                      error={Boolean(errors.email)}
-                      {...(errors.email && { helperText: errors.email.message })}
-                    />
-                  )}
-                />
-              </Grid>
-
-              <Grid item sm={6} xs={12}>
-                <Controller
-                  name='userrole'
-                  control={control}
-                  rules={{ required: true }}
-                  defaultValue={data?.userrole}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      select
-                      value={value}
-                      onChange={onChange}
-                      fullWidth
-                      id='userrole-select'
-                      label='User Role'
-                      sx={{ mb: 4 }}
-                      error={Boolean(errors.userrole)}
-                      aria-describedby='validation-userrole-select'
-                      {...(errors.userrole && { helperText: errors.userrole.message })}
-                      SelectProps={{
-                        native: true // For Material-UI native Select
-                      }}
-                    >
-                      <option value='null'>User Role</option>
-                      <option value='admin'>Admin</option>
-                      <option value='teacher'>Teacher</option>
-                      <option value='student'>Student</option>
-                    </CustomTextField>
-                  )}
-                />
-              </Grid>
-              <Grid item sm={6} xs={12}>
-                <Controller
-                  name='Member'
-                  control={control}
-                  defaultValue={userMemberId}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      select
-                      fullWidth
-                      id='Member-select'
-                      label='Member'
-                      value={value}
-                      onChange={onChange}
-                      sx={{ mb: 4 }}
-                      error={Boolean(errors.Member)}
-                      aria-describedby='validation-Member-select'
-                      {...(errors.Member && { helperText: errors.Member.message })}
-                      SelectProps={{ native: true }}
-                    >
-                      <option value='null'>Program</option>{' '}
-                      {/* Non-member / Silver member / Gold member / Platinum member */}
-                      <option value='1'>Non-member</option>
-                      <option value='2'>Silver member</option>
-                      <option value='3'>Gold member</option>
-                      <option value='4'>Platinum member</option>
-                    </CustomTextField>
-                  )}
-                />
-              </Grid>
-              {(userRole === 'student' || control._formValues.userrole=== 'student') && (
-                <>
+            {!!data && (
+              <>
+                <Grid container spacing={6}>
                   <Grid item sm={6} xs={12}>
+                    {/* <CustomTextField fullWidth label='Full Name' placeholder='John' /> */}
                     <Controller
-                      name='Class'
+                      name='firstname'
                       control={control}
-                      defaultValue={data?.Class}
+                      rules={{ required: true }}
+                      defaultValue={data?.firstname}
                       render={({ field: { value, onChange } }) => (
                         <CustomTextField
                           fullWidth
                           value={value}
                           sx={{ mb: 4 }}
-                          label='Class'
+                          label='First Name'
                           onChange={onChange}
-                          placeholder='A'
+                          placeholder='John'
+                          error={Boolean(errors.firstname)}
+                          {...(errors.firstname && { helperText: errors.firstname.message })}
                         />
                       )}
                     />
                   </Grid>
+
                   <Grid item sm={6} xs={12}>
                     <Controller
-                      name='grade'
+                      name='lastname'
                       control={control}
-                      defaultValue={data?.grade}
+                      rules={{ required: true }}
+                      defaultValue={data?.lastname}
                       render={({ field: { value, onChange } }) => (
                         <CustomTextField
                           fullWidth
                           value={value}
                           sx={{ mb: 4 }}
-                          label='Grade'
+                          label='Last Name'
                           onChange={onChange}
-                          placeholder='1'
+                          placeholder='Rayan'
+                          error={Boolean(errors.lastname)}
+                          {...(errors.lastname && { helperText: errors.lastname.message })}
                         />
                       )}
                     />
                   </Grid>
-                </>
-              )}
-            </Grid>
+
+                  <Grid item xs={12}>
+                    <Controller
+                      name='email'
+                      control={control}
+                      rules={{ required: true }}
+                      defaultValue={data?.email}
+                      render={({ field: { value, onChange } }) => (
+                        <CustomTextField
+                          fullWidth
+                          value={value}
+                          sx={{ mb: 4 }}
+                          label='Email'
+                          onChange={onChange}
+                          placeholder='john@xyz.com'
+                          error={Boolean(errors.email)}
+                          {...(errors.email && { helperText: errors.email.message })}
+                        />
+                      )}
+                    />
+                  </Grid>
+
+                  <Grid item sm={6} xs={12}>
+                    <Controller
+                      name='userrole'
+                      control={control}
+                      rules={{ required: true }}
+                      defaultValue={data?.userrole}
+                      render={({ field: { value, onChange } }) => (
+                        <CustomTextField
+                          select
+                          value={value}
+                          onChange={onChange}
+                          fullWidth
+                          id='userrole-select'
+                          label='User Role'
+                          sx={{ mb: 4 }}
+                          error={Boolean(errors.userrole)}
+                          aria-describedby='validation-userrole-select'
+                          {...(errors.userrole && { helperText: errors.userrole.message })}
+                          SelectProps={{
+                            native: true // For Material-UI native Select
+                          }}
+                        >
+                          <option value='null'>User Role</option>
+                          {renderUserRoleOptions()}
+                        </CustomTextField>
+                      )}
+                    />
+                  </Grid>
+
+                  <Grid item sm={6} xs={12}>
+                    <Controller
+                      name='Member'
+                      control={control}
+                      defaultValue={userMemberId}
+                      render={({ field: { value, onChange } }) => (
+                        <CustomTextField
+                          select
+                          fullWidth
+                          id='Member-select'
+                          label='Member'
+                          value={value}
+                          onChange={onChange}
+                          sx={{ mb: 4 }}
+                          error={Boolean(errors.Member)}
+                          aria-describedby='validation-Member-select'
+                          {...(errors.Member && { helperText: errors.Member.message })}
+                          SelectProps={{ native: true }}
+                        >
+                          <option value='null'>Program</option> {renderUserProgramOptions()}
+                        </CustomTextField>
+                      )}
+                    />
+                  </Grid>
+
+                  {userRoleVal === 'student' && (
+                    <>
+                      <Grid item sm={6} xs={12}>
+                        <Controller
+                          name='Class'
+                          control={control}
+                          defaultValue={data?.Class}
+                          render={({ field: { value, onChange } }) => (
+                            <CustomTextField
+                              fullWidth
+                              value={value}
+                              sx={{ mb: 4 }}
+                              label='Class'
+                              onChange={onChange}
+                              placeholder='A'
+                            />
+                          )}
+                        />
+                      </Grid>
+                      <Grid item sm={6} xs={12}>
+                        <Controller
+                          name='grade'
+                          control={control}
+                          defaultValue={data?.grade}
+                          render={({ field: { value, onChange } }) => (
+                            <CustomTextField
+                              fullWidth
+                              value={value}
+                              sx={{ mb: 4 }}
+                              label='Grade'
+                              onChange={onChange}
+                              placeholder='1'
+                            />
+                          )}
+                        />
+                      </Grid>
+                    </>
+                  )}
+                </Grid>
+              </>
+            )}
           </DialogContent>
           <DialogActions
             sx={{
@@ -373,7 +388,7 @@ const EditUserDrawer = param => {
             <Button type='submit' variant='contained' sx={{ mr: 1 }}>
               Submit
             </Button>
-            <Button variant='tonal' color='secondary' onClick={handleClose}>
+            <Button variant='tonal' color='secondary' onClick={() => handleClose()}>
               Discard
             </Button>
           </DialogActions>

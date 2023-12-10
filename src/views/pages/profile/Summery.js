@@ -36,9 +36,10 @@ export default function ProfileSummery(param) {
         open={show}
         maxWidth='md'
         scroll='body'
-        onClose={() => setShow(false)}
+        onClose={() => {param.onSuccess("PROFILE CLOSE"); setShow(false)}}
+        disableEscapeKeyDown
         // TransitionComponent={Transition}
-        // onBackdropClick={() => setShow(false)}
+        onBackdropClick={() => {param.onSuccess("PROFILE CLOSE"); setShow(false)}}
         sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}
       >
         <Grid>
@@ -86,7 +87,7 @@ export default function ProfileSummery(param) {
                 <Box sx={{ pt: 4 }}>
                   <Box sx={{ display: 'flex', mb: 3 }}>
                     <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>User ID:</Typography>
-                    <Typography sx={{ color: 'text.secondary' }}>@{data?.userid}</Typography>
+                    <Typography sx={{ color: 'text.secondary' }}>@{data?.userId}</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', mb: 3 }}>
                     <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
@@ -133,7 +134,7 @@ export default function ProfileSummery(param) {
               </CardContent>
             </Card>
           </Grid>
-          <Button onClick={()=> {param.success(false); setShow(false)}}>Close</Button>
+          <Button onClick={()=> {param.onSuccess("PROFILE CLOSE"); setShow(false)}}>Close</Button>
         </Grid>
       </Dialog>
     </>

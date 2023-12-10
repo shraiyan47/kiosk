@@ -35,6 +35,12 @@ const navigation = () => {
           icon: 'tabler:layout-grid',
           path: '/masterdata',
         },
+        {          
+          title: 'Week Manage',
+          icon: 'tabler:layout-grid',
+          path: '/setting/session-week',
+
+        },
         {
           title: 'Section',
           icon: 'tabler:layout-grid',
@@ -42,13 +48,13 @@ const navigation = () => {
         }
       ]
     },
-    {
-      path: '/acl',
-      action: 'read',
-      subject: 'acl-page',
-      icon: 'tabler:shield',
-      title: 'Access Control'
-    },
+    // {
+    //   path: '/acl',
+    //   action: 'read',
+    //   subject: 'acl-page',
+    //   icon: 'tabler:shield',
+    //   title: 'Access Control'
+    // },
   ]
 }
 

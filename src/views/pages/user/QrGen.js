@@ -3,42 +3,51 @@ import QRCode from 'qrcode.react'
 import { useEffect, useState } from 'react'
 
 export default function QrGen(param) {
-  console.log("QR GEN",param)
+  console.log('QR GEN', param)
   // console.debug(param)
   const qrData = param?.qr
   const [show, setShow] = useState(param?.show)
+  console.log('qrData in useEffect ->', qrData)
   useEffect(() => {
-    if (!show & !!qrData) {
+    console.log('qrData ->', qrData)
+
+    console.log('show ->', show)
+    if (!show && !!qrData) {
       setShow(true)
     }
   }, [qrData])
- 
 
   const downloadQRCode = () => {
-    const canvas = document.querySelector('canvas'); // Find the canvas element
-    const dataUrl = canvas.toDataURL('image/png');
+    const canvas = document.querySelector('canvas') // Find the canvas element
+    const dataUrl = canvas.toDataURL('image/png')
 
-    const link = document.createElement('a');
-    link.href = dataUrl;
-    link.download = 'generatedQRCode.png';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+    const link = document.createElement('a')
+    link.href = dataUrl
+    link.download = param?.qr + ' generatedQRCode.png'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
 
   const printQRCode = () => {
-    const canvas = document.querySelector('canvas');
-    const dataUrl = canvas.toDataURL('image/png');
+    const canvas = document.querySelector('canvas')
+    const dataUrl = canvas.toDataURL('image/png')
 
-    const img = new Image();
-    img.src = dataUrl;
+    const img = new Image()
+    img.src = dataUrl
 
-    const printWindow = window.open('', '_blank');
-    printWindow.document.open();
-    printWindow.document.write(`<img src="${dataUrl}" onload="window.print();window.close()" width="300" />`);
-    printWindow.document.close();
-  };
+    const printWindow = window.open('', '_blank')
+    printWindow.document.open()
+    printWindow.document.write(
+      `<img src="${dataUrl}" onload="window.print();window.close()" width="300" /><p>${param?.qr}</p>`
+    )
+    printWindow.document.close()
+  }
 
+  const closeHandler = () => {
+    setShow(false)
+    param.onSuccess('QR CLOSE') 
+  }
 
   return (
     <>
@@ -47,9 +56,10 @@ export default function QrGen(param) {
         open={show}
         maxWidth='md'
         scroll='body'
-        onClose={() => setShow(false)}
+        onClose={() => closeHandler()}
         // TransitionComponent={Transition}
-        // onBackdropClick={() => setShow(false)}
+        disableEscapeKeyDown
+        onBackdropClick={() => closeHandler()}
         sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}
       >
         <Grid container spacing={6.5}>
@@ -57,26 +67,22 @@ export default function QrGen(param) {
             <Card>
               <CardContent>
                 <Box sx={{ mb: 4.75, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-                  <QRCode value={qrData} size={100}   />
+                  <QRCode value={qrData} size={100} />
                 </Box>
                 <Button
-                  onClick={() => {
-                    setShow(false)
-                  }}
+                  onClick={() => closeHandler()}
                 >
                   Close
                 </Button>
 
                 <Button onClick={downloadQRCode}> Download </Button>
                 <Button onClick={printQRCode}> Print </Button>
-
-                
               </CardContent>
             </Card>
           </Grid>
           <Grid item xs={7}>
             <p>Email: {param?.userData?.email}</p>
-            <p>User ID: {param.userData?.userid}</p>
+            <p>User ID: {param.userData?.userId}</p>
             <p>Password: {param.userData?.password}</p>
             <p>PIN: {param.userData?.PIN}</p>
           </Grid>

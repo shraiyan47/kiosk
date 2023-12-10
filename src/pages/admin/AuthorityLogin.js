@@ -47,7 +47,7 @@ const schema = yup.object().shape({
 })
 
 const defaultValues = {
-  password: '12345',
+  password: '87654321',
   email: 'chaim.levilev@gmail.com'
 }
 
