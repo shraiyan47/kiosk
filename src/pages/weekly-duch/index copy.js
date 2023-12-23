@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -28,9 +28,6 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import CustomCheckboxBasic from 'src/@core/components/custom-checkbox/basic'
 
-import {icons,icons2,icons3,icons4,icons5,icons6,icons7} from './weeklyduchData'
-import { useSelector } from 'react-redux'
-
 const steps = [{}, {}, {}, {}, {}, {}, {}]
 
 const defaultAccountValues = {
@@ -49,40 +46,121 @@ const personalSchema = yup.object().shape({
   // country: yup.string().required(),
 })
 
-const aAZz = yup.object().shape({
+const socialSchema = yup.object().shape({
   // google: yup.string().required(),
 })
 
+
+
+const data = [
+  {
+    title: 'I covered my elbows completely at all times.',
+    value: 'option 1'
+  },
+  {
+    title: 'I covered my collarbone completely at all times.',
+    value: 'option 2'
+  },
+  {
+    title: 'I covered my knees completely at all times',
+    value: 'option 3'
+  },
+  {
+    meta: '(+3)',
+    title: 'My skirt was 4 inches below my knees all week.',
+    value: 'option 4'
+  }
+]
+
+const data2 = [
+  {
+    title: 'I learned the Daughters of Dignity booklet this week with my Chavrusa.',
+    value: 'option 1',
+    meta: '(4)'
+  },
+  {
+    title: 'I learned in 770',
+    value: 'option 2',
+    meta: '(+1)'
+  }
+]
+
+const data3 = [
+  {
+    title: 'I attended maagalim this week',
+    value: 'option 1'
+  }
+]
+
+const data4 = [
+  {
+    title: 'I did not using any social media or watch any content on an unfiltered media platform.',
+    value: 'option 1',
+    meta: '(1)'
+  },
+  {
+    title: 'I did not use any unfiltered device.',
+    value: 'option 2',
+    meta: '(+2)'
+  }
+]
+
+const data5 = [
+  {
+    title: 'I kept to my Hachlata for the whole week.',
+    value: 'option 1'
+  }
+]
+
+const data6 = [
+  {
+    title: 'I affirm that everything on this card is 100% honest and I am proud to share it with the Rebbe.',
+    value: 'option 1'
+  }
+]
+
+const data7 = [
+  {
+    title: 'I attended maagalim this week',
+    value: 'option 1'
+  }
+]
+
+const icons = [
+  { icon: 'tabler:folder', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } },
+  { icon: 'tabler:ban', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } },
+  { icon: 'tabler:lock', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } },
+  { icon: 'tabler:folder', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } }
+]
+
+const icons2 = [
+  { icon: 'tabler:ban', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } },
+  { icon: 'tabler:lock', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } }
+]
+
+const icons3 = [
+  { icon: 'tabler:ban', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } }
+]
+
+const icons4 = [
+  { icon: 'tabler:ban', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } },
+  { icon: 'tabler:lock', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } }
+]
+
+const icons5 = [
+  { icon: 'tabler:ban', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } }
+]
+
+const icons6 = [
+  { icon: 'tabler:ban', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } }
+]
+
+const icons7 = [
+  { icon: 'tabler:ban', iconProps: { fontSize: '2.75rem', style: { marginBottom: 8 } } }
+]
+
 const StepperLinearWithValidation = () => {
-
-  const sectionAndOptionsData = useSelector(state => state.weeklyduchs.sectionAndOptions)
-
-  console.log(" sectionAndOptionsData ==> ", sectionAndOptionsData)
-
-  const sec1 = sectionAndOptionsData[0][0].options
-  const data = sec1.map(obj => ({...obj, title: obj.Name, value: obj.Id}));
-
-  const sec2 = sectionAndOptionsData[0][1].options
-  const data2 = sec2.map(obj => ({...obj, title: obj.Name, value: obj.Id}));
-
-  const sec3 = sectionAndOptionsData[0][2].options
-  const data3 = sec3.map(obj => ({...obj, title: obj.Name, value: obj.Id}));
-
-  const sec4 = sectionAndOptionsData[0][3].options
-  const data4 = sec4.map(obj => ({...obj, title: obj.Name, value: obj.Id}));
-
-  const sec5 = sectionAndOptionsData[0][4].options
-  const data5 = sec5.map(obj => ({...obj, title: obj.Name, value: obj.Id}));
-
-  const sec6 = sectionAndOptionsData[0][5].options
-  const data6 = sec6.map(obj => ({...obj, title: obj.Name, value: obj.Id}));
-
-  const sec7 = sectionAndOptionsData[0][6].options
-  const data7 = sec7.map(obj => ({...obj, title: obj.Name, value: obj.Id}));
-
-  console.log( " OPtions => ", sectionAndOptionsData[0][0].options)
-
-  const initialSelected = data.filter(item => item.isSelected).map(item => item.Id)
+  const initialSelected = data.filter(item => item.isSelected).map(item => item.value)
   const initialSelected2 = data2.filter(item => item.isSelected).map(item => item.value)
   const initialSelected3 = data3.filter(item => item.isSelected).map(item => item.value)
   const initialSelected4 = data4.filter(item => item.isSelected).map(item => item.value)
@@ -100,7 +178,6 @@ const StepperLinearWithValidation = () => {
   const [selected7, setSelected7] = useState(initialSelected7)
 
   const handleChange = value => {
-    console.log("Handle Change Value => ", value)
     if (selected.includes(value)) {
       const updatedArr = selected.filter(item => item !== value)
       setSelected(updatedArr)
@@ -163,18 +240,6 @@ const StepperLinearWithValidation = () => {
     }
   }
 
-  useEffect(() => {
-    console.log('Selected 1 ==> ', selected)
-    console.log('Selected 2 ==> ', selected2)
-    console.log('Selected 3 ==> ', selected3)
-    console.log('Selected 4 ==> ', selected4)
-    console.log('Selected 5 ==> ', selected5)
-    console.log('Selected 6 ==> ', selected6)
-    console.log('Selected 7 ==> ', selected7)
-
-    console.log([selected, selected2, selected3, selected4, selected5, selected6, selected7])
-  }, [selected, selected2, selected3, selected4, selected5, selected6, selected7])
-
   // ** States
   const [activeStep, setActiveStep] = useState(0)
 
@@ -213,7 +278,7 @@ const StepperLinearWithValidation = () => {
     formState: { errors: socialErrors }
   } = useForm({
     defaultValues: defaultSocialValues,
-    resolver: yupResolver(aAZz)
+    resolver: yupResolver(socialSchema)
   })
 
   // Handle Stepper
@@ -234,6 +299,16 @@ const StepperLinearWithValidation = () => {
   }
 
   const getStepContent = step => {
+    // const [state, setState] = useState({
+    //   step1: true,
+    //   step2: false,
+    //   step3: false,
+    //   step4: false,
+    //   step5: false,
+    //   step6: false,
+    //   step7: false
+    // })
+
     // ** Vars
     const { option1, option2, option3, option4 } = state
     const error = [option1, option2, option3, option4].filter(v => v).length !== 2
@@ -244,7 +319,7 @@ const StepperLinearWithValidation = () => {
           <form key={0} onSubmit={handleAccountSubmit(onSubmit)}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
-                <label>{sectionAndOptionsData[0][0].Name}</label>
+                <label>Back to Basics</label>
               </Grid>
               {data.map((item, index) => (
                 <CustomCheckboxBasic
@@ -274,7 +349,7 @@ const StepperLinearWithValidation = () => {
           <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
             <Grid container spacing={5}>
               <Grid item xs={12}>
-                <label>{sectionAndOptionsData[0][1].Name}</label>
+                <label>Daughters of Dignity</label>
               </Grid>
               {data2.map((item2, index2) => (
                 <CustomCheckboxBasic
@@ -304,7 +379,7 @@ const StepperLinearWithValidation = () => {
           <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
             <Grid container spacing={5}>
               <Grid item xs={12}>
-                <label>{sectionAndOptionsData[0][2].Name}</label>
+                <label>Maagalim</label>
               </Grid>
               {data3.map((item3, index3) => (
                 <CustomCheckboxBasic
@@ -334,7 +409,7 @@ const StepperLinearWithValidation = () => {
           <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
             <Grid container spacing={5}>
               <Grid item xs={12}>
-                <label>{sectionAndOptionsData[0][3].Name}</label>
+                <label>Tech Check</label>
               </Grid>
               {data4.map((item4, index4) => (
                 <CustomCheckboxBasic
@@ -365,7 +440,7 @@ const StepperLinearWithValidation = () => {
             <Grid container spacing={5}>
               <Grid item xs={12}>
                 <Card>
-                  <CardHeader title={sectionAndOptionsData[0][4].Name} />
+                  <CardHeader title='My Hachlata' />
                   <CardContent>
                     <TextField
                       fullWidth
@@ -409,7 +484,7 @@ const StepperLinearWithValidation = () => {
             <Grid container spacing={5}>
               <Grid item xs={12}>
                 <Card>
-                  <CardHeader title={sectionAndOptionsData[0][5].Name} />
+                  <CardHeader title='' />
                   <CardContent>
                     <Grid container spacing={5}>
                       <Grid item xs={4}>
@@ -459,7 +534,7 @@ const StepperLinearWithValidation = () => {
           <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
             <Grid container spacing={5}>
               <Grid item xs={12}>
-                <label>{sectionAndOptionsData[0][6].Name}</label>
+                <label>Geder Moments</label>
               </Grid>
 
               {data5.map((item7, index7) => (

@@ -74,15 +74,6 @@ const CardSnippet = props => {
     >
       <CardHeader
         title={title}
-        {...(hidden
-          ? {}
-          : {
-              action: (
-                <IconButton onClick={() => setShowCode(!showCode)}>
-                  <Icon icon='tabler:code' fontSize={20} />
-                </IconButton>
-              )
-            })}
       />
       <CardContent>{children}</CardContent>
       {hidden ? null : (

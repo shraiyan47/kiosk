@@ -4,6 +4,7 @@ import userReducer from '../user/userSlice';
 import profileSlice from '../profile/profileSlice';
 import userRoleSlice from '../user/userRoleSlice';
 import userProgramSlice from '../user/userProgramSlice';
+import weeklyduchSlice from '../weeklyduch/weeklyduchSlice';
 
 // import rootReducer from './reducers'
 
@@ -17,6 +18,7 @@ export default configureStore({
         profile:profileSlice,
         userPrograms:userProgramSlice,
         userRoles:userRoleSlice,
+        weeklyduchs:weeklyduchSlice,
     }
 
 })

@@ -3,15 +3,16 @@ import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import { useTheme } from '@mui/material/styles'
-import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
+import CardSnippet from 'src/@core/components/card-snippet'
 
 // ** Custom Components Imports
 import Icon from 'src/@core/components/icon'
-import OptionsMenu from 'src/@core/components/option-menu'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
+import * as source from 'src/views/components/progress/ProgressSourceCode'
+import ProgressLinearControlledUncontrolled from 'src/views/components/progress/ProgressLinearControlledUncontrolled'
 
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
@@ -147,16 +148,15 @@ const AnalyticsSupportTracker = () => {
 
   return (
     <Card>
-      <CardHeader
-        title='Section Tracker'
-        subheader='Last 7 Days'
-        action={
-          <OptionsMenu
-            options={['Refresh', 'Edit', 'Share']}
-            iconButtonProps={{ size: 'small', sx: { color: 'text.disabled' } }}
-          />
-        }
-      />
+      <CardSnippet
+          title='December 27, 2023 to July 24, 2024'
+          code={{
+            tsx: null,
+            jsx: source.ProgressLinearControlledUncontrolledJSXCode
+          }}
+        >
+          <ProgressLinearControlledUncontrolled />
+      </CardSnippet>
       <CardContent>
         <Grid container spacing={6}>
           <Grid item xs={12} sm={5}>

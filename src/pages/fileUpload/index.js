@@ -66,6 +66,7 @@ export default function CSVtoJSONConverter(xaram) {
 
         return { 
           password: '12345',
+          PIN: '1234',
           userrole: 'student',
           EntryBy: entryPerson,
           email,
@@ -75,12 +76,12 @@ export default function CSVtoJSONConverter(xaram) {
             firstname,
             lastname,
             EntryBy: entryPerson,
-            Grade,
+            Grade:grade,
             Class
           }
         }
       })
-      console.log('CSV to JSON --> ', jData)
+      // console.log('CSV to JSON --> ', jData)
 
       const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/BulkUserAdd`
 

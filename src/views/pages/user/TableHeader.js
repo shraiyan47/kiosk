@@ -144,7 +144,7 @@ const TableHeader = props => {
               <a> Upload CSV </a>
             </Button> */}
 
-            <Fragment>
+            {/* <Fragment>
               <Dialog
                 open={open}
                 onClose={handleClose}
@@ -165,7 +165,7 @@ const TableHeader = props => {
                   <Button onClick={handleClose}>Cancel</Button>
                 </DialogActions>
               </Dialog>
-            </Fragment>
+            </Fragment> */}
           </Box>
         </Grid>
       </Grid>

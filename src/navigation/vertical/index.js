@@ -18,13 +18,22 @@ const navigation = () => {
       title: 'User',
       path: '/users',
       icon: 'tabler:user',
+      action: 'read',
+      subject: 'users'
     },
     {
       title: 'Weekly Duch',
       path: '/weekly-duch',
       icon: 'tabler:text-wrap-disabled',
       action: 'read',
-      subject: 'weekly-duch',
+      subject: 'weekly-duch'
+    },
+    {
+      path: '/programs',
+      action: 'read',
+      subject: 'programs-page',
+      icon: 'material-symbols:energy-program-saving-outline',
+      title: 'Programs'
     },
     {
       title: 'Setup',
@@ -34,20 +43,25 @@ const navigation = () => {
           title: 'Master Data',
           icon: 'tabler:layout-grid',
           path: '/masterdata',
+          action: 'read',
+          subject: 'masterdata'
         },
-        {          
+        {
           title: 'Week Manage',
           icon: 'tabler:layout-grid',
           path: '/setting/session-week',
-
+          action: 'read',
+          subject: 'session-week'
         },
         {
           title: 'Section',
           icon: 'tabler:layout-grid',
           path: '/section',
+          action: 'read',
+          subject: 'section'
         }
       ]
-    },
+    }
     // {
     //   path: '/acl',
     //   action: 'read',

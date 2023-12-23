@@ -41,3 +41,7 @@ code[class*='language-'] {
 #reader__header_message{
   padding-top: 20px !important;
 }
+
+.custom-datepicker {
+  width: fit-content !important;
+}

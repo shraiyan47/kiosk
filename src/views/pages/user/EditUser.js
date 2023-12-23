@@ -182,7 +182,7 @@ const EditUserDrawer = param => {
 
   const handleClose = () => {
     setShow(false)
-    reset()
+    // reset()
     param.onSuccess('EDIT CLOSE')
     // toggle
   }

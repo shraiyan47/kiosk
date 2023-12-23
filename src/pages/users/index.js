@@ -94,10 +94,10 @@ const UserList = () => {
     setQr('')
     setViewData('')
     setEditData('')
-    // console.log('Success Table of User -> ', x)
+    console.log('Success Table of User -> ', x)
   }
 
-  const RowOptions = ({ id, email, userId, dataUser }) => {
+  const RowOptions = ({userId, dataUser }) => {
     const qrHandler = ({ userId }) => {
       // console.log('userId->', userId)
       setQr({ userId, dataUser })
@@ -112,7 +112,7 @@ const UserList = () => {
 
     const editHandler = event => {
       // alert(`Edit -> ${event}`)
-
+      console.log("dataUser -> ", dataUser)
       setShowEdit(true)
       setEditData(dataUser)
     }
@@ -156,10 +156,10 @@ const UserList = () => {
           <Button onClick={() => qrHandler({ userId, dataUser })}>
             <Icon icon='tabler:qrcode' />
           </Button>
-          <Button onClick={() => viewHandler(id)}>
+          <Button onClick={() => viewHandler()}>
             <Icon icon='tabler:eye' />
           </Button>
-          <Button onClick={() => editHandler(id)}>
+          <Button onClick={() => editHandler()}>
             <Icon icon='tabler:pencil' />
           </Button>
           <Button onClick={() => deleteHandler(dataUser)}>
