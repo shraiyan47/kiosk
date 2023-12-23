@@ -10,13 +10,14 @@ import Icon from 'src/@core/components/icon'
 const CustomCheckboxIcons = props => {
   // ** Props
   const { data, icon, name, selected, gridProps, iconProps, handleChange, color = 'primary' } = props
-  const { title, value, content } = data
+  // const { title, value, content } = data
+  const { SectionOption, Id, content } = data
 
   const renderComponent = () => {
     return (
       <Grid item {...gridProps}>
         <Box
-          onClick={() => handleChange(value)}
+          onClick={() => handleChange(Id)}
           sx={{
             p: 4,
             height: '100%',
@@ -27,7 +28,7 @@ const CustomCheckboxIcons = props => {
             alignItems: 'center',
             flexDirection: 'column',
             border: theme => `1px solid ${theme.palette.divider}`,
-            ...(selected.includes(value)
+            ...(selected.includes(Id)
               ? {
                   borderColor: `${color}.main`,
                   backgroundColor: '#fff4f4',
@@ -37,13 +38,13 @@ const CustomCheckboxIcons = props => {
           }}
         >
           {icon ? <Icon icon={icon} {...iconProps} /> : null}
-          {title ? (
-            typeof title === 'string' ? (
+          {SectionOption ? (
+            typeof SectionOption === 'string' ? (
               <Typography variant='h5' sx={{ ...(content ? { mb: 2 } : { my: 'auto' }), textAlign: 'center', margin: '20px 5px' }}>
-                {title}
+                {SectionOption}
               </Typography>
             ) : (
-              title
+              SectionOption
             )
           ) : null}
           {content ? (
@@ -58,10 +59,10 @@ const CustomCheckboxIcons = props => {
           <Checkbox
             size='small'
             color={color}
-            name={`${name}-${value}`}
-            checked={selected.includes(value)}
-            onChange={() => handleChange(value)}
-            sx={{ mb: -2, ...(!icon && !title && !content && { mt: -2 }) }}
+            name={`${name}-${Id}`}
+            checked={selected.includes(Id)}
+            onChange={() => handleChange(Id)}
+            sx={{ mb: -2, ...(!icon && !SectionOption && !content && { mt: -2 }) }}
           />
         </Box>
       </Grid>
