@@ -529,17 +529,17 @@ const StepperLinearWithValidation = () => {
 
   const [AnswerdData, setAnswerdData] = useState([])
 
-  useEffect(() => {
-    console.log([
-      { ...sectionAndOptionsData[0][0], SectionOptionList: selectedAns },
-      { ...sectionAndOptionsData[0][1], SectionOptionList: selected2Ans },
-      { ...sectionAndOptionsData[0][2], SectionOptionList: selected3Ans },
-      { ...sectionAndOptionsData[0][3], SectionOptionList: selected4Ans },
-      { ...sectionAndOptionsData[0][4], SectionOptionList: selected5Ans },
-      { ...sectionAndOptionsData[0][5], SectionOptionList: selected6Ans },
-      { ...sectionAndOptionsData[0][6], SectionOptionList: selected7Ans }
-    ])
-  }, [selectedAns, selected2Ans, selected3Ans, selected4Ans, selected5Ans, selected6Ans, selected7Ans])
+  // useEffect(() => {
+  //   console.log([
+  //     { ...sectionAndOptionsData[0][0], SectionOptionList: selectedAns },
+  //     { ...sectionAndOptionsData[0][1], SectionOptionList: selected2Ans },
+  //     { ...sectionAndOptionsData[0][2], SectionOptionList: selected3Ans },
+  //     { ...sectionAndOptionsData[0][3], SectionOptionList: selected4Ans },
+  //     { ...sectionAndOptionsData[0][4], SectionOptionList: selected5Ans },
+  //     { ...sectionAndOptionsData[0][5], SectionOptionList: selected6Ans },
+  //     { ...sectionAndOptionsData[0][6], SectionOptionList: selected7Ans }
+  //   ])
+  // }, [selectedAns, selected2Ans, selected3Ans, selected4Ans, selected5Ans, selected6Ans, selected7Ans])
 
   const proceedHandler = () => {
     setAnswerdData([
@@ -1199,7 +1199,7 @@ const StepperLinearWithValidation = () => {
             <Grid item xs={12}>
               {AnswerdData?.map((x, index) => (
                 <Card key={index} sx={{ mt: 3 }}>
-                  <CardHeader title={`${index+1}  - ${x?.SectionTitle} - Total Points: ${totalPoints[index].TotalPoint}`} />
+                  <CardHeader title={`${index+1}  - ${x?.SectionTitle} - Total Points: ${totalPoints[index]?.TotalPoint}`} />
                   <CardContent>
                     <b>Selected Options:</b>
                     <ul>
