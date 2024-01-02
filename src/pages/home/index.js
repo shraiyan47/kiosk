@@ -20,6 +20,16 @@ import { clearWeeklyduchlist, weeklyduchsList } from 'src/redux/weeklyduch/weekl
 import CardHorizontalRatings from 'src/views/ui/cards/basic/CardHorizontalRatings'
 import AnalyticsSupportTracker from 'src/views/dashboards/analytics/AnalyticsSupportTracker'
 import CrmProjectStatus from 'src/views/dashboards/crm/CrmProjectStatus'
+import {
+  clearEligiblesList,
+  clearSubmissionsList,
+  cleargedermomentsList,
+  clearhachlatasList,
+  eligiblesList,
+  gedermomentsList,
+  hachlatasList,
+  submissionsList
+} from 'src/redux/weeklyduch/submissionSlice'
 
 // import Counter from '../Counter/index'
 
@@ -34,69 +44,192 @@ const Home = () => {
 
   const dispatch = useDispatch()
 
-  const fetchData = async () => {
+  async function fetchActiveProgramData() {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/MasterSection?Stauts=all`)
-      const aaZara = response.data
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/GetCurrentWeek`)
 
-      const secData = aaZara.map(item => ({
-        // ...item,
-        SectionTitle: item.Name,
-        SessionId: item.Id,
-        UserAccountId: auth?.user?.Id,
-        WeekId: 1,
-        Point: item.Point,
-        EntryBy: auth?.user?.userId
-      }))
+      if (response.status === 200) {
+        const data = response.data
+        console.log('Fetched Current Week data:', data) // Use a logger for informative messages
 
-      console.log('aaZara ==> ', secData)
+        // Fetch Current Week Data for this User - SectionSubmitCheckByUserId & ProgramCheckByUserId
+        try {
+          const response1 = await axios.get(
+            `${process.env.NEXT_PUBLIC_BASE_URL}api/SectionSubmitCheckByUserId?UserAccountId=${auth?.user?.Id}&SessionId=${data?.SessionId}&WeekId=${data?.WeekId}` // if it returns null, that weekly duch already submitted
+          )
 
-      const requests = aaZara.map(x =>
-        axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/MasterSectionDetailsBySectionId?SectionId=${x.Id}`)
-      )
+          const response2 = await axios.get(
+            `${process.env.NEXT_PUBLIC_BASE_URL}api/ProgramCheckByUserId?UserAccountId=${auth?.user?.Id}&ProgramId=${data?.SessionId}` // Student eligible for Program = active
+          )
 
-      const responseData = await Promise.all(requests)
+          if (response1.status === 200) {
+            const data1 = response1.data
 
-      const combinedData = responseData.map((res, index) => {
-        const obj = {
-          ...secData[index],
-          SectionOptionList: [] // Initialize empty array
+            const submissionDispatch = {
+              sub: data1
+            }
+
+            dispatch(clearSubmissionsList())
+
+            dispatch(submissionsList(submissionDispatch))
+
+            console.log('Fetched Submitted Weekly data:', data1) // Use a logger for informative messages
+
+            // return { ok: true, data1 }
+          } else if (response1.status === 204) {
+            const submissionDispatch = {
+              sub: "ALREADY SUBMITTED"
+            }
+
+            dispatch(clearSubmissionsList())
+
+            dispatch(submissionsList(submissionDispatch))
+            setLoading(false)
+          } else {
+            throw new Error(`API request failed with status ${response1.status}`)
+          }
+
+          if (response2.status === 200) {
+            const data2 = response2.data
+
+            const elegibleDispatch = {
+              eleg: data2
+            }
+
+            dispatch(clearEligiblesList())
+
+            dispatch(eligiblesList(elegibleDispatch))
+
+            console.log('Fetched Program Eligible data:', data2) // Use a logger for informative messages
+
+            // return { ok: true, data2 }
+          } else {
+            throw new Error(`API request failed with status ${response2.status}`)
+          }
+        } catch (err) {
+          console.error('Error fetching active program data:', err)
+
+          return { ok: false, err: err }
         }
 
-        res.data.forEach(data => {
-          obj.SectionOptionList.push({
-            SectionOption: data.Name,
-            Point: 1,
-            EntryBy: auth?.user?.userId,
-            Id: data.Id
+        // // // MasterSection // // // 
+        try {
+          const response4 = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/MasterSection?Stauts=all`)
+          const aaZara = response4.data
+
+          const secData = aaZara.map(item => ({
+            // ...item,
+            SectionTitle: item.Name,
+            SessionId: data?.SessionId,
+            UserAccountId: auth?.user?.Id,
+            WeekId: data?.Id,
+            Point: item.Point,
+            EntryBy: auth?.user?.userId
+          }))
+
+          console.log('aaZara ==> ', secData)
+
+          const requests = aaZara.map(x =>
+            axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/MasterSectionDetailsBySectionId?SectionId=${x.Id}`)
+          )
+
+          const response4Data = await Promise.all(requests)
+
+          const combinedData = response4Data.map((res, index) => {
+            const obj = {
+              ...secData[index],
+              SectionOptionList: [] // Initialize empty array
+            }
+
+            res.data.forEach(data => {
+              obj.SectionOptionList.push({
+                SectionOption: data.Name,
+                Point: data.Point,
+                EntryBy: auth?.user?.userId,
+                Id: data.Id
+              })
+            })
+
+            return obj
           })
-        })
 
-        return obj
-      })
+          const weeklyduchDispatch = {
+            sectionAndOptions: combinedData
+          }
 
-      const weeklyduchDispatch = {
-        sectionAndOptions: combinedData
+          dispatch(clearWeeklyduchlist())
+
+          dispatch(weeklyduchsList(weeklyduchDispatch))
+
+          console.log('Combined Data: ', weeklyduchDispatch)
+          setLoading(false)
+
+          return combinedData
+        } catch (error) {
+          console.error('Error fetching data: ', error)
+          throw error
+        }
+
+        return { ok: true, data }
+      } else {
+        throw new Error(`API request failed with status ${response.status}`)
       }
+    } catch (err) {
+      console.error('Error fetching active program data:', err)
 
-      dispatch(clearWeeklyduchlist())
-
-      dispatch(weeklyduchsList(weeklyduchDispatch))
-
-      console.log('Combined Data: ', weeklyduchDispatch)
-      setLoading(false)
-
-      return combinedData
-    } catch (error) {
-      console.error('Error fetching data: ', error)
-      throw error
+      return { ok: false, err: err }
     }
   }
 
-  // Call fetchData function
+  async function fetchHachlataGedderMomentData() {
+    try {
+      const resHachlata = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?Accesskey=HA`)
+      const resGedder = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?Accesskey=GM`)
+
+      if (resHachlata.status === 200) {
+        const data = resHachlata.data
+
+        const HachlataDispatch = {
+          hachlata: data
+        }
+
+        dispatch(clearhachlatasList())
+
+        dispatch(hachlatasList(HachlataDispatch))
+        console.log('Fetched Hachlata data:', data) // Use a logger for informative messages
+      }else {
+        throw new Error(`API request failed with status ${response.status}`)
+      }
+
+      if (resGedder.status === 200) {
+        const data = resGedder.data
+
+        const GedderDispatch = {
+          gedermoment: data
+        }
+
+        dispatch(cleargedermomentsList())
+
+        dispatch(gedermomentsList(GedderDispatch))
+        
+        console.log('Fetched Gedder Moment data:', data) // Use a logger for informative messages
+      }else {
+        throw new Error(`API request failed with status ${response.status}`)
+      }
+
+
+    } catch (err) {
+      console.error('Error fetching active program data:', err)
+
+      return { ok: false, err: err }
+    }
+  }
+
+  // Call fetchMasterSectionData function
   useEffect(() => {
     setLoading(true)
-    fetchData()
+    fetchHachlataGedderMomentData()
+    fetchActiveProgramData()
   }, [])
 
   const Illustration = styled('img')(({ theme }) => ({
@@ -108,117 +241,6 @@ const Home = () => {
       width: 110
     }
   }))
-
-  //  var userData_custom = window.localStorage.getItem('userData')
-  // if (auth.user.userrole === 'admin') {
-  //   return (
-  //     <Grid container spacing={12}>
-  //       <Grid item xs={12} sm={12} md={12}>
-  //         <Card>
-  //           <CardHeader
-  //             sx={{
-  //               textAlign: 'center',
-  //               color: 'primary.main'
-  //             }}
-  //             title='Welcome to You Create Holiness: Admin Panel 🚀'
-  //           ></CardHeader>
-
-  //           <Typography
-  //             variant='h5'
-  //             sx={{
-  //               textAlign: 'center',
-  //               mb: 0.5
-  //             }}
-  //           >
-  //             Congratulations {auth.user.fullname}! 🎉
-  //           </Typography>
-  //         </Card>
-  //       </Grid>
-  //       <Grid item xs={12} sm={12} md={12}>
-  //         <Card>
-  //           <CardHeader
-  //             sx={{
-  //               textAlign: 'center',
-  //               color: 'primary.main'
-  //             }}
-  //             title='Welcome to Counter App: for redux testing 🚀'
-  //           ></CardHeader>
-
-  //           <Typography
-  //             variant='h5'
-  //             sx={{
-  //               textAlign: 'center',
-  //               mb: 0.5
-  //             }}
-  //           >
-  //             {/* <Provider store={store}> */}
-  //             <Counter />
-
-  //             {/* </Provider> */}
-  //           </Typography>
-  //         </Card>
-  //       </Grid>
-  //     </Grid>
-  //   )
-  // } else if (auth.user.userrole === 'student') {
-  //   return (
-  //     <Grid container spacing={12}>
-  //       <Grid item xs={12} sm={12} md={12}>
-  //         {!loading ? (
-  //           <Card>
-  //             <CardHeader
-  //               sx={{
-  //                 textAlign: 'center'
-  //               }}
-  //               title='Welcome to You Create Holiness: Student Panel 🚀'
-  //             ></CardHeader>
-
-  //             <Typography
-  //               variant='h5'
-  //               sx={{
-  //                 textAlign: 'center',
-  //                 mb: 0.5
-  //               }}
-  //             >
-  //               Congratulations {auth.user.fullname}! 🎉
-  //             </Typography>
-  //             <Typography
-  //               variant='h4'
-  //               sx={{
-  //                 textAlign: 'center',
-  //                 mb: 0.75,
-  //                 color: 'primary.main',
-  //                 margin: theme => theme.spacing(2, 2, 8, 2)
-  //               }}
-  //             >
-  //               My membership goal: {auth.user.Member}
-  //             </Typography>
-  //           </Card>
-  //         ) : (
-  //           <>
-  //             <div
-  //               style={{
-  //                 position: 'absolute',
-  //                 top: 0,
-  //                 left: 0,
-  //                 width: '100vw',
-  //                 height: '100vh',
-  //                 backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  //                 pointerEvents: 'none',
-  //                 zIndex: '2001'
-  //               }}
-  //             >
-  //               <Card>
-  //                 <CardHeader
-  //                   sx={{
-  //                     textAlign: 'center'
-  //                   }}
-  //                   title='Wait...'
-  //                 ></CardHeader>
-  //               </Card>
-  //             </div>
-  //           </>
-  //         )}
 
   return (
     <>

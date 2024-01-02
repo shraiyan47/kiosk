@@ -299,7 +299,7 @@ const index = () => {
 
   // API Section 
   async function fetchWeekData(sessionid) {
-    const my_url = "https://vehayamachanechakadosh.com:8080/api/Week";
+    const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/Week?SessionId=${(sessionid)&&sessionid}`;
     const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'application/json')
     // myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'))
@@ -313,9 +313,9 @@ const index = () => {
     //   body: JSON.stringify(params)  
     // }
     console.log("fetch Week session Id", sessionid)
-    const params = new URLSearchParams([['SessionId', sessionid]]);
+    // const params = new URLSearchParams([['SessionId', sessionid]]);
     //alert(params)
-    const res = await axios.get(my_url, { params })
+    const res = await axios.get(my_url)
     const data = await res.data
     console.log("session-week",data) 
     if (res.status == 200) {
@@ -337,7 +337,7 @@ const index = () => {
     }
   }
   async function fetchSessionData() {
-    const API_url = "https://vehayamachanechakadosh.com:8080/api/Session";
+    const API_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/Session`;
     const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'application/json')
 
@@ -376,7 +376,7 @@ const index = () => {
     //   return obj.IsActive === true;
     // });
     // console.log("data", foundobj)   
-    const API_url = "https://vehayamachanechakadosh.com:8080/api/GetCurrentWeek";
+    const API_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/GetCurrentWeek`;
     const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'application/json')
 
@@ -405,7 +405,7 @@ const index = () => {
 
   const postWeekData = async (param) => {
     console.log("param1", param)
-    const my_url = "https://vehayamachanechakadosh.com:8080/api/Week";
+    const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/Week`;
     const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'application/json')
 
@@ -436,7 +436,7 @@ const index = () => {
 
   const postSessionData = async (param) => {
     console.log("param1", param)
-    const my_url = "https://vehayamachanechakadosh.com:8080/api/Session";
+    const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/Session`;
     const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'application/json')
 

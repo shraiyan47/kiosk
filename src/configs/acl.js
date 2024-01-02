@@ -12,7 +12,8 @@ const defineRulesFor = (role, subject) => {
   console.log('role',role)
   if (role === 'admin') {
     can('manage', 'all')
-    cannot(['read'], ['weekly-duch', 'home-page', 'masterdata', 'section'])
+    // cannot(['read'], ['weekly-duch', 'home-page', 'masterdata', 'section'])
+    cannot(['read'], ['weekly-duch', 'home-page'])
   } else if (role === 'student') {
     can(['read'], ['acl-page', 'home-page', 'weekly-duch'])
   } else if (role === 'sysadmin') {

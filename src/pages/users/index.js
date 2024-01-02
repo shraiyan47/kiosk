@@ -264,6 +264,7 @@ const UserList = () => {
 
   const [allUsers, setAllUsers] = useState([])
   const [allUsers2, setAllUsers2] = useState([])
+  const [loading, setLoading] = useState(false)
 
   const AllUsersURL = `${process.env.NEXT_PUBLIC_BASE_URL}api/GetAllUserInfo?Stauts=all` ////// All Users
   const UserRoleURL = `${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?MasterId=2&Accesskey=UR` ////// All User Roles
@@ -283,6 +284,7 @@ const UserList = () => {
   }, [success])
 
   async function fetchAllUsers() {
+    setLoading(true)
     const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'application/json')
 
@@ -311,10 +313,12 @@ const UserList = () => {
       }
 
       dispatch(usersList(userDispatch))
+      setLoading(false)
 
       return { ok: true, data }
     } else {
       constole.log('ERROR => ', data.error)
+      setLoading(false)
 
       return { ok: false, err: res, data }
     }
@@ -423,9 +427,10 @@ const UserList = () => {
             rows={allUsers}
             columns={columns}
             disableRowSelectionOnClick
-            pageSizeOptions={[2, 3, 4, 10, 25, 50]}
+            pageSizeOptions={[5, 10, 25, 50]}
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
+            loading={loading}
           />
         </Card>
       </Grid>

@@ -62,7 +62,7 @@ export default function CSVtoJSONConverter(xaram) {
         })
 
         console.log(cleanedRow)
-        const { firstname,lastname, email, Grade, Class } = cleanedRow
+        const { firstname,lastname, email, grade, Class } = cleanedRow
 
         return { 
           password: '12345',
