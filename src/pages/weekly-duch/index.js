@@ -153,8 +153,8 @@ const StepperLinearWithValidation = () => {
       result.push({ SectionTitle: sectionTitle, TotalPoint: totalPoints.toString() })
     })
 
-    // console.log('Total Points all Section -> ', allSectionTotal)
-    // setallSectionTotalPoints(allSectionTotal)
+    console.log('Total Points all Section -> ', allSectionTotal)
+    setallSectionTotalPoints(allSectionTotal)
     setLoading(false)
 
     return result
@@ -1217,7 +1217,7 @@ const StepperLinearWithValidation = () => {
         'WAIT'
       ) : (
         <Fragment>
-          <Typography>Review your the Submitted Data </Typography>
+          <Typography>Review your the Submitted Data || Your total point {allSectionTotalPoints}</Typography>
 
           <Grid container spacing={3}>
             <Grid item xs={12}>
