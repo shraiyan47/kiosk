@@ -132,25 +132,33 @@ const StepperLinearWithValidation = () => {
   const [chavrusaChecked, setChavrusaChecked] = useState(true)
   const [techCheck, setTechCheck] = useState(true)
   const [hachlata, setHachlata] = useState(false)
+  const [Loading, setLoading] = useState(false)
+  const [allSectionTotalPoints, setallSectionTotalPoints] = useState(0)
 
-  const calculateTotalPoints = (data) => {
-    const result = [];
-  
-    data.forEach((section) => {
-      const sectionTitle = section.SectionTitle;
-      const sectionOptionList = section.SectionOptionList;
-      let totalPoints = 0;
-  
-      sectionOptionList.forEach((option) => {
-        totalPoints += option.Point;
-      });
-  
-      result.push({ SectionTitle: sectionTitle, TotalPoint: totalPoints.toString() });
-    });
-  
-    return result;
-  };
-  
+  const calculateTotalPoints = data => {
+    const result = []
+    let allSectionTotal = 0
+
+    data.forEach(section => {
+      const sectionTitle = section.SectionTitle
+      const sectionOptionList = section.SectionOptionList
+      let totalPoints = 0
+
+      sectionOptionList.forEach(option => {
+        totalPoints += option.Point
+      })
+
+      allSectionTotal += totalPoints
+
+      result.push({ SectionTitle: sectionTitle, TotalPoint: totalPoints.toString() })
+    })
+
+    // console.log('Total Points all Section -> ', allSectionTotal)
+    // setallSectionTotalPoints(allSectionTotal)
+    setLoading(false)
+
+    return result
+  }
 
   const handleChange = value => {
     // console.log("Handle Change Value => ", value)
@@ -309,7 +317,7 @@ const StepperLinearWithValidation = () => {
   const handleChange5 = value => {
     console.log('Handle 5 -> ', value)
     if (value?.target?.name === 'hachlatalist') {
-      if (value?.target?.value.replace(/ /g, '') === 'Others') {
+      if (value?.target?.value.replace(/ /g, '') === 'Other') {
         setOtherhachlata(true)
       } else {
         setOtherhachlata(false)
@@ -406,7 +414,7 @@ const StepperLinearWithValidation = () => {
   const handleChange7 = value => {
     console.log(' CHECK 7 => ', data7, value, selected7Ans)
 
-    if (value?.target?.name === data7[0]?.SectionOption ) {
+    if (value?.target?.name === data7[0]?.SectionOption) {
       if (value?.target?.value.replace(/ /g, '') === 'Other') {
         setOtherGeder1(true)
       } else {
@@ -430,19 +438,19 @@ const StepperLinearWithValidation = () => {
       }
       const uniqueSelected7Ans = selected7Ans.filter(obj => obj.SectionOption !== newObject.SectionOption)
       setSelected7Ans([...uniqueSelected7Ans, newObject])
-    } else if (value?.target?.name == 'dow1'){
-      let index = selected7Ans.findIndex(obj => obj.SectionOption === data7[0]?.SectionOption);
-      console.log("D O W 1",index)
+    } else if (value?.target?.name == 'dow1') {
+      let index = selected7Ans.findIndex(obj => obj.SectionOption === data7[0]?.SectionOption)
+      console.log('D O W 1', index)
       if (index !== -1) {
         const updatedObject = {
           ...selected7Ans[index],
           Remarks: value.target.value
-        };
-    
-        const updatedSelected7Ans = [...selected7Ans];
-        updatedSelected7Ans[index] = updatedObject;
-    
-        setSelected7Ans(updatedSelected7Ans);
+        }
+
+        const updatedSelected7Ans = [...selected7Ans]
+        updatedSelected7Ans[index] = updatedObject
+
+        setSelected7Ans(updatedSelected7Ans)
       }
     }
 
@@ -470,19 +478,19 @@ const StepperLinearWithValidation = () => {
       }
       const uniqueSelected7Ans = selected7Ans.filter(obj => obj.SectionOption !== newObject.SectionOption)
       setSelected7Ans([...uniqueSelected7Ans, newObject])
-    }else if (value?.target?.name == 'dow2'){
-      let index = selected7Ans.findIndex(obj => obj.SectionOption === data7[1]?.SectionOption);
-      console.log("D O W 2",index)
+    } else if (value?.target?.name == 'dow2') {
+      let index = selected7Ans.findIndex(obj => obj.SectionOption === data7[1]?.SectionOption)
+      console.log('D O W 2', index)
       if (index !== -1) {
         const updatedObject = {
           ...selected7Ans[index],
           Remarks: value.target.value
-        };
-    
-        const updatedSelected7Ans = [...selected7Ans];
-        updatedSelected7Ans[index] = updatedObject;
-    
-        setSelected7Ans(updatedSelected7Ans);
+        }
+
+        const updatedSelected7Ans = [...selected7Ans]
+        updatedSelected7Ans[index] = updatedObject
+
+        setSelected7Ans(updatedSelected7Ans)
       }
     }
 
@@ -510,19 +518,19 @@ const StepperLinearWithValidation = () => {
       }
       const uniqueSelected7Ans = selected7Ans.filter(obj => obj.SectionOption !== newObject.SectionOption)
       setSelected7Ans([...uniqueSelected7Ans, newObject])
-    }else if (value?.target?.name == 'dow3'){
-      let index = selected7Ans.findIndex(obj => obj.SectionOption === data7[2]?.SectionOption);
-      console.log("D O W 3",index)
+    } else if (value?.target?.name == 'dow3') {
+      let index = selected7Ans.findIndex(obj => obj.SectionOption === data7[2]?.SectionOption)
+      console.log('D O W 3', index)
       if (index !== -1) {
         const updatedObject = {
           ...selected7Ans[index],
           Remarks: value.target.value
-        };
-    
-        const updatedSelected7Ans = [...selected7Ans];
-        updatedSelected7Ans[index] = updatedObject;
-    
-        setSelected7Ans(updatedSelected7Ans);
+        }
+
+        const updatedSelected7Ans = [...selected7Ans]
+        updatedSelected7Ans[index] = updatedObject
+
+        setSelected7Ans(updatedSelected7Ans)
       }
     }
   }
@@ -555,6 +563,7 @@ const StepperLinearWithValidation = () => {
   const [totalPoints, setTotalPoints] = useState([])
   useEffect(() => {
     console.log(AnswerdData)
+    setLoading(true)
     setTotalPoints(calculateTotalPoints(AnswerdData))
   }, [AnswerdData])
 
@@ -643,6 +652,7 @@ const StepperLinearWithValidation = () => {
 
   const [ProgramName, setProgramName] = useState('')
   const [WeekName, setWeekName] = useState('')
+  const [WeekCount, setWeekCount] = useState(0)
 
   useEffect(() => {
     activeProgramData()
@@ -663,6 +673,7 @@ const StepperLinearWithValidation = () => {
 
       setProgramName(data.sessionname)
       setWeekName(data.WeekName)
+      setWeekCount(data.WeekCount)
 
       return { ok: true, data }
     } else {
@@ -773,6 +784,7 @@ const StepperLinearWithValidation = () => {
                       onBlur={handleChange2}
                       name='chavrusa'
                       disabled={chavrusaChecked}
+                      required
                     />
                   </Grid>
                   <CustomCheckboxBasic
@@ -808,18 +820,24 @@ const StepperLinearWithValidation = () => {
               <Grid item xs={12}>
                 <label>{sectionAndOptionsData[0][2].SectionTitle}</label>
               </Grid>
-              {data3.map((item3, index3) => (
-                <CustomCheckboxBasic
-                  key={index3}
-                  data={data3[index3]}
-                  selected={selected3}
-                  handleChange={handleChange3}
-                  name='custom-checkbox-basic'
-                  gridProps={{ xs: 12 }}
-                  icon={icons3[index3] ? icons3[index3].icon : ''}
-                  iconProps={icons3[index3] ? icons3[index3].iconProps : {}}
-                />
-              ))}
+              {WeekCount % 2 == 0 ? (
+                data3.map((item3, index3) => (
+                  <CustomCheckboxBasic
+                    key={index3}
+                    data={data3[index3]}
+                    selected={selected3}
+                    handleChange={handleChange3}
+                    name='custom-checkbox-basic'
+                    gridProps={{ xs: 12 }}
+                    icon={icons3[index3] ? icons3[index3].icon : ''}
+                    iconProps={icons3[index3] ? icons3[index3].iconProps : {}}
+                  />
+                ))
+              ) : (
+                <Grid item xs={12} sx={{ marginLeft: '10px', display: 'flex', justifyContent: 'center' }}>
+                  <b>NO MAAGALIM FOR THIS WEEK</b>
+                </Grid>
+              )}
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Button variant='step3' color='secondary' onClick={handleBack}>
                   Back
@@ -924,6 +942,7 @@ const StepperLinearWithValidation = () => {
                           sx={{ marginBottom: 5 }}
                           name='otherhachlata'
                           onBlur={handleChange5}
+                          required
                         />
                       </>
                     )}
@@ -1038,8 +1057,8 @@ const StepperLinearWithValidation = () => {
                   <MenuItem key={6} value='Friday'>
                     Friday
                   </MenuItem>
-                  <MenuItem key={7} value='Saturday'>
-                    Saturday
+                  <MenuItem key={7} value='Shabbos'>
+                    Shabbos
                   </MenuItem>
                 </CustomTextField>
               </Grid>
@@ -1057,6 +1076,7 @@ const StepperLinearWithValidation = () => {
                       sx={{ marginBottom: 5 }}
                       name='otherGeder1'
                       onBlur={handleChange7}
+                      required
                     />
                   </Grid>
                 </>
@@ -1074,7 +1094,7 @@ const StepperLinearWithValidation = () => {
               </Grid>
               <Grid item xs={5}>
                 <b>Day of Week</b> : &nbsp;&nbsp;
-                <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={"dow2"}>
+                <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={'dow2'}>
                   <MenuItem key={1} value='Sunday'>
                     Sunday
                   </MenuItem>
@@ -1093,8 +1113,8 @@ const StepperLinearWithValidation = () => {
                   <MenuItem key={6} value='Friday'>
                     Friday
                   </MenuItem>
-                  <MenuItem key={7} value='Saturday'>
-                    Saturday
+                  <MenuItem key={7} value='Shabbos'>
+                    Shabbos
                   </MenuItem>
                 </CustomTextField>
               </Grid>
@@ -1112,6 +1132,7 @@ const StepperLinearWithValidation = () => {
                       sx={{ marginBottom: 5 }}
                       name='otherGeder2'
                       onBlur={handleChange7}
+                      required
                     />
                   </Grid>
                 </>
@@ -1129,7 +1150,7 @@ const StepperLinearWithValidation = () => {
               </Grid>
               <Grid item xs={5}>
                 <b>Day of Week</b> : &nbsp;&nbsp;
-                <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={"dow3"}>
+                <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={'dow3'}>
                   <MenuItem key={1} value='Sunday'>
                     Sunday
                   </MenuItem>
@@ -1148,8 +1169,8 @@ const StepperLinearWithValidation = () => {
                   <MenuItem key={6} value='Friday'>
                     Friday
                   </MenuItem>
-                  <MenuItem key={7} value='Saturday'>
-                    Saturday
+                  <MenuItem key={7} value='Shabbos'>
+                    Shabbos
                   </MenuItem>
                 </CustomTextField>
               </Grid>
@@ -1167,6 +1188,7 @@ const StepperLinearWithValidation = () => {
                       sx={{ marginBottom: 5 }}
                       name='otherGeder3'
                       onBlur={handleChange7}
+                      required
                     />
                   </Grid>
                 </>
@@ -1191,34 +1213,42 @@ const StepperLinearWithValidation = () => {
 
   const renderContent = () => {
     if (activeStep === steps.length) {
-      return (
+      return Loading ? (
+        'WAIT'
+      ) : (
         <Fragment>
-          <Typography>Summary of the Submitted Data will be visible here..</Typography>
+          <Typography>Review your the Submitted Data </Typography>
 
           <Grid container spacing={3}>
             <Grid item xs={12}>
               {AnswerdData?.map((x, index) => (
                 <Card key={index} sx={{ mt: 3 }}>
-                  <CardHeader title={`${index+1}  - ${x?.SectionTitle} - Total Points: ${totalPoints[index]?.TotalPoint}`} />
+                  <CardHeader
+                    title={`${index + 1}  - ${x?.SectionTitle} - Total Points: ${totalPoints[index]?.TotalPoint}`}
+                  />
                   <CardContent>
                     <b>Selected Options:</b>
                     <ul>
                       {x?.SectionOptionList?.map((option, idx) => (
                         <>
-                          <li key={idx}>{option?.SectionOption} - &nbsp;Point:{option?.Point}</li>
-                          {
-                            (option?.SectionOption == "My Chavrusa" ||option?.SectionOption == "Hachlata" ||option?.SectionOption == "Remarks" ||option?.SectionOption == "Geder Moment1" ||option?.SectionOption == "Geder Moment2" ||option?.SectionOption == "Geder Moment3" )&& 
-                            <ul> 
-                              <li key={idx}>
-                                {option?.Result}
-                              </li>
-                              {
-                                (option?.SectionOption == "Geder Moment1" ||option?.SectionOption == "Geder Moment2" ||option?.SectionOption == "Geder Moment3") && 
+                          <li key={idx}>
+                            {option?.SectionOption} - &nbsp;Point:{option?.Point}
+                          </li>
+                          {(option?.SectionOption == 'My Chavrusa' ||
+                            option?.SectionOption == 'Hachlata' ||
+                            option?.SectionOption == 'Remarks' ||
+                            option?.SectionOption == 'Geder Moment1' ||
+                            option?.SectionOption == 'Geder Moment2' ||
+                            option?.SectionOption == 'Geder Moment3') && (
+                            <ul>
+                              <li key={idx}>{option?.Result}</li>
+                              {(option?.SectionOption == 'Geder Moment1' ||
+                                option?.SectionOption == 'Geder Moment2' ||
+                                option?.SectionOption == 'Geder Moment3') && (
                                 <li key={idx}>Day of week : {option?.Remarks}</li>
-                              }
-                             </ul>
-                            
-                          }
+                              )}
+                            </ul>
+                          )}
                         </>
                       ))}
                     </ul>

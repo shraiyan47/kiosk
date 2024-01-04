@@ -26,7 +26,7 @@ const data = [
   {
     subtitle: '28',
     avatarColor: 'info',
-    title: 'Daughters of Digninty',
+    title: 'Daughter of Dignity',
     avatarIcon: 'tabler:circle-check'
   },
   {

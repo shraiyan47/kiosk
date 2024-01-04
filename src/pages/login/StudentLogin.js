@@ -50,8 +50,6 @@ export default function QrCodeScanner() {
     maxWidth: 125
   }))
 
-  
-
   useEffect(() => {
     const scanner = new Html5QrcodeScanner('reader', {
       qrbox: {
@@ -107,11 +105,9 @@ export default function QrCodeScanner() {
           type: 'manual',
           message: (
             <>
-            <span>
-              Incorrect PIN.
-            </span>
-              <br/>
-              Do you forget your PIN? 
+              <span>Incorrect PIN.</span>
+              <br />
+              Do you forget your PIN?
               <span style={{ color: '#12A3EA', cursor: 'pointer' }} onClick={handlePasswordReset}>
                 Click Here
               </span>
@@ -133,7 +129,7 @@ export default function QrCodeScanner() {
     setValue
   } = useForm({
     mode: 'onSubmit'
-  }) 
+  })
 
   const onSubmit = x => {
     const updatePINpass = {
@@ -142,7 +138,8 @@ export default function QrCodeScanner() {
       UserId: scanResult,
       UpdateBy: scanResult,
       email: data.email,
-      userrole: data.userrole
+      userrole: data.userrole,
+      MotherName: x.fullnameMother
     }
 
     console.log('updatePINpass ===> ', updatePINpass)
@@ -172,7 +169,7 @@ export default function QrCodeScanner() {
       // dispatch(usersList(userDispatch))
       // setShow(false)
       // toggle(true)
-      alert("PIN & Password Successfully Updated")
+      alert('PIN & Password Successfully Updated')
       router.replace('/')
 
       return { ok: true, data }
@@ -189,7 +186,7 @@ export default function QrCodeScanner() {
   const { handleSubmit: passwordCheckHandler } = useForm({
     mode: 'onSubmitPass'
   })
-  
+
   const [isResetPIN, setResetPIN] = useState(false)
 
   const [isPassError, setPassError] = useState(false)
@@ -207,8 +204,8 @@ export default function QrCodeScanner() {
           <>
             <p>
               <span style={{ marginTop: '0px' }}>Incorrect Password.</span>
-              <br/>
-              Do you forget your Password too! 
+              <br />
+              Do you forget your Password too!
               <span style={{ color: '#12A3EA', cursor: 'pointer' }} onClick={handleOpen}>
                 Click Here
               </span>
@@ -229,7 +226,7 @@ export default function QrCodeScanner() {
   })
 
   const onPinSubmit = data => {
-    console.log("data pin ->",data, PINReset)
+    console.log('data pin ->', data, PINReset)
 
     const updatePIN = {
       PIN: PINReset,
@@ -264,7 +261,7 @@ export default function QrCodeScanner() {
       // dispatch(usersList(userDispatch))
       // setShow(false)
       // toggle(true)
-      alert(data+" Changed Successfully")
+      alert(data + ' Changed Successfully')
       router.replace('/')
 
       return { ok: true, data }
@@ -378,6 +375,39 @@ export default function QrCodeScanner() {
                         />
                       )}
                     />
+
+                    {/* <Controller
+                      name='fullnameStudent'
+                      control={control}
+                      rules={{ required: true }}
+                      render={({ field: { value, onChange } }) => (
+                        <CustomTextField
+                          fullWidth
+                          value={value}
+                          sx={{ mb: 4 }}
+                          label='Student Full Hebrew Name'
+                          onChange={onChange}
+                          type={'text'}
+                        />
+                      )}
+                    /> */}
+
+                    <Controller
+                      name='fullnameMother'
+                      control={control}
+                      rules={{ required: true }}
+                      render={({ field: { value, onChange } }) => (
+                        <CustomTextField
+                          fullWidth
+                          value={value}
+                          sx={{ mb: 4 }}
+                          label="Studnet's Mother Full Hebrew Name"
+                          onChange={onChange}
+                          type={'text'}
+                        />
+                      )}
+                    />
+
                     <Button type='submit' variant='contained'>
                       Set PIN & Password
                     </Button>

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // ** MUI Imports
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
@@ -78,7 +79,7 @@ const Home = () => {
             // return { ok: true, data1 }
           } else if (response1.status === 204) {
             const submissionDispatch = {
-              sub: "ALREADY SUBMITTED"
+              sub: 'ALREADY SUBMITTED'
             }
 
             dispatch(clearSubmissionsList())
@@ -112,7 +113,7 @@ const Home = () => {
           return { ok: false, err: err }
         }
 
-        // // // MasterSection // // // 
+        // // // MasterSection // // //
         try {
           const response4 = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/MasterSection?Stauts=all`)
           const aaZara = response4.data
@@ -122,7 +123,7 @@ const Home = () => {
             SectionTitle: item.Name,
             SessionId: data?.SessionId,
             UserAccountId: auth?.user?.Id,
-            WeekId: data?.Id,
+            WeekId: data?.WeekId,
             Point: item.Point,
             EntryBy: auth?.user?.userId
           }))
@@ -171,11 +172,16 @@ const Home = () => {
         }
 
         return { ok: true, data }
+      } else if (response.status === 204) {
+        setLoading(false)
+
+        alert(' NO CURRENT WEEK / PROGRAM ACTIVE ')
       } else {
         throw new Error(`API request failed with status ${response.status}`)
       }
     } catch (err) {
       console.error('Error fetching active program data:', err)
+      setLoading(false)
 
       return { ok: false, err: err }
     }
@@ -183,8 +189,13 @@ const Home = () => {
 
   async function fetchHachlataGedderMomentData() {
     try {
-      const resHachlata = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?Accesskey=HA`)
-      const resGedder = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?Accesskey=GM`)
+      const resHachlata = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?Accesskey=HA`
+      )
+      
+      const resGedder = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?Accesskey=GM`
+      )
 
       if (resHachlata.status === 200) {
         const data = resHachlata.data
@@ -197,7 +208,7 @@ const Home = () => {
 
         dispatch(hachlatasList(HachlataDispatch))
         console.log('Fetched Hachlata data:', data) // Use a logger for informative messages
-      }else {
+      } else {
         throw new Error(`API request failed with status ${response.status}`)
       }
 
@@ -211,13 +222,11 @@ const Home = () => {
         dispatch(cleargedermomentsList())
 
         dispatch(gedermomentsList(GedderDispatch))
-        
+
         console.log('Fetched Gedder Moment data:', data) // Use a logger for informative messages
-      }else {
+      } else {
         throw new Error(`API request failed with status ${response.status}`)
       }
-
-
     } catch (err) {
       console.error('Error fetching active program data:', err)
 
