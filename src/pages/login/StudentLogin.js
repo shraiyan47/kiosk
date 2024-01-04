@@ -232,7 +232,8 @@ export default function QrCodeScanner() {
       PIN: PINReset,
       Password: studentPassword,
       UserId: scanResult,
-      UpdateBy: scanResult
+      UpdateBy: scanResult,
+      MotherName: ""
     }
 
     console.log('updatePIN ===> ', updatePIN)

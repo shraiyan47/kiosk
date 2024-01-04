@@ -35,6 +35,7 @@ import { Dialog, Icon, MenuItem } from '@mui/material'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import axios from 'axios'
 import { useRouter } from 'next/router'
+import { redirect } from 'next/navigation'
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
@@ -71,7 +72,7 @@ const StepperLinearWithValidation = () => {
     event.returnValue = ''
   })
 
-  const router = useRouter()
+  const {push} = useRouter()
 
   const sectionAndOptionsData = useSelector(state => state.weeklyduchs.sectionAndOptions)
   const submissionData = useSelector(state => state.submissions.sub)
@@ -88,7 +89,9 @@ const StepperLinearWithValidation = () => {
   useEffect(() => {
     if (elegibleData[0] != 'Active' || submissionData.length < 1 || submissionData[0] === 'ALREADY SUBMITTED') {
       alert('Weekly Duch already submitted or you are not eligible for program.')
-      window.location.replace('/home')
+      // window.location.replace('/home')
+      push('/home')
+      
     } else {
       console.log('Everything Looks Good!')
     }
@@ -96,6 +99,8 @@ const StepperLinearWithValidation = () => {
 
   if (sectionAndOptionsData.length < 1) {
     window.location.replace('/home')
+    // push('/home')
+
   }
 
   const data = sectionAndOptionsData[0][0].SectionOptionList
@@ -652,6 +657,7 @@ const StepperLinearWithValidation = () => {
 
   const [ProgramName, setProgramName] = useState('')
   const [WeekName, setWeekName] = useState('')
+  const [SubmissionDone, setSubmissionDone] = useState(false)
   const [WeekCount, setWeekCount] = useState(0)
 
   useEffect(() => {
@@ -698,21 +704,29 @@ const StepperLinearWithValidation = () => {
     }
 
     // console.log(requestOptions)
+    if (!SubmissionDone) {
+      const res = await fetch(my_url, requestOptions)
+      const data = await res.json()
+      if (res.ok) {
+        alert('Successfully Submitted')
+        // handleReset()
+        setSubmitModal(false)
+        ResetHandler()
+        setSubmissionDone(true)
+        window.location.replace('/home')
 
-    const res = await fetch(my_url, requestOptions)
-    const data = await res.json()
-    if (res.ok) {
-      alert('Successfully Submitted')
-      // handleReset()
-      setSubmitModal(false)
-      ResetHandler()
-      // localStorage.setItem('wdsubmit', true)
+        return { ok: true, data }
+      } else {
+        console.log('ERROR => ', data.error)
+        // window.location.replace('/home')
+        redirect('/home')
 
-      return { ok: true, data }
+        return { ok: false, err: res, data }
+      }
     } else {
-      console.log('ERROR => ', data.error)
-
-      return { ok: false, err: res, data }
+      alert('Already Submitted!')
+      // window.location.replace('/home')
+      redirect('/home')
     }
   }
 
@@ -1306,61 +1320,56 @@ const StepperLinearWithValidation = () => {
         </Stepper>
       </CardContent>
       <Divider sx={{ m: '0 !important' }} />
-      {localStorage.getItem('wdsubmit') ? (
-        <CardContent>Sorry, Weekly Duch already submitted</CardContent>
-      ) : (
-        <>
-          <Grid container spacing={6}>
-            <Grid item xs={12}>
-              <Card>
-                <CardContent>
-                  <Box
-                    sx={{
-                      p: 1,
-                      pb: 3,
-                      width: '100%',
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      alignItems: 'center',
-                      justifyContent: 'space-between'
-                    }}
-                  >
-                    <Grid item xs={6}>
-                      <Box sx={{ mr: 8, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                        <CustomAvatar skin='light' variant='rounded' sx={{ mr: 2.5, width: 38, height: 38 }}>
-                          <Icon fontSize='1.75rem' icon='tabler:checkbox' />
-                        </CustomAvatar>
-                        <div>
-                          <Typography variant='body2'>Active Program</Typography>
-                          <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{ProgramName}</Typography>
-                        </div>
-                      </Box>
-                    </Grid>
 
-                    <Grid item xs={6}>
-                      <Box sx={{ mr: 8, display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-                        <CustomAvatar skin='light' variant='rounded' sx={{ mr: 2.5, width: 38, height: 38 }}>
-                          <Icon fontSize='1.75rem' icon='tabler:ad-2' />
-                        </CustomAvatar>
-                        <div>
-                          <Typography variant='body2'>Current Week</Typography>
-                          <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{WeekName}</Typography>
-                        </div>
-                      </Box>
-                    </Grid>
+      <Grid container spacing={6}>
+        <Grid item xs={12}>
+          <Card>
+            <CardContent>
+              <Box
+                sx={{
+                  p: 1,
+                  pb: 3,
+                  width: '100%',
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <Grid item xs={6}>
+                  <Box sx={{ mr: 8, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                    <CustomAvatar skin='light' variant='rounded' sx={{ mr: 2.5, width: 38, height: 38 }}>
+                      <Icon fontSize='1.75rem' icon='tabler:checkbox' />
+                    </CustomAvatar>
+                    <div>
+                      <Typography variant='body2'>Active Program</Typography>
+                      <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{ProgramName}</Typography>
+                    </div>
+                  </Box>
+                </Grid>
 
-                    {/* <Box sx={{ rowGap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+                <Grid item xs={6}>
+                  <Box sx={{ mr: 8, display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+                    <CustomAvatar skin='light' variant='rounded' sx={{ mr: 2.5, width: 38, height: 38 }}>
+                      <Icon fontSize='1.75rem' icon='tabler:ad-2' />
+                    </CustomAvatar>
+                    <div>
+                      <Typography variant='body2'>Current Week</Typography>
+                      <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{WeekName}</Typography>
+                    </div>
+                  </Box>
+                </Grid>
+
+                {/* <Box sx={{ rowGap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
                 Active Program:
                     Current Week:
                 </Box> */}
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-          <CardContent>{renderContent()}</CardContent>
-        </>
-      )}
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+      <CardContent>{renderContent()}</CardContent>
 
       {/* Reset  */}
       <Dialog
