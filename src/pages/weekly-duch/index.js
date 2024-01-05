@@ -72,7 +72,7 @@ const StepperLinearWithValidation = () => {
     event.returnValue = ''
   })
 
-  const {push} = useRouter()
+  const { push } = useRouter()
 
   const sectionAndOptionsData = useSelector(state => state.weeklyduchs.sectionAndOptions)
   const submissionData = useSelector(state => state.submissions.sub)
@@ -89,18 +89,16 @@ const StepperLinearWithValidation = () => {
   useEffect(() => {
     if (elegibleData[0] != 'Active' || submissionData.length < 1 || submissionData[0] === 'ALREADY SUBMITTED') {
       alert('Weekly Duch already submitted or you are not eligible for program.')
-      // window.location.replace('/home')
       push('/home')
-      
     } else {
       console.log('Everything Looks Good!')
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elegibleData, submissionData])
 
   if (sectionAndOptionsData.length < 1) {
     window.location.replace('/home')
     // push('/home')
-
   }
 
   const data = sectionAndOptionsData[0][0].SectionOptionList
@@ -835,6 +833,10 @@ const StepperLinearWithValidation = () => {
                 <label>{sectionAndOptionsData[0][2].SectionTitle}</label>
               </Grid>
               {WeekCount % 2 == 0 ? (
+                <Grid item xs={12} sx={{ marginLeft: '10px', display: 'flex', justifyContent: 'center' }}>
+                  <b>NO MAAGALIM FOR THIS WEEK</b>
+                </Grid>
+              ) : (
                 data3.map((item3, index3) => (
                   <CustomCheckboxBasic
                     key={index3}
@@ -847,10 +849,6 @@ const StepperLinearWithValidation = () => {
                     iconProps={icons3[index3] ? icons3[index3].iconProps : {}}
                   />
                 ))
-              ) : (
-                <Grid item xs={12} sx={{ marginLeft: '10px', display: 'flex', justifyContent: 'center' }}>
-                  <b>NO MAAGALIM FOR THIS WEEK</b>
-                </Grid>
               )}
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Button variant='step3' color='secondary' onClick={handleBack}>
