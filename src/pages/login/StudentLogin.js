@@ -71,7 +71,7 @@ export default function QrCodeScanner() {
         setSucc(true)
       })
 
-      alert('User Id ' + result)
+      // alert('User Id ' + result)
     }
 
     function error(err) {
@@ -294,7 +294,7 @@ export default function QrCodeScanner() {
           justifyContent: 'center'
         }}
       >
-        <h2>Student Login with QR Code</h2>
+        <h2>Student Login</h2>
         <Link href={'/admin'}>.</Link>
       </Box>
 

@@ -1,8 +1,8 @@
- // eslint-disable-next-line react-hooks/exhaustive-deps
+// eslint-disable-next-line react-hooks/exhaustive-deps
 /* eslint-disable react/jsx-key */
 /* eslint-disable newline-before-return */
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useState, useEffect, useCallback, forwardRef } from 'react';
+import React, { useState, useEffect, useCallback, forwardRef } from 'react'
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
@@ -21,11 +21,11 @@ import DialogActions from '@mui/material/DialogActions'
 import { Controller, useForm } from 'react-hook-form'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField'
+import Autocomplete from '@mui/material/Autocomplete'
 import Fade from '@mui/material/Fade'
-import { Alert, AlertTitle } from '@mui/material';
-import Snackbar from '@mui/material/Snackbar';
+import { Alert, AlertTitle } from '@mui/material'
+import Snackbar from '@mui/material/Snackbar'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 import CircularProgress from '@mui/material/CircularProgress'
 // import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -37,11 +37,10 @@ import CircularProgress from '@mui/material/CircularProgress'
 import DatePicker from 'react-datepicker'
 
 import CustomAvatar from 'src/@core/components/mui/avatar'
-import { maxWidth } from '@mui/system';
+import { maxWidth } from '@mui/system'
 
 const index = () => {
-
-  const [openAlert, setOpenAlert] = useState(true);
+  const [openAlert, setOpenAlert] = useState(true)
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
   const [AllWeek, setAllWeek] = useState([])
   const [AllWeek1, setAllWeek1] = useState([])
@@ -57,7 +56,7 @@ const index = () => {
   const [WeekData, setWeekData] = useState()
   const [NumberOfWeek, setNumberOfWeek] = useState(0)
   const [WeekName, setWeekName] = useState('')
-  
+
   // some reference add
   const Transition = forwardRef(function Transition(props, ref) {
     return <Fade ref={ref} {...props} />
@@ -84,40 +83,41 @@ const index = () => {
 
   // default program load
   useEffect(() => {
-    function fetchsessionweekdata(){
-      activeProgramData().then((resdata)=>{
-        console.log("data", resdata);
-        fetchWeekData(resdata.data.SessionId);
-      });
-      loadsessiondata();      
-    }    
-    fetchsessionweekdata()   
-  }, []);
-  
- 
-  const loadsessiondata = ()=>{
-    fetchSessionData().then((resdata) => {
-      console.log("data", AllSection);
-      const foundobj = resdata.data.find(obj => obj.IsActive === true);      
-      console.log("foundobj", foundobj, foundobj.Id, foundobj.sessionname);
-  
+    function fetchsessionweekdata() {
+      activeProgramData().then(resdata => {
+        console.log('data', resdata)
+        if(!!resdata.data.SessionId){
+          fetchWeekData(resdata.data.SessionId)
+        }
+      })
+      loadsessiondata()
+    }
+    fetchsessionweekdata()
+  }, [])
+
+  const loadsessiondata = () => {
+    fetchSessionData().then(resdata => {
+      console.log('data', AllSection)
+      const foundobj = resdata.data.find(obj => obj.IsActive === true)
+      // console.log('foundobj', foundobj, foundobj.Id, foundobj.sessionname)
+
       // Use the functional form to update the state
       // setSessionid(prevSessionId => {
       //   // Use a default value if foundobj is undefined
       //   return foundobj ? foundobj.Id : prevSessionId;
       // });
-  
+
       // setProgramName(foundobj.sessionname);
       // setSessionid(foundobj.Id)
 
-      // setName1('test1');      
-  
+      // setName1('test1');
+
       // console.log("setName1", name1);
-      console.log("sessionId", Sessionid);
-      console.log("ProgramName", ProgramName);
+      console.log('sessionId', Sessionid)
+      console.log('ProgramName', ProgramName)
       // alert(ProgramName)
       // alert(Sessionid)
-    });
+    })
   }
 
   const resetdata = () => {
@@ -125,14 +125,13 @@ const index = () => {
     setInputFields([])
   }
 
-
   // Program add event fire
   const handleClickOpen = () => {
     setName('')
     if (!SessionDialogOpen) {
-      setSessionDialogOpen(true);
+      setSessionDialogOpen(true)
     }
-  };
+  }
 
   // Grid search event fire
   const handleFilter = useCallback(val => {
@@ -144,11 +143,9 @@ const index = () => {
     const searchQuery = value
 
     const filteredUsers = AllWeek1.filter(user => {
-      console.log(user)
+      console.log('WTF --> ', user)
 
-      return (
-        user.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      return user.name.toLowerCase().includes(searchQuery.toLowerCase())
     })
     setAllWeek(filteredUsers)
   }, [value])
@@ -157,9 +154,9 @@ const index = () => {
   const handleSessionEdit = () => {
     // console.log("Session Row", Sessionid);
     // console.log("All session", AllSection)
-    const result = AllSection.find(item => item.id === Sessionid);
+    const result = AllSection.find(item => item.id === Sessionid)
     // console.log("Session", result)
-    setName(result.sessionname);
+    setName(result.sessionname)
     alert(ProgramName)
     // console.log("Name1",name1)
     // setName1("final")
@@ -171,22 +168,23 @@ const index = () => {
     // if(!SessionDialogOpen)
     // {
     //   setSessionDialogOpen(true);
-    // } 
+    // }
     if (!adddialogopen) {
-      setadddialogopen(true);
+      setadddialogopen(true)
     }
-
-  };
+  }
 
   // dropdown event fire
-  const handleSessionList = (value) => {
+  const handleSessionList = value => {
     // Only call the setShow() function if the state needs to be changed
     //console.log("value", value.Id)
     //setSessionid(...Sessionid,value.Id);
     //console.log(Sessionid)
-   // setSessionid(value.Id);
-    console.log("select Session Id ",value)
-    fetchWeekData(value.Id);
+    // setSessionid(value.Id);
+    console.log('select Session Id ', value)
+    if(!!value.Id){
+      fetchWeekData(value.Id)
+    }
   }
 
   // export Grid columns  list
@@ -203,7 +201,7 @@ const index = () => {
             {/* {renderClient(row)} */}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-                {row.id}
+                {row?.id}
               </Typography>
             </Box>
           </Box>
@@ -222,7 +220,7 @@ const index = () => {
             {/* {renderClient(row)} */}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-                {row.WeekName}
+                {row?.WeekName}
               </Typography>
             </Box>
           </Box>
@@ -238,7 +236,7 @@ const index = () => {
       // valueGetter: params => new Date(params.value),
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.StartDt}
+          {params?.row?.StartDt}
         </Typography>
       )
     },
@@ -254,7 +252,7 @@ const index = () => {
             {/* {renderClient(row)} */}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-                {row.EndDt}
+                {row?.EndDt}
               </Typography>
             </Box>
           </Box>
@@ -273,7 +271,7 @@ const index = () => {
             {/* {renderClient(row)} */}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-                {row.IsActive}
+                {row?.IsActive}
               </Typography>
             </Box>
           </Box>
@@ -291,53 +289,55 @@ const index = () => {
           <IconButton onClick={() => handleClickEdit(row)}>
             <Icon icon='tabler:edit' />
           </IconButton>
-
         </Box>
       )
     }
   ]
 
-  // API Section 
+  // API Section
   async function fetchWeekData(sessionid) {
-    const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/Week?SessionId=${(sessionid)&&sessionid}`;
+    const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/Week?SessionId=${sessionid && sessionid}`
     const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'application/json')
     // myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'))
-    // const params = {      
+    // const params = {
     //   SessionId: Sessionid
     // }
     // const requestOptions = {
     //   method: 'GET',
     //   headers: myHeaders,
     //   redirect: 'follow',
-    //   body: JSON.stringify(params)  
+    //   body: JSON.stringify(params)
     // }
-    console.log("fetch Week session Id", sessionid)
+    console.log('fetch Week session Id', typeof sessionid)
     // const params = new URLSearchParams([['SessionId', sessionid]]);
     //alert(params)
     const res = await axios.get(my_url)
     const data = await res.data
-    console.log("session-week",data) 
+    console.log('session-week', data)
     if (res.status == 200) {
-      setAllWeek(Object.values(data).map((row, index) => ({
-        ...row,
-        id: row.Id, // You can use a different logic for generating unique IDs if needed
-        //StartDt: row.StartDt.toLocaleDateString("en-US"),
-        //StartDt1: new Date(row.StartDt).toLocaleDateString()
-        
-      })))
-      setAllWeek1(Object.values(data).map((row, index) => ({
-        id: row.Id, // You can use a different logic for generating unique IDs if needed
-        ...row
-      })))
-      console.log("All Week", AllWeek)
+      setAllWeek(
+        Object.values(data).map((row, index) => ({
+          ...row,
+          id: row.WeekId // You can use a different logic for generating unique IDs if needed
+          //StartDt: row.StartDt.toLocaleDateString("en-US"),
+          //StartDt1: new Date(row.StartDt).toLocaleDateString()
+        }))
+      )
+      setAllWeek1(
+        Object.values(data).map((row, index) => ({
+          id: row?.WeekId, // You can use a different logic for generating unique IDs if needed
+          ...row
+        }))
+      )
+      console.log('All Week ------------------ > ', AllWeek)
       return { ok: true, data }
     } else {
       return { ok: false, err: res, data }
     }
   }
   async function fetchSessionData() {
-    const API_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/Session`;
+    const API_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/Session`
     const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'application/json')
 
@@ -350,62 +350,62 @@ const index = () => {
     const requestOptions = {
       method: 'GET',
       headers: myHeaders,
-      redirect: 'follow',
-      // body: JSON.stringify(params)  
+      redirect: 'follow'
+      // body: JSON.stringify(params)
     }
 
     const res = await axios.get(API_url)
     const data = await res.data
-    console.log("res", res)
+    console.log('res', res)
     if (res.status == 200) {
-      setAllSection(Object.values(data).map((row, index) => ({
-        id: row.Id, // You can use a different logic for generating unique IDs if needed
-        ...row
-      }))      
+      setAllSection(
+        Object.values(data).map((row, index) => ({
+          id: row.Id, // You can use a different logic for generating unique IDs if needed
+          ...row
+        }))
       )
-      
+
       return { ok: true, data }
     } else {
       return { ok: false, err: res, data }
     }
   }
 
-  async function activeProgramData(){   
+  async function activeProgramData() {
     // console.log("AllSection", AllSection)
     // const foundobj = AllSection.find(obj => {
     //   return obj.IsActive === true;
     // });
-    // console.log("data", foundobj)   
-    const API_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/GetCurrentWeek`;
+    // console.log("data", foundobj)
+    const API_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/GetCurrentWeek`
     const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'application/json')
 
     // myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'))
-    
 
     const res = await axios.get(API_url)
     const data = await res.data
-   
-    if (res.status == 200) {    
-      console.log("current data", data);
+
+    if (res.status == 200) {
+      console.log('current data', data)
       // setWeekData(Object.values(data).map((row, index) => ({
       //   id: row.Id, // You can use a different logic for generating unique IDs if needed
       //   ...row
-      // }))     
+      // }))
       //)
       setProgramName(data.sessionname)
       setWeekName(data.WeekName)
       setSessionid(data.SessionId)
-      console.log("active session Id", Sessionid,data.SessionId)
+      console.log('active session Id', Sessionid, data.SessionId)
       return { ok: true, data }
     } else {
       return { ok: false, err: res, data }
     }
   }
 
-  const postWeekData = async (param) => {
-    console.log("param1", param)
-    const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/Week`;
+  const postWeekData = async param => {
+    console.log('param1', param)
+    const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/Week`
     const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'application/json')
 
@@ -413,30 +413,30 @@ const index = () => {
     let res = {}
     if (param.Id == 0) {
       res = await axios.post(my_url, param)
-    }
-    else {
+    } else {
       res = await axios.put(my_url, param)
     }
     console.log(res)
     //const data = await res.json()
     if (res.status == 200) {
-
       // dispatch(usersList(userDispatch))
-      //setShow(false)      
-      alert("Successfully save your data");
-      fetchWeekData(Sessionid);
-      setadddialogopen(false);
+      //setShow(false)
+      alert('Successfully save your data')
+      if(!!Sessionid){
+        fetchWeekData(Sessionid)
+      }
+      setadddialogopen(false)
       return { ok: true }
     } else {
       // console.log('ERROR => ', data.error)
-      alert("System Error");
+      alert('System Error')
       return { ok: false }
     }
   }
 
-  const postSessionData = async (param) => {
-    console.log("param1", param)
-    const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/Session`;
+  const postSessionData = async param => {
+    console.log('param1', param)
+    const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/Session`
     const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'application/json')
 
@@ -453,138 +453,137 @@ const index = () => {
     console.log(res)
     //const data = await res.json()
     if (res.status == 200) {
-
       // dispatch(usersList(userDispatch))
-      //setShow(false)      
-      alert("Successfully save your data");
+      //setShow(false)
+      alert('Successfully save your data')
       //fetchData(Sessionid);
-      setSessionDialogOpen(false);
+      setSessionDialogOpen(false)
       // fetchSessionData();
       // fetchsessionweekdata();
-      activeProgramData().then((resdata)=>{
-        console.log("data", resdata);
-        fetchWeekData(resdata.data.SessionId);
-        loadsessiondata();  
-        resetdata();
-      });
-      
+      activeProgramData().then(resdata => {
+        console.log('data', resdata)
+        if(!!resdata.data.SessionId){
+          fetchWeekData(resdata.data.SessionId)
+        }
+        loadsessiondata()
+        resetdata()
+      })
+
       return { ok: true }
     } else {
       // console.log('ERROR => ', data.error)
-      alert("System Error");
+      alert('System Error')
       return { ok: false }
     }
   }
 
   // END API Section
-  
+
   // SessionDialogOpen as Entry dialog open
   const handleSessionDialogClose = () => {
-    setSessionDialogOpen(false);
-  };
-  const [loaderVisible, setLoaderVisible] = useState(false);
-  
-  const handleSessionSubmit = (e) => {
+    setSessionDialogOpen(false)
+  }
+  const [loaderVisible, setLoaderVisible] = useState(false)
+
+  const handleSessionSubmit = e => {
     setLoaderVisible(true)
-    e.preventDefault();
-    var ProgramStartDt = ProgramDate.toLocaleDateString("en-US");
-    const list = [...inputFields];
-    
-    const newlist = list.map((element) => (
-      {
-        'name': element.fullName
-      }
-    ));
+    e.preventDefault()
+    var ProgramStartDt = ProgramDate.toLocaleDateString('en-US')
+    const list = [...inputFields]
+
+    const newlist = list.map(element => ({
+      name: element.fullName
+    }))
 
     let data = {}
-    data.sessionname = name;
-    data.ProgramDt = ProgramDate.toDateString("en-US");
-    data.NumberofWeek = NumberOfWeek;
-    //data.Id = Sessionid;  
-    data.EntryBy = "sysadmin";
+    data.sessionname = name
+    data.ProgramDt = ProgramDate.toDateString('en-US')
+    data.NumberofWeek = NumberOfWeek
+    //data.Id = Sessionid;
+    data.EntryBy = 'sysadmin'
     //data.WeekList = newlist;
-    if(data.sessionname != "" && data.ProgramDt != "" && data.NumberofWeek != 0)
-    {
+    if (data.sessionname != '' && data.ProgramDt != '' && data.NumberofWeek != 0) {
       //console.log(data)
       setLoaderVisible(false)
       postSessionData(data)
-    }
-    else{
+    } else {
       setLoaderVisible(false)
-      alert("Program Name , Program Start Dt and Week List Empty not allow");
+      alert('Program Name , Program Start Dt and Week List Empty not allow')
     }
-  };
+  }
 
   // start dynamic textbox addd arrary
 
-  const [inputFields, setInputFields] = useState([{
-    fullName: '',
-  }]);
+  const [inputFields, setInputFields] = useState([
+    {
+      fullName: ''
+    }
+  ])
 
-  const addInputField = (e) => {
-    e.preventDefault();
-    setInputFields([...inputFields, {
-      fullName: '',
-    }])
-    console.log("add input section");
-
+  const addInputField = e => {
+    e.preventDefault()
+    setInputFields([
+      ...inputFields,
+      {
+        fullName: ''
+      }
+    ])
+    console.log('add input section')
   }
 
-  const removeInputFields = (index) => {
-    const rows = [...inputFields];
-    rows.splice(index, 1);
-    setInputFields(rows);
+  const removeInputFields = index => {
+    const rows = [...inputFields]
+    rows.splice(index, 1)
+    setInputFields(rows)
   }
 
   const handleChange = (index, evnt) => {
-
-    const { name, value } = evnt.target;
-    const list = [...inputFields];
-    list[index][name] = value;
-    setInputFields(list);
-    console.log("dynamic value", [...inputFields])
+    const { name, value } = evnt.target
+    const list = [...inputFields]
+    list[index][name] = value
+    setInputFields(list)
+    console.log('dynamic value', [...inputFields])
   }
 
   // End SessionDialogOpen as Entry dialog open
   // start 2nd dialog option Edit master and Week
   const handleadddialogClose = () => {
-    setadddialogopen(false);
-  };
+    setadddialogopen(false)
+  }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("row", WeekData)
+  const handleSubmit = e => {
+    e.preventDefault()
+    console.log('row', WeekData)
     let data = {}
-    data.name = name;
-    data.sessionid = Sessionid;
+    data.name = name
+    data.sessionid = Sessionid
     // data.StartDt = WeekData.StartDt;
     // data.EndDt = WeekData.EndDt;
 
     if (WeekId != 0) {
-      data.Id = WeekId;
-      data.UpdateBy = "sysadmin";
+      data.Id = WeekId
+      data.UpdateBy = 'sysadmin'
     } else {
-      data.EntryBy = "sysadmin";
+      data.EntryBy = 'sysadmin'
     }
     //alert("sucessfully add.");
-    //setOpenAlert(true);    
+    //setOpenAlert(true);
     //postWeekData(data);
     //alert(JSON.stringify(data))
     postWeekData(data)
     //fetchWeekData();
-
-  };
+  }
 
   // End 2nd dialog option Edit master and Week
-  const handleClickEdit = (row) => {
-    console.log("row", row);
-    setWeekData(row);
-    setName(row.WeekName);
+  const handleClickEdit = row => {
+    console.log('row', row)
+    setWeekData(row)
+    setName(row.WeekName)
     setWeekId(row.Id)
     if (!adddialogopen) {
-      setadddialogopen(true);
+      setadddialogopen(true)
     }
-  }; 
+  }
 
   // close new dialog option
   // alert open and close after 3 second
@@ -592,14 +591,12 @@ const index = () => {
   //   setOpenAlert(false);
   // };
 
-  
-
   //  setTimeout(handleAlertClose, 10000);
   return (
     <>
       <Grid container spacing={6}>
         <Grid item xs={12}>
-        <Card>
+          <Card>
             <CardContent>
               <Box
                 sx={{
@@ -612,30 +609,29 @@ const index = () => {
                   justifyContent: 'space-between'
                 }}
               >
-                
-              <Grid item xs={6}>
-                <Box sx={{ mr: 8, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                  <CustomAvatar skin='light' variant='rounded' sx={{ mr: 2.5, width: 38, height: 38 }}>
-                    <Icon fontSize='1.75rem' icon='tabler:checkbox' />
-                  </CustomAvatar>
-                  <div>
-                    <Typography variant='body2'>Active Program</Typography>
-                    <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{ProgramName}</Typography>
-                  </div>
-                </Box>
-              </Grid>
-                
-              <Grid item xs={6}>
-                <Box sx={{ mr: 8, display: 'flex', alignItems: 'center', justifyContent: 'flex-start'}}>
-                  <CustomAvatar skin='light' variant='rounded' sx={{ mr: 2.5, width: 38, height: 38 }}>
-                    <Icon fontSize='1.75rem' icon='tabler:ad-2' />
-                  </CustomAvatar>
-                  <div>
-                    <Typography variant='body2'>Current Week</Typography>
-                    <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{WeekName}</Typography>
-                  </div>
-                </Box>
-              </Grid>
+                <Grid item xs={6}>
+                  <Box sx={{ mr: 8, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                    <CustomAvatar skin='light' variant='rounded' sx={{ mr: 2.5, width: 38, height: 38 }}>
+                      <Icon fontSize='1.75rem' icon='tabler:checkbox' />
+                    </CustomAvatar>
+                    <div>
+                      <Typography variant='body2'>Active Program</Typography>
+                      <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{ProgramName}</Typography>
+                    </div>
+                  </Box>
+                </Grid>
+
+                <Grid item xs={6}>
+                  <Box sx={{ mr: 8, display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+                    <CustomAvatar skin='light' variant='rounded' sx={{ mr: 2.5, width: 38, height: 38 }}>
+                      <Icon fontSize='1.75rem' icon='tabler:ad-2' />
+                    </CustomAvatar>
+                    <div>
+                      <Typography variant='body2'>Current Week</Typography>
+                      <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{WeekName}</Typography>
+                    </div>
+                  </Box>
+                </Grid>
 
                 {/* <Box sx={{ rowGap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
                 Active Program:
@@ -643,7 +639,7 @@ const index = () => {
                 </Box> */}
               </Box>
             </CardContent>
-        </Card>
+          </Card>
         </Grid>
       </Grid>
       <Grid container spacing={6.5}>
@@ -663,7 +659,6 @@ const index = () => {
                 justifyContent: 'space-between'
               }}
             >
-
               <Box sx={{ display: 'inline-block' }}>
                 <Autocomplete
                   // value={value}
@@ -705,17 +700,22 @@ const index = () => {
                 </Button>
               </Box>
             </Box>
-
-            <DataGrid
-              autoHeight
-              rowHeight={62}
-              rows={AllWeek}
-              columns={columns}
-              disableRowSelectionOnClick
-              pageSizeOptions={[2, 3, 4, 10, 25, 50]}
-              paginationModel={paginationModel}
-              onPaginationModelChange={setPaginationModel}
-            />
+            {Sessionid ? (
+              <DataGrid
+                autoHeight
+                rowHeight={62}
+                rows={AllWeek}
+                columns={columns}
+                disableRowSelectionOnClick
+                pageSizeOptions={[2, 3, 4, 10, 25, 50]}
+                paginationModel={paginationModel}
+                onPaginationModelChange={setPaginationModel}
+              />
+            ) : (
+              <>
+                <b>No Program Found </b>
+              </>
+            )}
           </Card>
         </Grid>
       </Grid>
@@ -767,7 +767,7 @@ const index = () => {
         fullWidth
         disableEscapeKeyDown
       >
-        <form >
+        <form>
           <DialogContent
             sx={{
               pb: theme => `${theme.spacing(8)} !important`,
@@ -775,61 +775,64 @@ const index = () => {
               pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
             }}
           >
+            <Grid container spacing={6.5}>
+              <Grid item md={12}>
+                {loaderVisible && (
+                  <img
+                    src='../../images/loader.gif'
+                    style={{ maxWidth: '100px', position: 'absolute', top: '40%', left: 'calc( 50% - 50px)' }}
+                  />
+                )}
 
-
-          <Grid container spacing={6.5}>
-            <Grid item md={12}>
-
-            {loaderVisible && (
-              <img src='../../images/loader.gif' style={{maxWidth: '100px', position: 'absolute', top: '40%', left: 'calc( 50% - 50px)'}}/>
-            )}
-  
-              <Box sx={{ mb: 4, textAlign: 'center' }} style={{marginBottom: '0'}}>
-                <Typography variant='h3' sx={{ mb: 3 }}>
-                <Icon icon='tabler:plus' style={{color: '#e7988f', fontSize: '2rem', paddingTop: '12px'}}/> Add Program
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap' }} className='demo-space-x' style={{paddingTop: '0'}}>
-                <TextField
-                autoFocus
-                value={name}
-                id='name'
-                label='Name'
-                type='text'
-                fullWidth
-                variant='standard'
-                onChange={e => setName(e.target.value)}
-              />
-              </Box>
-            </Grid>
-              <Grid item md={6} style={{paddingTop: '10px'}}>
+                <Box sx={{ mb: 4, textAlign: 'center' }} style={{ marginBottom: '0' }}>
+                  <Typography variant='h3' sx={{ mb: 3 }}>
+                    <Icon icon='tabler:plus' style={{ color: '#e7988f', fontSize: '2rem', paddingTop: '12px' }} /> Add
+                    Program
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap' }} className='demo-space-x' style={{ paddingTop: '0' }}>
+                  <TextField
+                    autoFocus
+                    value={name}
+                    id='name'
+                    label='Name'
+                    type='text'
+                    fullWidth
+                    variant='standard'
+                    onChange={e => setName(e.target.value)}
+                  />
+                </Box>
+              </Grid>
+              <Grid item md={6} style={{ paddingTop: '10px' }}>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap' }} className='demo-space-x'>
                   <div>
                     <DatePicker
-                    id='issue-date'
-                    selected={ProgramDate}
-                    customInput={<CustomInput label='Start Date' />}
-                    onChange={date => setProgramDate(date)}
-                    className='custom-datepicker'
+                      id='issue-date'
+                      selected={ProgramDate}
+                      customInput={<CustomInput label='Start Date' />}
+                      onChange={date => setProgramDate(date)}
+                      className='custom-datepicker'
                     />
                   </div>
                 </Box>
               </Grid>
-              <Grid item md={6} style={{paddingTop: '10px'}}>
+              <Grid item md={6} style={{ paddingTop: '10px' }}>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap' }} className='demo-space-x'>
                   <div>
-                    <CustomTextField type='number' label='Number Of Week' id='name' InputLabelProps={{ shrink: true }} 
-                    fullWidth
-                    onChange={e => setNumberOfWeek(e.target.value)}/>
+                    <CustomTextField
+                      type='number'
+                      label='Number Of Week'
+                      id='name'
+                      InputLabelProps={{ shrink: true }}
+                      fullWidth
+                      onChange={e => setNumberOfWeek(e.target.value)}
+                    />
                   </div>
                 </Box>
               </Grid>
-              </Grid>
+            </Grid>
             <Box sx={{ mb: 3, display: 'flex', alignItems: 'center' }}>
-              
               {/* <Typography sx={{ mr: 3, width: '100px', color: 'text.secondary' }}>Date Issued:</Typography> */}
-              
-               
             </Box>
             <Box>
               {/* <button onClick={addInput}>+</button>
@@ -881,14 +884,14 @@ const index = () => {
                 <div className="col-sm-4">
                 </div>
               </div>*/}
-
             </Box>
             {/* onSubmit={handleSessionSubmit} */}
-
           </DialogContent>
           <DialogActions>
             <Button onClick={handleSessionDialogClose}>Cancel</Button>
-            <Button type='submit' onClick={handleSessionSubmit}>Submit</Button>
+            <Button type='submit' onClick={handleSessionSubmit}>
+              Submit
+            </Button>
           </DialogActions>
         </form>
       </Dialog>

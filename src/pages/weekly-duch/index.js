@@ -64,13 +64,14 @@ const aAZz = yup.object().shape({
 })
 
 const StepperLinearWithValidation = () => {
-  // Reload prevention
-  window.addEventListener('beforeunload', event => {
-    // Cancel the event as stated by the standard.
-    event.preventDefault()
-    // Chrome requires returnValue to be set.
-    event.returnValue = ''
-  })
+ 
+  // // Reload prevention
+  // window.addEventListener('beforeunload', event => {
+  //   // Cancel the event as stated by the standard.
+  //   event.preventDefault()
+  //   // Chrome requires returnValue to be set.
+  //   event.returnValue = ''
+  // })
 
   const { push } = useRouter()
 
@@ -93,7 +94,7 @@ const StepperLinearWithValidation = () => {
     } else {
       console.log('Everything Looks Good!')
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elegibleData, submissionData])
 
   if (sectionAndOptionsData.length < 1) {
@@ -187,6 +188,8 @@ const StepperLinearWithValidation = () => {
     }
   }
 
+  let ChavrusaName
+
   const handleChange2 = value => {
     console.log('data2 -> ', data2, value)
     // if (selected2.includes(value)) {
@@ -197,6 +200,7 @@ const StepperLinearWithValidation = () => {
         EntryBy: data2[2]?.EntryBy,
         Result: value.target.value
       }
+      ChavrusaName = value.target.value
       const uniqueSelected2Ans = selected2Ans.filter(obj => obj.SectionOption !== newObject.SectionOption)
       setSelected2Ans([...uniqueSelected2Ans, newObject])
     } else {
@@ -243,6 +247,12 @@ const StepperLinearWithValidation = () => {
       }
     }
   }
+
+  useEffect(() => {
+    const updated2Ans = selected2Ans.find(item =>item.SectionOption !== 'My Chavrusa')
+    console.log("WTF ---------------------------> ",updated2Ans)
+  }, [selected2Ans])
+  
 
   const handleChange3 = value => {
     if (selected3.includes(value)) {
@@ -565,8 +575,10 @@ const StepperLinearWithValidation = () => {
   }
   const [totalPoints, setTotalPoints] = useState([])
   useEffect(() => {
-    console.log(AnswerdData)
     setLoading(true)
+    console.log("Answer Data",AnswerdData)
+    // const boo = data.SectionOptionList.find(option => option.SectionOption === "My Chavrusa")?.Result;
+    // console.log("BOOO............................. )> ",boo)
     setTotalPoints(calculateTotalPoints(AnswerdData))
   }, [AnswerdData])
 
@@ -787,6 +799,7 @@ const StepperLinearWithValidation = () => {
               {data2[2]?.SectionOption === 'My Chavrusa' && chavrusaChecked == false && (
                 <>
                   <Grid item xs={4}>
+                    {ChavrusaName}
                     <CustomTextField
                       fullWidth
                       label={data2[2].SectionOption}
@@ -797,7 +810,9 @@ const StepperLinearWithValidation = () => {
                       name='chavrusa'
                       disabled={chavrusaChecked}
                       required
+                      value={ChavrusaName&&ChavrusaName}
                     />
+                    
                   </Grid>
                   <CustomCheckboxBasic
                     key={1}
