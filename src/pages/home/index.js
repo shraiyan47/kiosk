@@ -31,6 +31,7 @@ import {
   hachlatasList,
   submissionsList
 } from 'src/redux/weeklyduch/submissionSlice'
+import { useRandomPassword } from 'src/hooks/useRandom'
 
 // import Counter from '../Counter/index'
 
@@ -39,6 +40,90 @@ const Home = () => {
   //   zIndex: 2,
   //   maxWidth: 150
   // }))
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  // WE TRIED TO UPDATE ALL THE USER EMAIL
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // useEffect(() => {
+  //   getAllUser()
+  // }, [])
+
+  // async function updateUser(user) {
+  //   try {
+  //     const url = `${process.env.NEXT_PUBLIC_BASE_URL}api/User`
+  //     const myHeaders = new Headers()
+  //     myHeaders.append('Content-Type', 'application/json')
+
+  //     const userData = {
+  //       Id: user.Id,
+  //       UserId: user.userId,
+  //       MemberId: (user.MemberId).toString(),
+  //       UserRole: user.userrole,
+  //       PIN: user.PIN,
+  //       UserName: user.UserName,
+  //       Password: user.password,
+  //       email: `${user.userId}@vehayamachanechakadosh.com`,
+  //       UpdateBy: 'sysadmin',
+  //       UserProfiles: {
+  //         Id: user.ProfileId,
+  //         UserAccountId: user.Id,
+  //         UserId: user.userId,
+  //         FullName: user.fullname,
+  //         Class: user.Class,
+  //         Grade: user.grade,
+  //         UpdateBy: 'sysadmin'
+  //       }
+  //     }
+
+  //     const requestOptions = {
+  //       method: 'PUT',
+  //       headers: myHeaders,
+  //       body: JSON.stringify(userData),
+  //       redirect: 'follow'
+  //     }
+  //     const res = await fetch(url, requestOptions)
+  //     const data = await res.json()
+  //     if (res.ok) {
+  //       console.log('Success Email Update ==>', data)
+
+  //       return { ok: true, data }
+  //     } else {
+  //       console.log('ERROR => ', data.error)
+
+  //       return { ok: false, err: res, data }
+  //     }
+  //   } catch (err) {
+  //     console.error('Error fetching active program data:', err)
+
+  //     return { ok: false, err: err }
+  //   }
+  // }
+
+  // async function getAllUser() {
+  //   try {
+  //     const getUsers = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/GetAllUserInfo?Stauts=all`)
+
+  //     if (getUsers.status === 200) {
+  //       const getAllUserData = getUsers.data
+
+  //       getAllUserData.map(x => {
+  //         console.log('User ID = ', x.userId + '@vehayamachanechakadosh.com')
+  //         updateUser(x)
+  //       })
+  //     } else {
+  //       throw new Error(`API request failed with status ${response.status}`)
+  //     }
+  //   } catch (err) {
+  //     console.error('Error fetching active program data:', err)
+
+  //     return { ok: false, err: err }
+  //   }
+  // }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  // WE TRIED TO UPDATE ALL THE USER EMAIL
+  /////////////////////////////////////////////////////////////////////////////////////////////////
 
   const [loading, setLoading] = useState(false)
   const auth = useAuth()
@@ -192,7 +277,7 @@ const Home = () => {
       const resHachlata = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?Accesskey=HA`
       )
-      
+
       const resGedder = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?Accesskey=GM`
       )
@@ -255,6 +340,9 @@ const Home = () => {
     <>
       {!loading ? (
         <Grid container spacing={6}>
+          <Grid item xs={12} sx={{ pb: 4 }}>
+            <Typography variant='h1'> {auth?.user?.fullname} </Typography>
+          </Grid>
           <Grid item xs={12} sx={{ pb: 4 }}>
             <Typography variant='h4'>Current Program </Typography>
           </Grid>

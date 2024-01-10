@@ -139,6 +139,7 @@ export default function QrCodeScanner() {
       UpdateBy: scanResult,
       email: data.email,
       userrole: data.userrole,
+      UserName: x.fullnameStudent,
       MotherName: x.fullnameMother
     }
 
@@ -233,7 +234,8 @@ export default function QrCodeScanner() {
       Password: studentPassword,
       UserId: scanResult,
       UpdateBy: scanResult,
-      MotherName: ""
+      MotherName: "",
+      UserName: ""
     }
 
     console.log('updatePIN ===> ', updatePIN)
@@ -377,7 +379,7 @@ export default function QrCodeScanner() {
                       )}
                     />
 
-                    {/* <Controller
+                    <Controller
                       name='fullnameStudent'
                       control={control}
                       rules={{ required: true }}
@@ -391,7 +393,7 @@ export default function QrCodeScanner() {
                           type={'text'}
                         />
                       )}
-                    /> */}
+                    />
 
                     <Controller
                       name='fullnameMother'

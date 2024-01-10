@@ -64,7 +64,6 @@ const aAZz = yup.object().shape({
 })
 
 const StepperLinearWithValidation = () => {
- 
   // // Reload prevention
   // window.addEventListener('beforeunload', event => {
   //   // Cancel the event as stated by the standard.
@@ -88,11 +87,15 @@ const StepperLinearWithValidation = () => {
   console.log(' geder moment Data ==> ', gedermomentData)
 
   useEffect(() => {
-    if (elegibleData[0] != 'Active' || submissionData.length < 1 || submissionData[0] === 'ALREADY SUBMITTED') {
-      alert('Weekly Duch already submitted or you are not eligible for program.')
+    if (elegibleData[0] != 'Active') {
+      alert('INACTIVE!! You are not eligible for program.')
       push('/home')
     } else {
-      console.log('Everything Looks Good!')
+      if (submissionData.length < 1 || submissionData[0] === 'ALREADY SUBMITTED') {
+        alert('SUBMITTED!! Weekly Duch already submitted.')
+        push('/home')
+      }
+      console.log('Eligible and not submitted!')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elegibleData, submissionData])
@@ -249,10 +252,9 @@ const StepperLinearWithValidation = () => {
   }
 
   useEffect(() => {
-    const updated2Ans = selected2Ans.find(item =>item.SectionOption !== 'My Chavrusa')
-    console.log("WTF ---------------------------> ",updated2Ans)
+    const updated2Ans = selected2Ans.find(item => item.SectionOption !== 'My Chavrusa')
+    console.log('WTF ---------------------------> ', updated2Ans)
   }, [selected2Ans])
-  
 
   const handleChange3 = value => {
     if (selected3.includes(value)) {
@@ -576,7 +578,7 @@ const StepperLinearWithValidation = () => {
   const [totalPoints, setTotalPoints] = useState([])
   useEffect(() => {
     setLoading(true)
-    console.log("Answer Data",AnswerdData)
+    console.log('Answer Data', AnswerdData)
     // const boo = data.SectionOptionList.find(option => option.SectionOption === "My Chavrusa")?.Result;
     // console.log("BOOO............................. )> ",boo)
     setTotalPoints(calculateTotalPoints(AnswerdData))
@@ -810,9 +812,8 @@ const StepperLinearWithValidation = () => {
                       name='chavrusa'
                       disabled={chavrusaChecked}
                       required
-                      value={ChavrusaName&&ChavrusaName}
+                      value={ChavrusaName && ChavrusaName}
                     />
-                    
                   </Grid>
                   <CustomCheckboxBasic
                     key={1}
@@ -992,61 +993,6 @@ const StepperLinearWithValidation = () => {
         return (
           <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
             <Grid container spacing={5}>
-              <Grid item xs={6}>
-                <Card>
-                  <CardHeader title={sectionAndOptionsData[0][5].SectionTitle} />
-                  <CardContent>
-                    {/* {data6.map((item6, index6) => ( */}
-
-                    <CustomCheckboxBasic
-                      key={0}
-                      data={data6[0]}
-                      selected={selected6}
-                      handleChange={handleChange6}
-                      name='custom-checkbox-basic'
-                      gridProps={{ xs: 12 }}
-                      icon={icons6[0] ? icons6[0].icon : ''}
-                      iconProps={icons6[0] ? icons6[0].iconProps : {}}
-                    />
-                    <br />
-
-                    {/* ))} */}
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={6}>
-                <Card>
-                  <CardContent>
-                    <TextField
-                      fullWidth
-                      rows={8}
-                      multiline
-                      variant='filled'
-                      label='Anything else you want to ask or share with the Rebbe?'
-                      id='textarea-filled-static'
-                      sx={{ marginBottom: 5, marginTop: '50px' }}
-                      name='commentstoRebbe'
-                      onBlur={handleChange6}
-                    />
-                  </CardContent>
-                </Card>
-              </Grid>
-
-              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant='step6' color='secondary' onClick={handleBack}>
-                  Back
-                </Button>
-                <Button type='submit' variant='contained'>
-                  Next
-                </Button>
-              </Grid>
-            </Grid>
-          </form>
-        )
-      case 6: /// Geder Moments
-        return (
-          <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
-            <Grid container spacing={5}>
               <Grid item xs={12}>
                 <label>{sectionAndOptionsData[0][6].SectionTitle}</label>
               </Grid>
@@ -1222,6 +1168,62 @@ const StepperLinearWithValidation = () => {
               )}
               {/* </> */}
               {/* ))} */}
+
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Button variant='step6' color='secondary' onClick={handleBack}>
+                  Back
+                </Button>
+                <Button type='submit' variant='contained'>
+                  Next
+                </Button>
+              </Grid>
+              
+            </Grid>
+          </form>
+        )
+      case 6: /// Geder Moments
+        return (
+          <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
+            <Grid container spacing={5}>
+              <Grid item xs={6}>
+                <Card>
+                  <CardHeader title={sectionAndOptionsData[0][5].SectionTitle} />
+                  <CardContent>
+                    {/* {data6.map((item6, index6) => ( */}
+
+                    <CustomCheckboxBasic
+                      key={0}
+                      data={data6[0]}
+                      selected={selected6}
+                      handleChange={handleChange6}
+                      name='custom-checkbox-basic'
+                      gridProps={{ xs: 12 }}
+                      icon={icons6[0] ? icons6[0].icon : ''}
+                      iconProps={icons6[0] ? icons6[0].iconProps : {}}
+                    />
+                    <br />
+
+                    {/* ))} */}
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={6}>
+                <Card>
+                  <CardContent>
+                    <TextField
+                      fullWidth
+                      rows={8}
+                      multiline
+                      variant='filled'
+                      label='Anything else you want to ask or share with the Rebbe?'
+                      id='textarea-filled-static'
+                      sx={{ marginBottom: 5, marginTop: '50px' }}
+                      name='commentstoRebbe'
+                      onBlur={handleChange6}
+                    />
+                  </CardContent>
+                </Card>
+              </Grid>
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Button variant='step7' color='secondary' onClick={handleBack}>
                   Back
@@ -1230,6 +1232,7 @@ const StepperLinearWithValidation = () => {
                   Proceed
                 </Button>
               </Grid>
+              
             </Grid>
           </form>
         )
