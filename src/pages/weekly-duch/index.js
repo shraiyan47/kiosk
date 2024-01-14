@@ -422,14 +422,18 @@ const StepperLinearWithValidation = () => {
     }
   }
 
+  const [Geder1, setGeder1] = useState(false)
   const [otherGeder1, setOtherGeder1] = useState(false)
+  const [Geder2, setGeder2] = useState(false)
   const [otherGeder2, setOtherGeder2] = useState(false)
+  const [Geder3, setGeder3] = useState(false)
   const [otherGeder3, setOtherGeder3] = useState(false)
 
   const handleChange7 = value => {
     console.log(' CHECK 7 => ', data7, value, selected7Ans)
 
     if (value?.target?.name === data7[0]?.SectionOption) {
+      setGeder1(true)
       if (value?.target?.value.replace(/ /g, '') === 'Other') {
         setOtherGeder1(true)
       } else {
@@ -470,6 +474,7 @@ const StepperLinearWithValidation = () => {
     }
 
     if (value?.target?.name === data7[1]?.SectionOption) {
+      setGeder2(true)
       if (value?.target?.value.replace(/ /g, '') === 'Other') {
         setOtherGeder2(true)
       } else {
@@ -510,6 +515,7 @@ const StepperLinearWithValidation = () => {
     }
 
     if (value?.target?.name === data7[2]?.SectionOption) {
+      setGeder3(true)
       if (value?.target?.value.replace(/ /g, '') === 'Other') {
         setOtherGeder3(true)
       } else {
@@ -768,9 +774,9 @@ const StepperLinearWithValidation = () => {
                 />
               ))}
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant='step1' color='secondary' disabled>
+                {/* <Button variant='step1' color='secondary' disabled>
                   Back
-                </Button>
+                </Button> */}
                 <Button type='submit' variant='contained'>
                   Next
                 </Button>
@@ -831,9 +837,9 @@ const StepperLinearWithValidation = () => {
               {/* )} */}
 
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant='step2' color='secondary' onClick={handleBack}>
+                {/* <Button variant='step2' color='secondary' onClick={handleBack}>
                   Back
-                </Button>
+                </Button> */}
                 <Button type='submit' variant='contained'>
                   Next
                 </Button>
@@ -867,9 +873,9 @@ const StepperLinearWithValidation = () => {
                 ))
               )}
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant='step3' color='secondary' onClick={handleBack}>
+                {/* <Button variant='step3' color='secondary' onClick={handleBack}>
                   Back
-                </Button>
+                </Button> */}
                 <Button type='submit' variant='contained'>
                   Next
                 </Button>
@@ -914,9 +920,9 @@ const StepperLinearWithValidation = () => {
 
               {/* ))} */}
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant='step4' color='secondary' onClick={handleBack}>
+                {/* <Button variant='step4' color='secondary' onClick={handleBack}>
                   Back
-                </Button>
+                </Button> */}
                 <Button type='submit' variant='contained'>
                   Next
                 </Button>
@@ -948,7 +954,7 @@ const StepperLinearWithValidation = () => {
                     {hachlata && (
                       <>
                         <b>Choose Your Hachlata</b> <br />
-                        <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange5} name='hachlatalist'>
+                        <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange5} name='hachlatalist' required>
                           {hachlataData[0].map((data, i) => (
                             <MenuItem key={i} value={data.Name}>
                               {data.Name}
@@ -1011,7 +1017,7 @@ const StepperLinearWithValidation = () => {
               </Grid>
               <Grid item xs={5}>
                 <b>Day of Week</b> : &nbsp;&nbsp;
-                <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={'dow1'}>
+                <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={'dow1'} required={Geder1}>
                   <MenuItem key={1} value='Sunday'>
                     Sunday
                   </MenuItem>
@@ -1067,7 +1073,7 @@ const StepperLinearWithValidation = () => {
               </Grid>
               <Grid item xs={5}>
                 <b>Day of Week</b> : &nbsp;&nbsp;
-                <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={'dow2'}>
+                <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={'dow2'} required={Geder2}>
                   <MenuItem key={1} value='Sunday'>
                     Sunday
                   </MenuItem>
@@ -1123,7 +1129,7 @@ const StepperLinearWithValidation = () => {
               </Grid>
               <Grid item xs={5}>
                 <b>Day of Week</b> : &nbsp;&nbsp;
-                <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={'dow3'}>
+                <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={'dow3'} required={Geder3}>
                   <MenuItem key={1} value='Sunday'>
                     Sunday
                   </MenuItem>
@@ -1170,9 +1176,9 @@ const StepperLinearWithValidation = () => {
               {/* ))} */}
 
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant='step6' color='secondary' onClick={handleBack}>
+                {/* <Button variant='step6' color='secondary' onClick={handleBack}>
                   Back
-                </Button>
+                </Button> */}
                 <Button type='submit' variant='contained'>
                   Next
                 </Button>
@@ -1225,9 +1231,9 @@ const StepperLinearWithValidation = () => {
                 </Card>
               </Grid>
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant='step7' color='secondary' onClick={handleBack}>
+                {/* <Button variant='step7' color='secondary' onClick={handleBack}>
                   Back
-                </Button>
+                </Button> */}
                 <Button type='submit' variant='contained' onClick={proceedHandler}>
                   Proceed
                 </Button>
@@ -1293,9 +1299,9 @@ const StepperLinearWithValidation = () => {
               Reset
             </Button>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Button variant='contained' onClick={handleBack} sx={{ marginRight: '10px' }} color='warning'>
+              {/* <Button variant='contained' onClick={handleBack} sx={{ marginRight: '10px' }} color='warning'>
                 Edit
-              </Button>
+              </Button> */}
               <Button variant='contained' onClick={() => handleSubmit()} color='success'>
                 Submit
               </Button>
@@ -1375,6 +1381,11 @@ const StepperLinearWithValidation = () => {
                     </div>
                   </Box>
                 </Grid>
+
+                <Grid item xs={12} sx={{mt:2}}>
+                      <Typography variant='body2'>** Choose carefully. No edit or go back option right now.</Typography>
+                </Grid>
+
 
                 {/* <Box sx={{ rowGap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
                 Active Program:

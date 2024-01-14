@@ -131,10 +131,14 @@ export default function QrCodeScanner() {
     mode: 'onSubmit'
   })
 
+  const passwordCheck = watch('passwordCheck', '')
+  const PINReset = watch('PINReset', '')
+  const pinMaxChar = `${watch('PIN')}`.length 
+
   const onSubmit = x => {
     const updatePINpass = {
       password: x.password,
-      PIN: x.PIN,
+      PIN: x.PIN.toString().substr(0,4),
       UserId: scanResult,
       UpdateBy: scanResult,
       email: data.email,
@@ -180,9 +184,6 @@ export default function QrCodeScanner() {
       return { ok: false, err: res, data }
     }
   }
-
-  const passwordCheck = watch('passwordCheck', '')
-  const PINReset = watch('PINReset', '')
 
   const { handleSubmit: passwordCheckHandler } = useForm({
     mode: 'onSubmitPass'
@@ -234,8 +235,8 @@ export default function QrCodeScanner() {
       Password: studentPassword,
       UserId: scanResult,
       UpdateBy: scanResult,
-      MotherName: "",
-      UserName: ""
+      MotherName: '',
+      UserName: ''
     }
 
     console.log('updatePIN ===> ', updatePIN)
@@ -318,7 +319,7 @@ export default function QrCodeScanner() {
                           fullWidth
                           value={value}
                           sx={{ mb: 4 }}
-                          label='PIN'
+                          label={(pinMaxChar <= 4 || !pinMaxChar )?"PIN":"PIN: You can't use more than 4 number."}
                           onChange={onChange}
                           type={showPassword ? 'text' : 'password'}
                           error={Boolean(errors.PIN)}
@@ -343,6 +344,7 @@ export default function QrCodeScanner() {
                         />
                       )}
                     />
+                    
 
                     <Controller
                       name='password'
