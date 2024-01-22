@@ -348,7 +348,7 @@ export default function QrCodeScanner() {
         }}
       >
         <h2>Student Login</h2>
-        <Link href={'/admin'}>.</Link>
+        {/* <Link href={'/admin'}>.</Link> */}
       </Box>
 
       {scanResult ? (
