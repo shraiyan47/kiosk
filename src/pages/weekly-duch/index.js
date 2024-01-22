@@ -253,7 +253,7 @@ const StepperLinearWithValidation = () => {
 
   useEffect(() => {
     const updated2Ans = selected2Ans.find(item => item.SectionOption !== 'My Chavrusa')
-    console.log('WTF ---------------------------> ', updated2Ans)
+    console.log('updated2Ans ---------------------------> ', updated2Ans)
   }, [selected2Ans])
 
   const handleChange3 = value => {
@@ -582,6 +582,7 @@ const StepperLinearWithValidation = () => {
     ])
   }
   const [totalPoints, setTotalPoints] = useState([])
+  
   useEffect(() => {
     setLoading(true)
     console.log('Answer Data', AnswerdData)
@@ -985,9 +986,9 @@ const StepperLinearWithValidation = () => {
                 </Card>
               </Grid>
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant='step5' color='secondary' onClick={handleBack}>
+                {/* <Button variant='step5' color='secondary' onClick={handleBack}>
                   Back
-                </Button>
+                </Button> */}
                 <Button type='submit' variant='contained'>
                   Next
                 </Button>
@@ -995,7 +996,7 @@ const StepperLinearWithValidation = () => {
             </Grid>
           </form>
         )
-      case 5: //// SECTION 6
+      case 5: //// Geder Moment
         return (
           <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
             <Grid container spacing={5}>
@@ -1005,7 +1006,7 @@ const StepperLinearWithValidation = () => {
 
               {/* {data7.map((item7, index7) => ( */}
               {/* <> */}
-              <Grid item xs={5}>
+              <Grid item xs={12}>
                 <b> {data7[0].SectionOption}</b> : &nbsp;&nbsp;
                 <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={data7[0].SectionOption}>
                   {gedermomentData[0].map((data, i) => (
@@ -1015,7 +1016,7 @@ const StepperLinearWithValidation = () => {
                   ))}
                 </CustomTextField>
               </Grid>
-              <Grid item xs={5}>
+              <Grid item xs={12}>
                 <b>Day of Week</b> : &nbsp;&nbsp;
                 <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={'dow1'} required={Geder1}>
                   <MenuItem key={1} value='Sunday'>
@@ -1042,6 +1043,7 @@ const StepperLinearWithValidation = () => {
                 </CustomTextField>
               </Grid>
               <br />
+
               {otherGeder1 && (
                 <>
                   <Grid item xs={12}>
@@ -1061,7 +1063,7 @@ const StepperLinearWithValidation = () => {
                 </>
               )}
 
-              <Grid item xs={5}>
+              <Grid item xs={12}>
                 <b> {data7[1].SectionOption}</b> : &nbsp;&nbsp;
                 <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={data7[1].SectionOption}>
                   {gedermomentData[0].map((data, i) => (
@@ -1071,7 +1073,7 @@ const StepperLinearWithValidation = () => {
                   ))}
                 </CustomTextField>
               </Grid>
-              <Grid item xs={5}>
+              <Grid item xs={12}>
                 <b>Day of Week</b> : &nbsp;&nbsp;
                 <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={'dow2'} required={Geder2}>
                   <MenuItem key={1} value='Sunday'>
@@ -1098,6 +1100,7 @@ const StepperLinearWithValidation = () => {
                 </CustomTextField>
               </Grid>
               <br />
+
               {otherGeder2 && (
                 <>
                   <Grid item xs={12}>
@@ -1116,8 +1119,7 @@ const StepperLinearWithValidation = () => {
                   </Grid>
                 </>
               )}
-
-              <Grid item xs={5}>
+              <Grid item xs={12}>
                 <b> {data7[2].SectionOption}</b> : &nbsp;&nbsp;
                 <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={data7[2].SectionOption}>
                   {gedermomentData[0].map((data, i) => (
@@ -1127,7 +1129,7 @@ const StepperLinearWithValidation = () => {
                   ))}
                 </CustomTextField>
               </Grid>
-              <Grid item xs={5}>
+              <Grid item xs={12}>
                 <b>Day of Week</b> : &nbsp;&nbsp;
                 <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={'dow3'} required={Geder3}>
                   <MenuItem key={1} value='Sunday'>
@@ -1154,6 +1156,7 @@ const StepperLinearWithValidation = () => {
                 </CustomTextField>
               </Grid>
               <br />
+
               {otherGeder3 && (
                 <>
                   <Grid item xs={12}>
@@ -1187,11 +1190,11 @@ const StepperLinearWithValidation = () => {
             </Grid>
           </form>
         )
-      case 6: /// Geder Moments
+      case 6: /// Confermation
         return (
           <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
             <Grid container spacing={5}>
-              <Grid item xs={6}>
+              <Grid item xs={12}>
                 <Card>
                   <CardHeader title={sectionAndOptionsData[0][5].SectionTitle} />
                   <CardContent>
@@ -1213,7 +1216,7 @@ const StepperLinearWithValidation = () => {
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12}>
                 <Card>
                   <CardContent>
                     <TextField
@@ -1268,8 +1271,9 @@ const StepperLinearWithValidation = () => {
                       {x?.SectionOptionList?.map((option, idx) => (
                         <>
                           <li key={idx}>
-                            {option?.SectionOption} - &nbsp;Point:{option?.Point}
+                            {option?.SectionOption} - &nbsp;Points:{option?.Point}
                           </li>
+
                           {(option?.SectionOption == 'My Chavrusa' ||
                             option?.SectionOption == 'Hachlata' ||
                             option?.SectionOption == 'Remarks' ||

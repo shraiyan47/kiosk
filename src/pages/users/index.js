@@ -27,7 +27,7 @@ import TableHeader from '../../views/pages/user/TableHeader'
 import { useSelector, useDispatch } from 'react-redux'
 import { usersList } from '../../redux/user/userSlice'
 import { userRolesList } from '../../redux/user/userRoleSlice'
-import { userProgramsList } from '../../redux/user/userProgramSlice'
+// import { userProgramsList } from '../../redux/user/userProgramSlice'
 
 import QrGen from '../../views/pages/user/QrGen'
 
@@ -268,7 +268,7 @@ const UserList = () => {
 
   const AllUsersURL = `${process.env.NEXT_PUBLIC_BASE_URL}api/GetAllUserInfo?Stauts=all` ////// All Users
   const UserRoleURL = `${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?MasterId=2&Accesskey=UR` ////// All User Roles
-  const UserProgramURL = `${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?MasterId=1&Accesskey=TM` ////// All User Program
+  // const UserProgramURL = `${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?MasterId=1&Accesskey=TM` ////// All User Program
 
   // const userStateData = useSelector(state => state.users.data)
   // const userRoleStateData = useSelector(state => state.userRoles.data)
@@ -279,7 +279,7 @@ const UserList = () => {
   useEffect(() => {
     fetchAllUsers()
     fetchUserRoles()
-    fetchUserPrograms()
+    // fetchUserPrograms()
     console.log('success ----> ', success)
   }, [success])
 
@@ -353,34 +353,34 @@ const UserList = () => {
     }
   }
 
-  async function fetchUserPrograms() {
-    const myHeaders = new Headers()
-    myHeaders.append('Content-Type', 'application/json')
-    // myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'))
+  // async function fetchUserPrograms() {
+  //   const myHeaders = new Headers()
+  //   myHeaders.append('Content-Type', 'application/json')
+  //   // myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'))
 
-    const requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow'
-    }
+  //   const requestOptions = {
+  //     method: 'GET',
+  //     headers: myHeaders,
+  //     redirect: 'follow'
+  //   }
     
-    const res = await fetch(UserProgramURL, requestOptions)
-    const data = await res.json()
-    if (res.ok) {
-      const userProgramDispatch = {
-        programData: data
-      }
-      dispatch(userProgramsList(userProgramDispatch))
+  //   const res = await fetch(UserProgramURL, requestOptions)
+  //   const data = await res.json()
+  //   if (res.ok) {
+  //     const userProgramDispatch = {
+  //       programData: data
+  //     }
+  //     dispatch(userProgramsList(userProgramDispatch))
 
-      console.log("userProgramDispatch -> ",userProgramDispatch)
+  //     console.log("userProgramDispatch -> ",userProgramDispatch)
 
-      return { ok: true, data }
-    } else {
-      constole.log('ERROR => ', data.error)
+  //     return { ok: true, data }
+  //   } else {
+  //     constole.log('ERROR => ', data.error)
 
-      return { ok: false, err: res, data }
-    }
-  }
+  //     return { ok: false, err: res, data }
+  //   }
+  // }
 
   useEffect(() => {
     const searchQuery = value

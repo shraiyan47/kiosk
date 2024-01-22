@@ -36,6 +36,8 @@ import { useRandomPassword } from 'src/hooks/useRandom'
 // import Counter from '../Counter/index'
 
 const Home = () => {
+
+
   // const LoginIllustration = styled('img')(({ theme }) => ({
   //   zIndex: 2,
   //   maxWidth: 150
@@ -51,7 +53,7 @@ const Home = () => {
 
   // async function updateUser(user) {
   //   try {
-  //     const url = `${process.env.NEXT_PUBLIC_BASE_URL}api/User`
+  //     const url = `${process.env.NEXT_PUBLIC_BASE_URL}/////////////api////////User`
   //     const myHeaders = new Headers()
   //     myHeaders.append('Content-Type', 'application/json')
 
@@ -102,7 +104,7 @@ const Home = () => {
 
   // async function getAllUser() {
   //   try {
-  //     const getUsers = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/GetAllUserInfo?Stauts=all`)
+  //     const getUsers = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}///////api/////////GetAllUserInfo?Stauts=all`)
 
   //     if (getUsers.status === 200) {
   //       const getAllUserData = getUsers.data
@@ -129,6 +131,8 @@ const Home = () => {
   const auth = useAuth()
 
   const dispatch = useDispatch()
+
+  console.log(" AUTH ==> ",auth?.user)
 
   async function fetchActiveProgramData() {
     try {

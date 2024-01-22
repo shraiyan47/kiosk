@@ -24,6 +24,8 @@ import Link from 'next/link'
 // ** Form
 import { Controller, useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
+import { userProgramsList } from '../../redux/user/userProgramSlice'
+import { useSelector, useDispatch } from 'react-redux'
 
 import Modal from '@mui/material'
 
@@ -34,6 +36,9 @@ export default function QrCodeScanner() {
   const theme = useTheme()
 
   const auth = useAuth()
+
+  const dispatch = useDispatch()
+
 
   const router = useRouter()
   const [scanResult, setScanResult] = useState(null)
@@ -77,6 +82,9 @@ export default function QrCodeScanner() {
     function error(err) {
       console.warn(err)
     }
+
+    fetchUserPrograms()
+
   }, [])
 
   function handlePasswordReset() {
@@ -133,18 +141,19 @@ export default function QrCodeScanner() {
 
   const passwordCheck = watch('passwordCheck', '')
   const PINReset = watch('PINReset', '')
-  const pinMaxChar = `${watch('PIN')}`.length 
+  const pinMaxChar = `${watch('PIN')}`.length
 
   const onSubmit = x => {
     const updatePINpass = {
       password: x.password,
-      PIN: x.PIN.toString().substr(0,4),
+      PIN: x.PIN.toString().substr(0, 4),
       UserId: scanResult,
       UpdateBy: scanResult,
       email: data.email,
       userrole: data.userrole,
       UserName: x.fullnameStudent,
-      MotherName: x.fullnameMother
+      MotherName: x.fullnameMother,
+      TargetMemberId: x.Member
     }
 
     console.log('updatePINpass ===> ', updatePINpass)
@@ -276,6 +285,47 @@ export default function QrCodeScanner() {
     }
   }
 
+  const UserProgramURL = `${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?MasterId=1&Accesskey=TM` ////// All User Program
+
+  async function fetchUserPrograms() {
+    const myHeaders = new Headers()
+    myHeaders.append('Content-Type', 'application/json')
+    // myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'))
+
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    }
+    
+    const res = await fetch(UserProgramURL, requestOptions)
+    const data = await res.json()
+    if (res.ok) {
+      const userProgramDispatch = {
+        programData: data
+      }
+      dispatch(userProgramsList(userProgramDispatch))
+
+      console.log("userProgramDispatch -> ",userProgramDispatch)
+
+      return { ok: true, data }
+    } else {
+      constole.log('ERROR => ', data.error)
+
+      return { ok: false, err: res, data }
+    }
+  }
+
+  const userProgramStateData = useSelector(state => state.userPrograms.programData[0])
+
+  const renderUserProgramOptions = () => {
+    return userProgramStateData.map((item) => (
+      <option key={item.Id} value={item.Id}>
+        {item.Name}
+      </option>
+    ));
+  };
+
   return (
     <>
       <Box
@@ -305,6 +355,7 @@ export default function QrCodeScanner() {
         <>
           {data?.userId === scanResult ? (
             <div>
+              {/* IF USER IS NEW  */}
               {data.userstatus === 'NEW' ? (
                 <div>
                   <h4>Please set up the PIN and password to continue..</h4>
@@ -319,7 +370,8 @@ export default function QrCodeScanner() {
                           fullWidth
                           value={value}
                           sx={{ mb: 4 }}
-                          label={(pinMaxChar <= 4 || !pinMaxChar )?"PIN":"PIN: You can't use more than 4 number."}
+                          max={9999}
+                          label={pinMaxChar <= 4 || !pinMaxChar ? 'PIN' : "PIN: You can't use more than 4 number."}
                           onChange={onChange}
                           type={showPassword ? 'text' : 'password'}
                           error={Boolean(errors.PIN)}
@@ -344,7 +396,6 @@ export default function QrCodeScanner() {
                         />
                       )}
                     />
-                    
 
                     <Controller
                       name='password'
@@ -410,6 +461,28 @@ export default function QrCodeScanner() {
                           onChange={onChange}
                           type={'text'}
                         />
+                      )}
+                    />
+
+                    <Controller
+                      name='Member'
+                      control={control}
+                      render={({ field: { value, onChange } }) => (
+                        <CustomTextField
+                          select
+                          fullWidth
+                          id='Member-select'
+                          label='Member'
+                          value={value}
+                          onChange={onChange}
+                          sx={{ mb: 4 }}
+                          error={Boolean(errors.Member)}
+                          aria-describedby='validation-Member-select'
+                          {...(errors.Member && { helperText: errors.Member.message })}
+                          SelectProps={{ native: true }}
+                        >
+                          <option value='null'>Program</option> {renderUserProgramOptions()}
+                        </CustomTextField>
                       )}
                     />
 
