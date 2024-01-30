@@ -64,16 +64,8 @@ const CardHorizontalRatings = () => {
             <EcommerceStatistics />
 
           </CardContent>
-          <CardActions className='card-action-dense' sx={{ width: '100%' }}>
-            <Button>View</Button>
-            <Button>Delete</Button>
-          </CardActions>
-        </StyledGrid1>
-        <StyledGrid2 item xs={12} md={6} lg={5}>
-          <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Img alt='Stumptown Roasters' src='/images/cards/analog-clock.jpg' />
-          </CardContent>
-        </StyledGrid2>
+          
+        </StyledGrid1> 
       </Grid>
     </Card>
   )

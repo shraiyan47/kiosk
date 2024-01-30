@@ -47,8 +47,8 @@ const schema = yup.object().shape({
 })
 
 const defaultValues = {
-  password: '87654321',
-  email: 'chaim.levilev@gmail.com'
+  password: '',
+  email: ''
 }
 
 export default function AuthorityLogin() {

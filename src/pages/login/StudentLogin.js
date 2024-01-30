@@ -24,7 +24,7 @@ import Link from 'next/link'
 // ** Form
 import { Controller, useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
-import { userProgramsList } from '../../redux/user/userProgramSlice'
+import { userProgramsList, userAllList } from '../../redux/user/userProgramSlice'
 import { useSelector, useDispatch } from 'react-redux'
 
 import Modal from '@mui/material'
@@ -56,6 +56,7 @@ export default function QrCodeScanner() {
   }))
 
   useEffect(() => {
+
     const scanner = new Html5QrcodeScanner('reader', {
       qrbox: {
         width: 250,
@@ -74,9 +75,16 @@ export default function QrCodeScanner() {
         setStudentPIN(response?.data?.PIN)
         setStudentPassword(response?.data?.password)
         setSucc(true)
-      })
 
-      // alert('User Id ' + result)
+        const userAllDispatch = {
+          userData: response?.data
+        }
+
+        dispatch(userAllList(userAllDispatch))
+  
+        console.log("User All Dispatch -> ",userAllDispatch)
+      })
+ 
     }
 
     function error(err) {

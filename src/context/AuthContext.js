@@ -25,6 +25,7 @@ const AuthProvider = ({ children }) => {
   // ** States
   const [user, setUser] = useState(defaultProvider.user)
   const [loading, setLoading] = useState(defaultProvider.loading)
+  const [cleared, setCleared] = useState(false)
 
   // ** Hooks
   const router = useRouter()
@@ -41,7 +42,7 @@ const AuthProvider = ({ children }) => {
             }
           })
           .then(async response => {
-            response.data.role = response.data.userrole;
+            response.data.role = response.data.userrole
             setLoading(false)
             setUser({ ...response.data })
           })
@@ -67,23 +68,23 @@ const AuthProvider = ({ children }) => {
     console.log(params.email)
     axios
       .post(authConfig.loginEndpoint, {
-        email:params.email,
-        password:params.password
+        email: params.email,
+        password: params.password
       })
       .then(async response => {
-        response.data.userData.role = response.data.userData.userrole;      
-     
-        const params = new URLSearchParams([['UserId', response.data.userData.userId]]);       
-        const res = await axios.get(process.env.NEXT_PUBLIC_BASE_URL+'api/GetUserInfoByUserId', { params });
-        
-        response.data.userData.Member = res.data.Member;
-        response.data.userData.fullname = res.data.fullname;
+        response.data.userData.role = response.data.userData.userrole
+
+        const params = new URLSearchParams([['UserId', response.data.userData.userId]])
+        const res = await axios.get(process.env.NEXT_PUBLIC_BASE_URL + 'api/GetUserInfoByUserId', { params })
+
+        response.data.userData.Member = res.data.Member
+        response.data.userData.fullname = res.data.fullname
         window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
 
-        const returnUrl = router.query.returnUrl       
-        setUser({ ...response.data.userData })        
+        const returnUrl = router.query.returnUrl
+        setUser({ ...response.data.userData })
         window.localStorage.setItem('userData', JSON.stringify(response.data.userData))
-        const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'        
+        const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
 
         router.replace(redirectURL)
       })
@@ -94,9 +95,19 @@ const AuthProvider = ({ children }) => {
 
   const handleLogout = () => {
     setUser(null)
-    window.localStorage.removeItem('userData')
-    window.localStorage.removeItem(authConfig.storageTokenKeyName)
-    router.push('/login')
+    // if (!cleared) {
+      const clearCookie = document.cookie.split('; ').find(cookie => cookie.startsWith('clearStorage='))
+      // if (!clearCookie) {
+        // window.localStorage.removeItem('userData')
+        // window.localStorage.removeItem(authConfig.storageTokenKeyName)
+        window.localStorage.clear()
+        window.sessionStorage.clear()
+        document.cookie = 'clearStorage=true; expires=Thu, 01 Jan 2030 00:00:00 GMT';
+        setCleared(true);
+      // }
+    // }
+    // router.push('/login')
+    window.location.replace('/login')
   }
 
   const values = {

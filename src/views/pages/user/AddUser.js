@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // ** React Imports
 import { useState, forwardRef, useEffect } from 'react'
 import { useRandomPassword, useRandomString } from 'src/hooks/useRandom'
@@ -187,7 +188,7 @@ const AddUserDrawer = props => {
       // dispatch(usersList(userDispatch))
       setShow(false)
       toggle(true)
-      handleClose()
+      handleClose("Add Successful")
 
       return { ok: true, data }
     } else {
@@ -197,11 +198,15 @@ const AddUserDrawer = props => {
     }
   }
 
-  const handleClose = () => {
+  const handleClose = (msg) => {
     setShow(false)
     reset()
     // toggle
-    props.onSuccess('ADD CLOSE')
+    if(msg){
+      props.onSuccess(msg)
+    }else{
+      props.onSuccess('ADD CLOSE')
+    }
   }
 
   return (

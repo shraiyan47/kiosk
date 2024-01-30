@@ -8,6 +8,7 @@ export const submissionSlice = createSlice({
     eleg: [],
     hachlata: [],
     gedermoment: [],
+    allWeekOfProgram: [],
     newdata: []
   },
   reducers: {
@@ -34,10 +35,16 @@ export const submissionSlice = createSlice({
     },
     cleargedermomentsList: (state = initialState) => {
       state.gedermoment = []
+    },
+    allWeekOfProgramList: (state = initialState, action) => {
+      state.allWeekOfProgram = [...state.allWeekOfProgram, action.payload.allWeekOfProgram]
+    },
+    clearallWeekOfProgramList: (state = initialState) => {
+      state.allWeekOfProgram = []
     }
   }
 })
 
-export const { submissionsList, clearSubmissionsList, eligiblesList, clearEligiblesList, hachlatasList, clearhachlatasList, gedermomentsList, cleargedermomentsList } = submissionSlice.actions
+export const { submissionsList, clearSubmissionsList, eligiblesList, clearEligiblesList, hachlatasList, clearhachlatasList, gedermomentsList, cleargedermomentsList, allWeekOfProgramList, clearallWeekOfProgramList} = submissionSlice.actions
 
 export default submissionSlice.reducer

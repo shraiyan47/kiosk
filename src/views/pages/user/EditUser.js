@@ -61,6 +61,7 @@ const CustomCloseButton = styled(IconButton)(({ theme }) => ({
 }))
 
 const EditUserDrawer = param => {
+  // const [data, setData] = useState(param?.data)
   const data = param?.data
 
   const [show, setShow] = useState(param?.show)
@@ -92,7 +93,7 @@ const EditUserDrawer = param => {
   const userRoleStateData = useSelector(state => state.userRoles.data)
   const userProgramStateData = useSelector(state => state.userPrograms.programData[0])
 
-  // console.log("userProgramStateData --> ",userProgramStateData)
+  console.log("userProgramStateData --> ",userProgramStateData)
 
   const NOUS = Number(userRoleStateData.length)
   // const NOPS = Number(userProgramStateData.length)
@@ -168,7 +169,7 @@ const EditUserDrawer = param => {
     if (res.ok) {
       // dispatch(usersList(userDispatch))
       alert('Edit Success')
-      handleClose()
+      handleClose('Edit Success')
       // console.log("first", param)
       // param.onSuccess(data)
 
@@ -180,10 +181,16 @@ const EditUserDrawer = param => {
     }
   }
 
-  const handleClose = () => {
+  const handleClose = (msg) => {
     setShow(false)
-    // reset()
-    param.onSuccess('EDIT CLOSE')
+    reset()
+    // setData('')
+    if(msg){
+      param.onSuccess(msg)
+    }
+    else{
+      param.onSuccess('EDIT CLOSE')
+    }
     // toggle
   }
 
@@ -212,7 +219,7 @@ const EditUserDrawer = param => {
             </CustomCloseButton>
             <Box sx={{ mb: 8, textAlign: 'center' }}>
               <Typography variant='h3' sx={{ mb: 3 }}>
-                Edit User
+                Edit User {(data?.firstname==null)&&data?.fullname}
               </Typography>
             </Box>
             {!!data && (
@@ -224,7 +231,7 @@ const EditUserDrawer = param => {
                       name='firstname'
                       control={control}
                       rules={{ required: true }}
-                      defaultValue={data?.firstname}
+                      defaultValue={(data?.firstname==null)? data?.fullname:data?.firstname}
                       render={({ field: { value, onChange } }) => (
                         <CustomTextField
                           fullWidth

@@ -12,18 +12,20 @@ import { useAuth } from 'src/hooks/useAuth'
 import { styled, useTheme } from '@mui/material/styles'
 // import Button from '@mui/material/Button'
 
-import Counter from '../components/Counter'
+// import Counter from '../components/Counter'
 // import Profile from '../components/Profile'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { clearWeeklyduchlist, weeklyduchsList } from 'src/redux/weeklyduch/weeklyduchSlice'
 import CardHorizontalRatings from 'src/views/ui/cards/basic/CardHorizontalRatings'
 import AnalyticsSupportTracker from 'src/views/dashboards/analytics/AnalyticsSupportTracker'
-import CrmProjectStatus from 'src/views/dashboards/crm/CrmProjectStatus'
+// import CrmProjectStatus from 'src/views/dashboards/crm/CrmProjectStatus'
 import {
+  allWeekOfProgramList,
   clearEligiblesList,
   clearSubmissionsList,
+  clearallWeekOfProgramList,
   cleargedermomentsList,
   clearhachlatasList,
   eligiblesList,
@@ -31,12 +33,11 @@ import {
   hachlatasList,
   submissionsList
 } from 'src/redux/weeklyduch/submissionSlice'
-import { useRandomPassword } from 'src/hooks/useRandom'
+// import { useRandomPassword } from 'src/hooks/useRandom'
 
 // import Counter from '../Counter/index'
 
 const Home = () => {
-
 
   // const LoginIllustration = styled('img')(({ theme }) => ({
   //   zIndex: 2,
@@ -130,9 +131,12 @@ const Home = () => {
   const [loading, setLoading] = useState(false)
   const auth = useAuth()
 
+  const userAllData = useSelector(state => state.userPrograms.userData[0])
+
+
   const dispatch = useDispatch()
 
-  console.log(" AUTH ==> ",auth?.user)
+  console.log(' AUTH ==> ', userAllData)
 
   async function fetchActiveProgramData() {
     try {
@@ -257,7 +261,32 @@ const Home = () => {
           return combinedData
         } catch (error) {
           console.error('Error fetching data: ', error)
-          throw error
+          // throw error
+        }
+
+        try {
+          const resAllWeekOfProgram = await axios.get(
+            `${process.env.NEXT_PUBLIC_BASE_URL}api/Week?SessionId=${data?.SessionId}`
+          )
+
+          if (resAllWeekOfProgram.status === 200) {
+            const data = resAllWeekOfProgram.data
+
+            const allWeekProgram = {
+              hachlata: data
+            }
+
+            dispatch(clearallWeekOfProgramList())
+
+            dispatch(allWeekOfProgramList(allWeekProgram))
+            console.log('Fetched ALL WEEK OF PROGRAM data:', data) // Use a logger for informative messages
+          } else {
+            throw new Error(`API request failed with status ${response.status}`)
+          }
+        } catch (err) {
+          console.error('Error fetching ALL WEEK OF PROGRAM data:', err)
+
+          return { ok: false, err: err }
         }
 
         return { ok: true, data }
@@ -345,7 +374,10 @@ const Home = () => {
       {!loading ? (
         <Grid container spacing={6}>
           <Grid item xs={12} sx={{ pb: 4 }}>
-            <Typography variant='h1'> {auth?.user?.fullname} </Typography>
+            <Typography variant='h1'>
+              {' '}
+              {userAllData?.fullname} Bas {userAllData?.MotherName}
+            </Typography>
           </Grid>
           <Grid item xs={12} sx={{ pb: 4 }}>
             <Typography variant='h4'>Current Program </Typography>
@@ -353,19 +385,15 @@ const Home = () => {
           <Grid item xs={12} md={8}>
             <AnalyticsSupportTracker />
           </Grid>
-          <Grid item xs={12} md={6} lg={4}>
+          {/* <Grid item xs={12} md={6} lg={4}>
             <CrmProjectStatus />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} sx={{ pb: 4 }}>
-            <Typography variant='h4'>Past Programs </Typography>
+            <Typography variant='h4'>All Weeks </Typography>
           </Grid>
           <Grid item xs={12} sm={12}>
             <CardHorizontalRatings />
-            <br></br>
-            <CardHorizontalRatings />
-            <br></br>
-            <CardHorizontalRatings />
-            <br></br>
+            <br></br> 
           </Grid>
         </Grid>
       ) : (
