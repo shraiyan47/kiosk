@@ -17,14 +17,23 @@ import { styled, useTheme } from '@mui/material/styles'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { clearWeeklyduchlist, weeklyduchsList } from 'src/redux/weeklyduch/weeklyduchSlice'
+import {
+  CurrentWeekList,
+  clearCurrentWeeklist,
+  clearWeeklyduchlist,
+  weeklyduchsList
+} from 'src/redux/weeklyduch/weeklyduchSlice'
 import CardHorizontalRatings from 'src/views/ui/cards/basic/CardHorizontalRatings'
 import AnalyticsSupportTracker from 'src/views/dashboards/analytics/AnalyticsSupportTracker'
 // import CrmProjectStatus from 'src/views/dashboards/crm/CrmProjectStatus'
 import {
+  GetPointSummeryList,
+  WeeklyPointsList,
   allWeekOfProgramList,
   clearEligiblesList,
+  clearGetPointSummeryList,
   clearSubmissionsList,
+  clearWeeklyPointsList,
   clearallWeekOfProgramList,
   cleargedermomentsList,
   clearhachlatasList,
@@ -38,7 +47,6 @@ import {
 // import Counter from '../Counter/index'
 
 const Home = () => {
-
   // const LoginIllustration = styled('img')(({ theme }) => ({
   //   zIndex: 2,
   //   maxWidth: 150
@@ -133,7 +141,6 @@ const Home = () => {
 
   const userAllData = useSelector(state => state.userPrograms.userData[0])
 
-
   const dispatch = useDispatch()
 
   console.log(' AUTH ==> ', userAllData)
@@ -145,6 +152,14 @@ const Home = () => {
       if (response.status === 200) {
         const data = response.data
         console.log('Fetched Current Week data:', data) // Use a logger for informative messages
+
+        dispatch(clearCurrentWeeklist())
+
+        const CurrentWeekData = {
+          currentWeek: data
+        }
+
+        dispatch(CurrentWeekList(CurrentWeekData))
 
         // Fetch Current Week Data for this User - SectionSubmitCheckByUserId & ProgramCheckByUserId
         try {
@@ -179,6 +194,8 @@ const Home = () => {
 
             dispatch(submissionsList(submissionDispatch))
             setLoading(false)
+
+            console.log('Fetched Submitted Weekly Data: ', submissionDispatch)
           } else {
             throw new Error(`API request failed with status ${response1.status}`)
           }
@@ -202,6 +219,87 @@ const Home = () => {
           }
         } catch (err) {
           console.error('Error fetching active program data:', err)
+
+          return { ok: false, err: err }
+        }
+
+        ///// All the weeks of running program with dates range
+        try {
+          const resAllWeekOfProgram = await axios.get(
+            `${process.env.NEXT_PUBLIC_BASE_URL}api/Week?SessionId=${data?.SessionId}`
+          )
+
+          if (resAllWeekOfProgram.status === 200) {
+            const data = resAllWeekOfProgram.data
+
+            const allWeekProgram = {
+              hachlata: data
+            }
+
+            dispatch(clearallWeekOfProgramList())
+
+            dispatch(allWeekOfProgramList(allWeekProgram))
+            // alert("LOL")
+            console.log('Fetched ALL WEEK OF PROGRAM data:', allWeekProgram) // Use a logger for informative messages
+          } else {
+            throw new Error(`API request failed with status ${response.status}`)
+          }
+        } catch (err) {
+          console.error('Error fetching ALL WEEK OF PROGRAM data:', err)
+
+          return { ok: false, err: err }
+        }
+
+        //// POINT SUMMERY OF PROGRAM
+        try {
+          const resWeekPoints = await axios.get(
+            `${process.env.NEXT_PUBLIC_BASE_URL}api/GetPointSummary?UserAccountId=${auth?.user?.Id}&SessionId=${data?.SessionId}`
+          )
+
+          if (resWeekPoints.status === 200) {
+            const data = resWeekPoints.data
+
+            const getPointSummeryProgram = {
+              pointSummeryProgram: data
+            }
+
+            dispatch(clearGetPointSummeryList())
+
+            dispatch(GetPointSummeryList(getPointSummeryProgram))
+            // alert("LOL")
+            console.log('SUBMITTED WEEK POINT SUMMERY :', getPointSummeryProgram) // Use a logger for informative messages
+          } else {
+            throw new Error(`API request failed with status ${response.status}`)
+          }
+        } catch (err) {
+          console.error('Error fetching ALL WEEK OF PROGRAM data:', err)
+
+          return { ok: false, err: err }
+        }
+
+        //// POINT SUMMERY OF PROGRAM
+        try {
+          const resWeekPoints = await axios.get(
+            `${process.env.NEXT_PUBLIC_BASE_URL}api/GetPointSummaryByWeekList?UserAccountId=${auth?.user?.Id}`
+          )
+
+          if (resWeekPoints.status === 200) {
+            const data = resWeekPoints.data
+
+            const allWeekPoints = {
+              weekPoints: data
+            }
+
+            dispatch(clearWeeklyPointsList())
+
+            dispatch(WeeklyPointsList(allWeekPoints))
+            // alert("LOL")
+            console.log('SUBMITTED WEEK POINT DETAILS :', allWeekPoints) // Use a logger for informative messages
+          } else {
+            throw new Error(`API request failed with status ${response.status}`)
+          }
+        } catch (err) {
+          console.error('Error fetching ALL WEEK OF PROGRAM data:', err)
 
           return { ok: false, err: err }
         }
@@ -264,36 +362,12 @@ const Home = () => {
           // throw error
         }
 
-        try {
-          const resAllWeekOfProgram = await axios.get(
-            `${process.env.NEXT_PUBLIC_BASE_URL}api/Week?SessionId=${data?.SessionId}`
-          )
-
-          if (resAllWeekOfProgram.status === 200) {
-            const data = resAllWeekOfProgram.data
-
-            const allWeekProgram = {
-              hachlata: data
-            }
-
-            dispatch(clearallWeekOfProgramList())
-
-            dispatch(allWeekOfProgramList(allWeekProgram))
-            console.log('Fetched ALL WEEK OF PROGRAM data:', data) // Use a logger for informative messages
-          } else {
-            throw new Error(`API request failed with status ${response.status}`)
-          }
-        } catch (err) {
-          console.error('Error fetching ALL WEEK OF PROGRAM data:', err)
-
-          return { ok: false, err: err }
-        }
-
         return { ok: true, data }
       } else if (response.status === 204) {
         setLoading(false)
 
         alert(' NO CURRENT WEEK / PROGRAM ACTIVE ')
+        console.log(' NO CURRENT WEEK / PROGRAM ACTIVE ')
       } else {
         throw new Error(`API request failed with status ${response.status}`)
       }
@@ -393,7 +467,7 @@ const Home = () => {
           </Grid>
           <Grid item xs={12} sm={12}>
             <CardHorizontalRatings />
-            <br></br> 
+            <br></br>
           </Grid>
         </Grid>
       ) : (

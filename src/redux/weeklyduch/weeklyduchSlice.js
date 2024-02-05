@@ -5,6 +5,7 @@ export const weeklyduchSlice = createSlice({
   initialState: {
     // value: 1,
     sectionAndOptions: [],
+    currentWeek: [],
     newdata: []
   },
   reducers: {
@@ -13,10 +14,16 @@ export const weeklyduchSlice = createSlice({
     }, 
     clearWeeklyduchlist: (state = initialState) => {
       state.sectionAndOptions = []
+    },
+    CurrentWeekList: (state = initialState, action) => {
+      state.currentWeek = [...state.currentWeek, action.payload.currentWeek]
+    }, 
+    clearCurrentWeeklist: (state = initialState) => {
+      state.currentWeek = []
     }
   }
 })
 
-export const { weeklyduchsList , clearWeeklyduchlist } = weeklyduchSlice.actions
+export const { weeklyduchsList , clearWeeklyduchlist, CurrentWeekList, clearCurrentWeeklist } = weeklyduchSlice.actions
 
 export default weeklyduchSlice.reducer

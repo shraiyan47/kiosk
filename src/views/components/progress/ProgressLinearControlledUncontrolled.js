@@ -29,7 +29,7 @@ const ProgressLinearControlledUncontrolled = () => {
   return (
     <>
       <Box sx={{ mb: 4 }}>
-        <Typography sx={{ fontWeight: 500, mb: 1.5 }}>Total 164</Typography>
+        <Typography sx={{ fontWeight: 500, mb: 1.5 }}> Week: </Typography>
         <LinearProgress variant='determinate' value={40} />
       </Box>
     </>

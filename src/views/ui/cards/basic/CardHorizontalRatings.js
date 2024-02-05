@@ -50,23 +50,8 @@ const Img = styled('img')(({ theme }) => ({
 
 const CardHorizontalRatings = () => {
   return (
-    <Card>
-      <Grid container spacing={6}>
-        <StyledGrid1 item xs={12} md={6} lg={7}>
-          <CardContent>
-            <Typography variant='h5' sx={{ mb: 2 }}>
-            December 27, 2023 to July 24, 2024
-            </Typography>
-            <Box>
-              <ProgressLinearControlledUncontrolled />
-            </Box>
-
-            <EcommerceStatistics />
-
-          </CardContent>
-          
-        </StyledGrid1> 
-      </Grid>
+    <Card> 
+            <EcommerceStatistics /> 
     </Card>
   )
 }

@@ -16,55 +16,16 @@ import ProgressLinearControlledUncontrolled from 'src/views/components/progress/
 
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
+import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
 
-const data = [
-  {
-    subtitle: '142',
-    title: 'Back To Basic',
-    avatarIcon: 'tabler:ticket'
-  },
-  {
-    subtitle: '28',
-    avatarColor: 'info',
-    title: 'Daughter of Dignity',
-    avatarIcon: 'tabler:circle-check'
-  },
-  {
-    subtitle: '28',
-    avatarColor: 'info',
-    title: 'Maagalim',
-    avatarIcon: 'tabler:circle-check'
-  },
-  {
-    subtitle: '28',
-    avatarColor: 'info',
-    title: 'Tech Check',
-    avatarIcon: 'tabler:circle-check'
-  },
-  {
-    subtitle: '43',
-    title: 'My Hachlata',
-    avatarColor: 'warning',
-    avatarIcon: 'tabler:clock'
-  },
-  {
-    subtitle: '43',
-    title: 'Section 6',
-    avatarColor: 'warning',
-    avatarIcon: 'tabler:clock'
-  },
-  {
-    subtitle: '43',
-    title: 'Geder Moments',
-    avatarColor: 'warning',
-    avatarIcon: 'tabler:clock'
-  }
-]
 
-const AnalyticsSupportTracker = () => {
+const AnalyticsSupportTracker = (x) => {
   // ** Hook
   const theme = useTheme()
+  
 
+  
   const options = {
     chart: {
       sparkline: { enabled: true }
@@ -145,36 +106,82 @@ const AnalyticsSupportTracker = () => {
       }
     ]
   }
+ 
+  const pointSummeryProgram = useSelector(state => state.submissions.pointSummeryProgram)
+  const CurrentWeekData = useSelector(state => state.weeklyduchs.currentWeek)
+
+  useEffect(() => {
+    console.log(pointSummeryProgram, CurrentWeekData)
+  }, [pointSummeryProgram, CurrentWeekData])
+  
+  const data = [
+    {
+      subtitle: pointSummeryProgram[0]?.BBCount+" times sumitted",
+      title: 'Back To Basic',
+      avatarIcon: 'tabler:ticket'
+    },
+    {
+      subtitle: pointSummeryProgram[0]?.DDCount+" times sumitted",
+      avatarColor: 'info',
+      title: 'Daughter of Dignity',
+      avatarIcon: 'tabler:circle-check'
+    },
+    {
+      subtitle: pointSummeryProgram[0]?.MACount+" times sumitted",
+      avatarColor: 'info',
+      title: 'Maagalim',
+      avatarIcon: 'tabler:circle-check'
+    },
+    {
+      subtitle: pointSummeryProgram[0]?.TCCount+" times sumitted",
+      avatarColor: 'info',
+      title: 'Tech Check',
+      avatarIcon: 'tabler:circle-check'
+    },
+    {
+      subtitle: pointSummeryProgram[0]?.MHCount+" times sumitted",
+      title: 'My Hachlata',
+      avatarColor: 'warning',
+      avatarIcon: 'tabler:clock'
+    }, 
+    {
+      subtitle: pointSummeryProgram[0]?.GMCount+" times sumitted",
+      title: 'Geder Moments',
+      avatarColor: 'warning',
+      avatarIcon: 'tabler:clock'
+    }
+  ]
+
+  
+
 
   return (
     <Card>
       <CardSnippet
-          title='December 27, 2023 to July 24, 2024'
+          title={"Starting Date: "+CurrentWeekData[0]?.SessionStartDt.replace("00:00:00","")+" - End Date: "+CurrentWeekData[0]?.SessionEndDt.replace("00:00:00","")}
           code={{
             tsx: null,
             jsx: source.ProgressLinearControlledUncontrolledJSXCode
           }}
-        >
-          <ProgressLinearControlledUncontrolled />
+        > 
       </CardSnippet>
       <CardContent>
-        <Grid container spacing={6}>
-          <Grid item xs={12} sm={5}>
-            <Typography variant='h1'>164</Typography>
-            <Typography sx={{ mb: 6, color: 'text.secondary' }}>Total Students</Typography>
+        <Grid container >
+          <Grid item xs={12} sm={12}>
+            <Typography variant='h3'> Submission Done : {pointSummeryProgram[0]?.WeekCount}</Typography>
             {data.map((item, index) => (
               <Box
                 key={index}
                 sx={{ display: 'flex', alignItems: 'center', mb: index !== data.length - 1 ? 4 : undefined }}
               >
-                <CustomAvatar
+                {/* <CustomAvatar
                   skin='light'
                   variant='rounded'
                   color={item.avatarColor}
                   sx={{ mr: 4, width: 34, height: 34 }}
                 >
                   <Icon icon={item.avatarIcon} />
-                </CustomAvatar>
+                </CustomAvatar> */}
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                   <Typography variant='h6'>{item.title}</Typography>
                   <Typography variant='body2' sx={{ color: 'text.disabled' }}>
@@ -184,9 +191,9 @@ const AnalyticsSupportTracker = () => {
               </Box>
             ))}
           </Grid>
-          <Grid item xs={12} sm={7} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ReactApexcharts type='radialBar' height={325} options={options} series={[85]} />
-          </Grid>
+          {/* <Grid item xs={12} sm={7} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            TOTAL POINT: {pointSummeryProgram[0]?.Point}
+          </Grid> */}
         </Grid>
       </CardContent>
     </Card>

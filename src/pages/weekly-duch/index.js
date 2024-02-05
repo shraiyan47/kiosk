@@ -105,21 +105,21 @@ const StepperLinearWithValidation = () => {
     // push('/home')
   }
 
-  const data = sectionAndOptionsData[0][0].SectionOptionList
-  const data2 = sectionAndOptionsData[0][1].SectionOptionList
-  const data3 = sectionAndOptionsData[0][2].SectionOptionList
-  const data4 = sectionAndOptionsData[0][3].SectionOptionList
-  const data5 = sectionAndOptionsData[0][4].SectionOptionList
-  const data6 = sectionAndOptionsData[0][5].SectionOptionList
-  const data7 = sectionAndOptionsData[0][6].SectionOptionList
+  const data = sectionAndOptionsData[0][0]?.SectionOptionList
+  const data2 = sectionAndOptionsData[0][1]?.SectionOptionList
+  const data3 = sectionAndOptionsData[0][2]?.SectionOptionList
+  const data4 = sectionAndOptionsData[0][3]?.SectionOptionList
+  const data5 = sectionAndOptionsData[0][4]?.SectionOptionList
+  const data6 = sectionAndOptionsData[0][5]?.SectionOptionList
+  const data7 = sectionAndOptionsData[0][6]?.SectionOptionList
 
-  const initialSelected = data.filter(item => item.isSelected).map(item => item.value)
-  const initialSelected2 = data2.filter(item => item.isSelected).map(item => item.value)
-  const initialSelected3 = data3.filter(item => item.isSelected).map(item => item.value)
-  const initialSelected4 = data4.filter(item => item.isSelected).map(item => item.value)
-  const initialSelected5 = data5.filter(item => item.isSelected).map(item => item.value)
-  const initialSelected6 = data6.filter(item => item.isSelected).map(item => item.value)
-  const initialSelected7 = data7.filter(item => item.isSelected).map(item => item.value)
+  const initialSelected = data?.filter(item => item.isSelected).map(item => item.value)
+  const initialSelected2 = data2?.filter(item => item.isSelected).map(item => item.value)
+  const initialSelected3 = data3?.filter(item => item.isSelected).map(item => item.value)
+  const initialSelected4 = data4?.filter(item => item.isSelected).map(item => item.value)
+  const initialSelected5 = data5?.filter(item => item.isSelected).map(item => item.value)
+  const initialSelected6 = data6?.filter(item => item.isSelected).map(item => item.value)
+  const initialSelected7 = data7?.filter(item => item.isSelected).map(item => item.value)
 
   // ** State
   const [selected, setSelected] = useState(initialSelected)
@@ -252,7 +252,7 @@ const StepperLinearWithValidation = () => {
   }
 
   useEffect(() => {
-    const updated2Ans = selected2Ans.find(item => item.SectionOption !== 'My Chavrusa')
+    const updated2Ans = selected2Ans?.find(item => item.SectionOption !== 'My Chavrusa')
     console.log('updated2Ans ---------------------------> ', updated2Ans)
   }, [selected2Ans])
 
@@ -760,9 +760,9 @@ const StepperLinearWithValidation = () => {
           <form key={0} onSubmit={handleAccountSubmit(onSubmit)}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
-                <label>{sectionAndOptionsData[0][0].SectionTitle}</label>
+                <label>{sectionAndOptionsData[0][0]?.SectionTitle}</label>
               </Grid>
-              {data.map((item, index) => (
+              {data?.map((item, index) => (
                 <CustomCheckboxBasic
                   key={index}
                   data={data[index]}
@@ -790,7 +790,7 @@ const StepperLinearWithValidation = () => {
           <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
             <Grid container spacing={5}>
               <Grid item xs={12}>
-                <label>{sectionAndOptionsData[0][1].SectionTitle}</label>
+                <label>{sectionAndOptionsData[0][1]?.SectionTitle}</label>
               </Grid>
               {/* {data2.map((item2, index2) => */}
               <>
@@ -811,10 +811,10 @@ const StepperLinearWithValidation = () => {
                     {ChavrusaName}
                     <CustomTextField
                       fullWidth
-                      label={data2[2].SectionOption}
+                      label={data2[2]?.SectionOption}
                       id='outlined-full-width'
                       sx={{ mb: 4 }}
-                      placeholder={data2[2].SectionOption + ' Name'}
+                      placeholder={data2[2]?.SectionOption + ' Name'}
                       onBlur={handleChange2}
                       name='chavrusa'
                       disabled={chavrusaChecked}
@@ -853,7 +853,7 @@ const StepperLinearWithValidation = () => {
           <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
             <Grid container spacing={5}>
               <Grid item xs={12}>
-                <label>{sectionAndOptionsData[0][2].SectionTitle}</label>
+                <label>{sectionAndOptionsData[0][2]?.SectionTitle}</label>
               </Grid>
               {WeekCount % 2 == 0 ? (
                 <Grid item xs={12} sx={{ marginLeft: '10px', display: 'flex', justifyContent: 'center' }}>
@@ -889,7 +889,7 @@ const StepperLinearWithValidation = () => {
           <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
             <Grid container spacing={5}>
               <Grid item xs={12}>
-                <label>{sectionAndOptionsData[0][3].SectionTitle}</label>
+                <label>{sectionAndOptionsData[0][3]?.SectionTitle}</label>
               </Grid>
               {/* {data4.map((item4, index4) => ( */}
 
@@ -937,7 +937,7 @@ const StepperLinearWithValidation = () => {
             <Grid container spacing={5}>
               <Grid item xs={12}>
                 <Card>
-                  <CardHeader title={sectionAndOptionsData[0][4].SectionTitle} />
+                  <CardHeader title={sectionAndOptionsData[0][4]?.SectionTitle} />
                   <CardContent>
                     {/* {data5.map((item5, index5) => ( */}
                     <CustomCheckboxBasic
@@ -1001,14 +1001,14 @@ const StepperLinearWithValidation = () => {
           <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
             <Grid container spacing={5}>
               <Grid item xs={12}>
-                <label>{sectionAndOptionsData[0][6].SectionTitle}</label>
+                <label>{sectionAndOptionsData[0][6]?.SectionTitle}</label>
               </Grid>
 
               {/* {data7.map((item7, index7) => ( */}
               {/* <> */}
               <Grid item xs={12}>
-                <b> {data7[0].SectionOption}</b> : &nbsp;&nbsp;
-                <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={data7[0].SectionOption}>
+                <b> {data7[0]?.SectionOption}</b> : &nbsp;&nbsp;
+                <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={data7[0]?.SectionOption}>
                   {gedermomentData[0].map((data, i) => (
                     <MenuItem key={i} value={data.Name}>
                       {data.Name}
@@ -1064,8 +1064,8 @@ const StepperLinearWithValidation = () => {
               )}
 
               <Grid item xs={12}>
-                <b> {data7[1].SectionOption}</b> : &nbsp;&nbsp;
-                <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={data7[1].SectionOption}>
+                <b> {data7[1]?.SectionOption}</b> : &nbsp;&nbsp;
+                <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={data7[1]?.SectionOption}>
                   {gedermomentData[0].map((data, i) => (
                     <MenuItem key={i} value={data.Name}>
                       {data.Name}
@@ -1120,8 +1120,8 @@ const StepperLinearWithValidation = () => {
                 </>
               )}
               <Grid item xs={12}>
-                <b> {data7[2].SectionOption}</b> : &nbsp;&nbsp;
-                <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={data7[2].SectionOption}>
+                <b> {data7[2]?.SectionOption}</b> : &nbsp;&nbsp;
+                <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange7} name={data7[2]?.SectionOption}>
                   {gedermomentData[0].map((data, i) => (
                     <MenuItem key={i} value={data.Name}>
                       {data.Name}
@@ -1196,7 +1196,7 @@ const StepperLinearWithValidation = () => {
             <Grid container spacing={5}>
               <Grid item xs={12}>
                 <Card>
-                  <CardHeader title={sectionAndOptionsData[0][5].SectionTitle} />
+                  <CardHeader title={sectionAndOptionsData[0][5]?.SectionTitle} />
                   <CardContent>
                     {/* {data6.map((item6, index6) => ( */}
 

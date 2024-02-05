@@ -11,61 +11,72 @@ import Icon from 'src/@core/components/icon'
 
 // ** Custom Components Imports
 import CustomAvatar from 'src/@core/components/mui/avatar'
+import { useSelector } from 'react-redux'
 
-const data = [
-  {
-    stats: '230',
-    title: 'Silver Member',
-    color: 'primary',
-    icon: 'tabler:chart-pie-2'
-  },
-  {
-    color: 'info',
-    stats: '85',
-    title: 'Gold Member',
-    icon: 'tabler:users'
-  },
-  {
-    color: 'error',
-    stats: '14',
-    title: 'Platinum Member',
-    icon: 'tabler:shopping-cart'
-  },
-  {
-    stats: '9',
-    color: 'success',
-    title: 'Non Member',
-    icon: 'tabler:currency-dollar'
-  }
-]
-
-const renderStats = () => {
-  return data.map((sale, index) => (
-    <Grid item xs={6} md={3} key={index}>
-      <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
-        <CustomAvatar skin='light' color={sale.color} sx={{ mr: 4, width: 42, height: 42 }}>
+const renderStats = data => {
+  return data.map(
+    (sale, index) =>
+      sale.SectionTitle !== 'Confirmation' && (
+        <Grid item xs={6} md={4} key={index}>
+          <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
+            {/* <CustomAvatar skin='light' color={sale.color} sx={{ mr: 4, width: 42, height: 42 }}>
           <Icon icon={sale.icon} fontSize='1.5rem' />
-        </CustomAvatar>
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          <Typography variant='h5'>{sale.stats}</Typography>
-          <Typography variant='body2'>{sale.title}</Typography>
-        </Box>
-      </Box>
-    </Grid>
-  ))
+        </CustomAvatar> */}
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography variant='h5'>{sale.SectionTitle}</Typography>
+              <Typography variant='body2'>{sale.Point}</Typography>
+            </Box>
+          </Box>
+        </Grid>
+      )
+  )
 }
 
 const EcommerceStatistics = () => {
+  const WeekPoints = useSelector(state => state.submissions.weekPoints)
+
+  const organizedDataArray = []
+
+  WeekPoints[0]?.forEach(item => {
+    const WeekName = item.WeekName
+
+    // Check if the WeekName already exists in the array
+    const existingWeek = organizedDataArray.find(obj => obj.WeekName === WeekName)
+
+    if (!existingWeek) {
+      // If WeekName doesn't exist, add a new object with the WeekName property
+      const newWeek = {
+        WeekName,
+        data: [item]
+      }
+      organizedDataArray.push(newWeek)
+    } else {
+      // If WeekName already exists, push the item to its data array
+      existingWeek.data.push(item)
+    }
+  })
+
+  console.log('organizedDataArray ->', organizedDataArray)
+
   return (
-    <Card>
-      <CardContent
-        sx={{ pt: theme => `${theme.spacing(7)} !important`, pb: theme => `${theme.spacing(7.5)} !important` }}
-      >
-        <Grid container spacing={6}>
-          {renderStats()}
-        </Grid>
-      </CardContent>
-    </Card>
+    <>
+      {organizedDataArray.map((x, y) => (
+        <>
+          <Card key={y} sx={{ padding: '10px', marginBottom: '20px' }}>
+            <CardContent
+              sx={{ pt: theme => `${theme.spacing(7)} !important`, pb: theme => `${theme.spacing(7.5)} !important` }}
+            >
+              <h3>{x.WeekName}</h3>
+
+              <Grid container spacing={6}>
+                {renderStats(x.data)}
+              </Grid>
+            </CardContent>
+          </Card>
+          {/* <br /> */}
+        </>
+      ))}
+    </>
   )
 }
 

@@ -9,6 +9,9 @@ export const submissionSlice = createSlice({
     hachlata: [],
     gedermoment: [],
     allWeekOfProgram: [],
+    pointSummery: [],
+    pointSummeryProgram: [],
+    weekPoints: [],
     newdata: []
   },
   reducers: {
@@ -41,10 +44,28 @@ export const submissionSlice = createSlice({
     },
     clearallWeekOfProgramList: (state = initialState) => {
       state.allWeekOfProgram = []
+    },
+    PointSummeryList: (state = initialState, action) => {
+      state.pointSummery = [...state.pointSummery, action.payload.pointSummery]
+    },
+    clearPointSummeryList: (state = initialState) => {
+      state.pointSummery = []
+    },
+    GetPointSummeryList: (state = initialState, action) => {
+      state.pointSummeryProgram = [...state.pointSummeryProgram, action.payload.pointSummeryProgram]
+    },
+    clearGetPointSummeryList: (state = initialState) => {
+      state.pointSummeryProgram = []
+    },
+    WeeklyPointsList: (state = initialState, action) => {
+      state.weekPoints = [...state.weekPoints, action.payload.weekPoints]
+    },
+    clearWeeklyPointsList: (state = initialState) => {
+      state.weekPoints = []
     }
   }
 })
 
-export const { submissionsList, clearSubmissionsList, eligiblesList, clearEligiblesList, hachlatasList, clearhachlatasList, gedermomentsList, cleargedermomentsList, allWeekOfProgramList, clearallWeekOfProgramList} = submissionSlice.actions
+export const {WeeklyPointsList, clearWeeklyPointsList, GetPointSummeryList, clearGetPointSummeryList, PointSummeryList, clearPointSummeryList,  submissionsList, clearSubmissionsList, eligiblesList, clearEligiblesList, hachlatasList, clearhachlatasList, gedermomentsList, cleargedermomentsList, allWeekOfProgramList, clearallWeekOfProgramList} = submissionSlice.actions
 
 export default submissionSlice.reducer

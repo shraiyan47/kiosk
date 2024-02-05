@@ -187,7 +187,7 @@ const UserList = () => {
       headerName: 'User',
 
       renderCell: ({ row }) => {
-        const { fullname, userId } = row
+        const { fullname, userId,  userstatus} = row
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -197,7 +197,7 @@ const UserList = () => {
                 {fullname}
               </Typography>
               <Typography noWrap variant='body2' sx={{ color: 'text.disabled' }}>
-                {userId}
+                {userId} -{(userstatus == "NEW")?<label style={{background:'GREEN', color:'WHITE', border: '2px solid GREEN', borderRadius: '5px', padding:'2px' }}>NEW</label> : <label style={{background:'orange', color:'white', border: '2px solid orange', borderRadius: '5px', padding:'2px' }}> OLD </label>} 
               </Typography>
             </Box>
           </Box>
