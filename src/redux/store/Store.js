@@ -6,6 +6,7 @@ import userRoleSlice from '../user/userRoleSlice';
 import userProgramSlice from '../user/userProgramSlice';
 import weeklyduchSlice from '../weeklyduch/weeklyduchSlice';
 import submissionSlice from '../weeklyduch/submissionSlice'; 
+import wdSubReportSlice from '../weeklyduch/wdSubReportSlice';
 
 // import rootReducer from './reducers'
 
@@ -21,6 +22,7 @@ export default configureStore({
         userRoles:userRoleSlice,
         weeklyduchs:weeklyduchSlice,
         submissions:submissionSlice, 
+        wdSubReport: wdSubReportSlice,
     }
 
 })

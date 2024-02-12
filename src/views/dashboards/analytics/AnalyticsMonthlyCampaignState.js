@@ -12,59 +12,65 @@ import Icon from 'src/@core/components/icon'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import OptionsMenu from 'src/@core/components/option-menu'
 
-const data = [
-  {
-    title: 'Emails',
-    amount: '12,346',
-    icon: 'tabler:mail',
-    trendNumber: '0.3%',
-    avatarColor: 'success'
-  },
-  {
-    title: 'Opened',
-    amount: '8,734',
-    trendNumber: '2.1%',
-    avatarColor: 'info',
-    icon: 'tabler:link'
-  },
-  {
-    amount: '967',
-    title: 'Clicked',
-    trend: 'negative',
-    trendNumber: '1.4%',
-    icon: 'tabler:click',
-    avatarColor: 'warning'
-  },
-  {
-    amount: '345',
-    title: 'Subscribe',
-    trendNumber: '8.5%',
-    icon: 'tabler:users',
-    avatarColor: 'primary'
-  },
-  {
-    amount: '10',
-    trend: 'negative',
-    title: 'Complaints',
-    trendNumber: '1.5%',
-    avatarColor: 'secondary',
-    icon: 'tabler:alert-triangle'
-  },
-  {
-    amount: '86',
-    icon: 'tabler:ban',
-    trendNumber: '0.8%',
-    title: 'Unsubscribe',
-    avatarColor: 'error'
-  }
-]
+// const data = [
+//   {
+//     title: 'Emails',
+//     amount: '12,346',
+//     icon: 'tabler:mail',
+//     trendNumber: '0.3%',
+//     avatarColor: 'success'
+//   },
+//   {
+//     title: 'Opened',
+//     amount: '8,734',
+//     trendNumber: '2.1%',
+//     avatarColor: 'info',
+//     icon: 'tabler:link'
+//   },
+//   {
+//     amount: '967',
+//     title: 'Clicked',
+//     trend: 'negative',
+//     trendNumber: '1.4%',
+//     icon: 'tabler:click',
+//     avatarColor: 'warning'
+//   },
+//   {
+//     amount: '345',
+//     title: 'Subscribe',
+//     trendNumber: '8.5%',
+//     icon: 'tabler:users',
+//     avatarColor: 'primary'
+//   },
+//   {
+//     amount: '10',
+//     trend: 'negative',
+//     title: 'Complaints',
+//     trendNumber: '1.5%',
+//     avatarColor: 'secondary',
+//     icon: 'tabler:alert-triangle'
+//   },
+//   {
+//     amount: '86',
+//     icon: 'tabler:ban',
+//     trendNumber: '0.8%',
+//     title: 'Unsubscribe',
+//     avatarColor: 'error'
+//   }
+// ]
 
-const AnalyticsMonthlyCampaignState = () => {
+const AnalyticsMonthlyCampaignState = ({ data }) => {
+  let t = 0
+
+  data.map(x => {
+    t+=x.UserCount
+  })
+
   return (
     <Card>
       <CardHeader
-        title='Monthly Campaign State'
-        subheader='8.52k Social Visitors'
+        title='Every Week User Submission Count'
+        subheader={t + ' Total Submission'}
         action={
           <OptionsMenu
             options={['Last Month', 'Last 6 Months', 'Last Year']}
@@ -89,7 +95,7 @@ const AnalyticsMonthlyCampaignState = () => {
                 color={item.avatarColor}
                 sx={{ mr: 4, width: 34, height: 34 }}
               >
-                <Icon icon={item.icon} />
+                <Icon icon='tabler:users' />
               </CustomAvatar>
               <Box
                 sx={{
@@ -102,9 +108,9 @@ const AnalyticsMonthlyCampaignState = () => {
                   justifyContent: 'space-between'
                 }}
               >
-                <Typography variant='h6'>{item.title}</Typography>
+                <Typography variant='h6'>{item.WeekName}</Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Typography sx={{ mr: 4, fontWeight: 500, color: 'text.secondary' }}>{item.amount}</Typography>
+                  <Typography sx={{ mr: 4, fontWeight: 500, color: 'text.secondary' }}>{item.UserCount}</Typography>
                   <Typography sx={{ color: `${item.trend === 'negative' ? 'error' : 'success'}.main` }}>
                     {item.trendNumber}
                   </Typography>
