@@ -12,53 +12,6 @@ import Icon from 'src/@core/components/icon'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import OptionsMenu from 'src/@core/components/option-menu'
 
-// const data = [
-//   {
-//     title: 'Emails',
-//     amount: '12,346',
-//     icon: 'tabler:mail',
-//     trendNumber: '0.3%',
-//     avatarColor: 'success'
-//   },
-//   {
-//     title: 'Opened',
-//     amount: '8,734',
-//     trendNumber: '2.1%',
-//     avatarColor: 'info',
-//     icon: 'tabler:link'
-//   },
-//   {
-//     amount: '967',
-//     title: 'Clicked',
-//     trend: 'negative',
-//     trendNumber: '1.4%',
-//     icon: 'tabler:click',
-//     avatarColor: 'warning'
-//   },
-//   {
-//     amount: '345',
-//     title: 'Subscribe',
-//     trendNumber: '8.5%',
-//     icon: 'tabler:users',
-//     avatarColor: 'primary'
-//   },
-//   {
-//     amount: '10',
-//     trend: 'negative',
-//     title: 'Complaints',
-//     trendNumber: '1.5%',
-//     avatarColor: 'secondary',
-//     icon: 'tabler:alert-triangle'
-//   },
-//   {
-//     amount: '86',
-//     icon: 'tabler:ban',
-//     trendNumber: '0.8%',
-//     title: 'Unsubscribe',
-//     avatarColor: 'error'
-//   }
-// ]
-
 const AnalyticsMonthlyCampaignState = ({ data }) => {
   let t = 0
 

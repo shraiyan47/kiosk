@@ -24,8 +24,6 @@ const AnalyticsSupportTracker = (x) => {
   // ** Hook
   const theme = useTheme()
   
-
-  
   const options = {
     chart: {
       sparkline: { enabled: true }
@@ -152,13 +150,11 @@ const AnalyticsSupportTracker = (x) => {
     }
   ]
 
-  
-
-
   return (
     <Card>
+      <Typography variant='h2' style={{padding:5}}> Running Week : {CurrentWeekData[0]?.WeekName}</Typography>
       <CardSnippet
-          title={"Starting Date: "+CurrentWeekData[0]?.SessionStartDt.replace("00:00:00","")+" - End Date: "+CurrentWeekData[0]?.SessionEndDt.replace("00:00:00","")}
+          title={"This program Starting Date: "+CurrentWeekData[0]?.SessionStartDt.replace("00:00:00","")+" - End Date: "+CurrentWeekData[0]?.SessionEndDt.replace("00:00:00","")}
           code={{
             tsx: null,
             jsx: source.ProgressLinearControlledUncontrolledJSXCode
@@ -168,7 +164,9 @@ const AnalyticsSupportTracker = (x) => {
       <CardContent>
         <Grid container >
           <Grid item xs={12} sm={12}>
-            <Typography variant='h3'> Submission Done : {pointSummeryProgram[0]?.WeekCount}</Typography>
+            
+            <Typography variant='h3'> Submitted Week : {pointSummeryProgram[0]?.WeekCount}</Typography>
+
             {data.map((item, index) => (
               <Box
                 key={index}

@@ -79,7 +79,7 @@ const AnalyticsDashboard = () => {
         // wdSubReport setWeeklyUserCount
         try {
           const resAllWeekOfProgram = await axios.get(
-            `${process.env.NEXT_PUBLIC_BASE_URL}api/Week?SessionId=${data?.SessionId}`
+            `${process.env.NEXT_PUBLIC_BASE_URL}api/Week?SessionId=${data?.SessionId}` // Every Week User Submission Count
           )
 
           if (resAllWeekOfProgram.status === 200) {
@@ -93,7 +93,7 @@ const AnalyticsDashboard = () => {
 
             dispatch(allWeekOfProgramList(allWeekProgram))
             // alert("LOL")
-            console.log('Fetched ALL WEEK OF PROGRAM data:', allWeekProgram) // Use a logger for informative messages
+            console.log('Fetched ALL WEEK OF PROGRAM data:', allWeekProgram) 
           } else {
             throw new Error(`API request failed with status ${response.status}`)
           }
@@ -105,13 +105,13 @@ const AnalyticsDashboard = () => {
 
         try {
           const res = await axios.get(
-            `${process.env.NEXT_PUBLIC_BASE_URL}api/GetWeekWiseUser?SessionId=${data?.SessionId}`
+            `${process.env.NEXT_PUBLIC_BASE_URL}api/GetWeekWiseUser?SessionId=${data?.SessionId}` // Get Week Wise User Count
           )
 
           if (res.status === 200) {
             const WeekWiseUserCount = res.data 
             setWeeklyUserCount(WeekWiseUserCount)
-            console.log('Fetched WEEK OF PROGRAM USER SUBMISSION COUNT -> :', WeekWiseUserCount) // Use a logger for informative messages
+            console.log('Fetched WEEK OF PROGRAM USER SUBMISSION COUNT -> :', WeekWiseUserCount) 
           } else {
             throw new Error(`API request failed with status ${response.status}`)
           }
@@ -124,13 +124,13 @@ const AnalyticsDashboard = () => {
 
         try {
           const res = await axios.get(
-            `${process.env.NEXT_PUBLIC_BASE_URL}api/GetMemberWiseUserDetails`
+            `${process.env.NEXT_PUBLIC_BASE_URL}api/GetMemberWiseUserDetails` // Active students membership
           )
 
           if (res.status === 200) {
             const MemberWiseUserDetails = res.data
             setMemberUserCount(MemberWiseUserDetails)
-            console.log('Fetched MemberWiseUserDetails COUNT -> :', MemberWiseUserDetails) // Use a logger for informative messages
+            console.log('Fetched MemberWiseUserDetails COUNT -> :', MemberWiseUserDetails) //
           } else {
             throw new Error(`API request failed with status ${response.status}`)
           }
@@ -147,7 +147,7 @@ const AnalyticsDashboard = () => {
       } else if (response.status === 204) {
         setLoading(false)
 
-        alert(' NO CURRENT WEEK / PROGRAM ACTIVE ')
+        // alert(' NO CURRENT WEEK / PROGRAM ACTIVE ')
         console.log(' NO CURRENT WEEK / PROGRAM ACTIVE ')
       } else {
         throw new Error(`API request failed with status ${response.status}`)
@@ -173,7 +173,7 @@ const AnalyticsDashboard = () => {
               </Grid>
 
               <Grid item xs={12} md={6}>
-                <ApexDonutChart />
+                <ApexDonutChart  data={WeeklyUserCount} />
               </Grid>
 
               {/* <Grid item xs={12} md={6}>

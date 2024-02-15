@@ -145,6 +145,8 @@ const Home = () => {
 
   console.log(' AUTH ==> ', userAllData)
 
+  const [runningWeek, setRunningWeek] = useState([])
+
   async function fetchActiveProgramData() {
     try {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/GetCurrentWeek`)
@@ -152,7 +154,7 @@ const Home = () => {
       if (response.status === 200) {
         const data = response.data
         console.log('Fetched Current Week data:', data) // Use a logger for informative messages
-
+        setRunningWeek(data)
         dispatch(clearCurrentWeeklist())
 
         const CurrentWeekData = {
@@ -457,13 +459,13 @@ const Home = () => {
             <Typography variant='h4'>Current Program </Typography>
           </Grid>
           <Grid item xs={12} md={8}>
-            <AnalyticsSupportTracker />
+            <AnalyticsSupportTracker RunningWeekData={runningWeek} />
           </Grid>
           {/* <Grid item xs={12} md={6} lg={4}>
             <CrmProjectStatus />
           </Grid> */}
           <Grid item xs={12} sx={{ pb: 4 }}>
-            <Typography variant='h4'>All Weeks </Typography>
+            <Typography variant='h4'>Week wise point calculation </Typography>
           </Grid>
           <Grid item xs={12} sm={12}>
             <CardHorizontalRatings />

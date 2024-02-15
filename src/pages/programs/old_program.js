@@ -24,7 +24,7 @@ const renderStats = data => {
         </CustomAvatar> */}
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='h5'>{sale.SectionTitle}</Typography>
-              <Typography variant='body2'>{sale.Point}</Typography>
+              <Typography variant='body2'>{sale.Point} Point</Typography>
             </Box>
           </Box>
         </Grid>
@@ -34,21 +34,33 @@ const renderStats = data => {
 
 const EcommerceStatistics = () => {
   const WeekPoints = useSelector(state => state.submissions.weekPoints)
-
+  let x = WeekPoints[0]
+  // let total_weekPoint = x.forEach( y => y.Point )
+  // console.log("Week Points --->",WeekPoints[0])
   const organizedDataArray = []
+  let weektotalpoint = 0
 
   WeekPoints[0]?.forEach(item => {
     const WeekName = item.WeekName
 
+    // console.log("Total Week Point -> ",item)
+
     // Check if the WeekName already exists in the array
     const existingWeek = organizedDataArray.find(obj => obj.WeekName === WeekName)
-
+ 
+    
     if (!existingWeek) {
       // If WeekName doesn't exist, add a new object with the WeekName property
+      
       const newWeek = {
         WeekName,
         data: [item]
       }
+      
+      let WeekPoint = newWeek.data
+      WeekPoint.map(x => weektotalpoint += x.Point)
+      console.log("Exitsting Week => ",weektotalpoint, WeekPoint); 
+
       organizedDataArray.push(newWeek)
     } else {
       // If WeekName already exists, push the item to its data array

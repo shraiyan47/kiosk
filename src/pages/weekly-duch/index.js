@@ -855,11 +855,12 @@ const StepperLinearWithValidation = () => {
               <Grid item xs={12}>
                 <label>{sectionAndOptionsData[0][2]?.SectionTitle}</label>
               </Grid>
-              {WeekCount % 2 == 0 ? (
-                <Grid item xs={12} sx={{ marginLeft: '10px', display: 'flex', justifyContent: 'center' }}>
-                  <b>NO MAAGALIM FOR THIS WEEK</b>
-                </Grid>
-              ) : (
+              {
+              // WeekCount % 2 == 0 ? (
+              //   <Grid item xs={12} sx={{ marginLeft: '10px', display: 'flex', justifyContent: 'center' }}>
+              //     <b>NO MAAGALIM FOR THIS WEEK</b>
+              //   </Grid>
+              // ) : (
                 data3.map((item3, index3) => (
                   <CustomCheckboxBasic
                     key={index3}
@@ -872,7 +873,8 @@ const StepperLinearWithValidation = () => {
                     iconProps={icons3[index3] ? icons3[index3].iconProps : {}}
                   />
                 ))
-              )}
+              // )
+              }
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 {/* <Button variant='step3' color='secondary' onClick={handleBack}>
                   Back
