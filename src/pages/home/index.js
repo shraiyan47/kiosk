@@ -235,7 +235,7 @@ const Home = () => {
             const data = resAllWeekOfProgram.data
 
             const allWeekProgram = {
-              hachlata: data
+              allWeekOfProgram: data
             }
 
             dispatch(clearallWeekOfProgramList())

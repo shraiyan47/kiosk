@@ -19,7 +19,7 @@ export const userSlice = createSlice({
 
   reducers: {
     usersList: (state = initialState, action) => {
-      console.log('state management users -> ', state.data)
+      // console.log('state management users -> ', state.data)
       state.data = [...state.data, action.payload.data]
     }, 
 

@@ -1,4 +1,3 @@
-
 import Box from '@mui/material/Box'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, useTheme } from '@mui/material/styles'
@@ -17,6 +16,8 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 import { useState } from 'react'
 import StudentLogin from './StudentLogin'
+import { Button, Stack } from '@mui/material'
+import AuthorityLogin from '../admin/AuthorityLogin'
 
 const LoginIllustration = styled('img')(({ theme }) => ({
   zIndex: 2,
@@ -44,11 +45,12 @@ const RightWrapper = styled(Box)(({ theme }) => ({
   }
 }))
 
-
 const LoginPage = () => {
   // ** Hooks
   // const auth = useAuth()
- 
+
+  const url = window.location.hostname
+  // alert(url)
   const theme = useTheme()
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
@@ -63,7 +65,6 @@ const LoginPage = () => {
   }
 
   const imageSource = skin === 'bordered' ? 'auth-v2-login-illustration-bordered' : 'auth-v2-login-illustration'
-  
 
   return (
     <Box className='content-right' sx={{ backgroundColor: 'background.paper' }}>
@@ -95,41 +96,44 @@ const LoginPage = () => {
           }}
         >
           <Box sx={{ width: '100%', maxWidth: 450 }}>
+            {url == 'localhost' ? (
+              <>
+                <Stack spacing={2} direction='row'>
+                  <Button type='button' onClick={btnHandler} value='student' variant='contained'>
+                    Student Login
+                  </Button>
 
-            {/* <Stack spacing={2} direction='row'>
-              <Button type='button' onClick={btnHandler} value='student' variant='contained'>
-                Student Login
-              </Button>
+                  <Button type='button' onClick={btnHandler} value='admin' variant='contained'>
+                    Admin Login
+                  </Button>
+                </Stack>
 
-              <Button type='button' onClick={btnHandler} value='admin' variant='contained'>
-                Admin Login
-              </Button>
-            </Stack>
-
-            {activeLogin === 'student' ? (
+                {activeLogin === 'student' ? (
+                  <Box sx={{ mb: 4 }}>
+                    <h3>Student Login with QR Code</h3>
+                    <StudentLogin />
+                  </Box>
+                ) : (
+                  activeLogin === 'admin' && (
+                    <Box sx={{ mb: 4 }}>
+                      <AuthorityLogin />
+                    </Box>
+                  )
+                )}
+              </>
+            ) : (
               <Box sx={{ mb: 4 }}>
-                <h3>Student Login with QR Code</h3>
+                {/* <h3>Student Login with QR Code</h3> */}
                 <StudentLogin />
               </Box>
-            ) : (
-              activeLogin === 'admin' && (
-                <Box sx={{ mb: 4 }}>
-                  <AuthorityLogin />
-                </Box>
-              )
-            )} */}
-            <Box sx={{ mb: 4 }}>
-              {/* <h3>Student Login with QR Code</h3> */}
-              <StudentLogin />
-            </Box>
-            
+            )}
+
             {/* <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
               <Typography sx={{ color: 'text.secondary', mr: 2 }}>Forget to Bring QR code?</Typography>
               <Typography href='/student' component={LinkStyled}>
                 Click here to login
               </Typography>
             </Box> */}
-
           </Box>
         </Box>
       </RightWrapper>

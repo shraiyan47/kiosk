@@ -56,9 +56,10 @@ const AnalyticsDashboard = () => {
 
           if (resAllWeekOfProgram.status === 200) {
             const data = resAllWeekOfProgram.data
+            console.log("WEEK LIST ->",data)
 
             const allWeekProgram = {
-              hachlata: data
+              allWeekOfProgram: data
             }
 
             dispatch(clearallWeekOfProgramList())
@@ -77,31 +78,31 @@ const AnalyticsDashboard = () => {
 
 
         // wdSubReport setWeeklyUserCount
-        try {
-          const resAllWeekOfProgram = await axios.get(
-            `${process.env.NEXT_PUBLIC_BASE_URL}api/Week?SessionId=${data?.SessionId}` // Every Week User Submission Count
-          )
+        // try {
+        //   const resAllWeekOfProgram = await axios.get(
+        //     `${process.env.NEXT_PUBLIC_BASE_URL}api/Week?SessionId=${data?.SessionId}` // Every Week User Submission Count
+        //   )
 
-          if (resAllWeekOfProgram.status === 200) {
-            const data = resAllWeekOfProgram.data
+        //   if (resAllWeekOfProgram.status === 200) {
+        //     const data = resAllWeekOfProgram.data
 
-            const allWeekProgram = {
-              hachlata: data
-            }
+        //     const allWeekProgram = {
+        //       hachlata: data
+        //     }
 
-            dispatch(clearallWeekOfProgramList())
+        //     dispatch(clearallWeekOfProgramList())
 
-            dispatch(allWeekOfProgramList(allWeekProgram))
-            // alert("LOL")
-            console.log('Fetched ALL WEEK OF PROGRAM data:', allWeekProgram) 
-          } else {
-            throw new Error(`API request failed with status ${response.status}`)
-          }
-        } catch (err) {
-          console.error('Error fetching ALL WEEK OF PROGRAM data:', err)
+        //     dispatch(allWeekOfProgramList(allWeekProgram))
+        //     // alert("LOL")
+        //     console.log('Fetched ALL WEEK OF PROGRAM data:', allWeekProgram) 
+        //   } else {
+        //     throw new Error(`API request failed with status ${response.status}`)
+        //   }
+        // } catch (err) {
+        //   console.error('Error fetching ALL WEEK OF PROGRAM data:', err)
 
-          return { ok: false, err: err }
-        }
+        //   return { ok: false, err: err }
+        // }
 
         try {
           const res = await axios.get(
@@ -139,7 +140,6 @@ const AnalyticsDashboard = () => {
 
           return { ok: false, err: err }
         }
-
 
         setLoading(false)
 
