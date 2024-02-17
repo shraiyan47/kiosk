@@ -12,8 +12,10 @@ import Icon from 'src/@core/components/icon'
 // ** Custom Components Imports
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import { useSelector } from 'react-redux'
+import { useTheme } from '@mui/material'
 
 const renderStats = data => {
+
   return data.map(
     (sale, index) =>
       sale.SectionTitle !== 'Confirmation' && (
@@ -33,37 +35,66 @@ const renderStats = data => {
 }
 
 const EcommerceStatistics = () => {
+  const theme = useTheme()
+
   const WeekPoints = useSelector(state => state.submissions.weekPoints)
   let x = WeekPoints[0]
   // let total_weekPoint = x.forEach( y => y.Point )
-  // console.log("Week Points --->",WeekPoints[0])
+  console.log('Week Points --->', WeekPoints[0])
   const organizedDataArray = []
   let weektotalpoint = 0
 
-  WeekPoints[0]?.forEach(item => {
-    const WeekName = item.WeekName
+  function sumPointsByWeekId(data) {
+    const result = []
 
-    // console.log("Total Week Point -> ",item)
+    for (const item of data) {
+      const weekId = item.WeekId
+      let found = false
+
+      for (let i = 0; i < result.length; i++) {
+        if (result[i].weekId === weekId) {
+          result[i].total += item.Point
+          found = true
+          break
+        }
+      }
+
+      if (!found) {
+        result.push({ weekId, total: item.Point })
+      }
+    }
+
+    return result
+  }
+  
+  const weekIdTotals = (WeekPoints[0])&&sumPointsByWeekId(WeekPoints[0])
+  console.log('Total Week Point -> ', weekIdTotals)
+
+  WeekPoints[0]?.forEach((item, index) => {
+    const WeekName = item.WeekName
+    const WeekId = item.WeekId
 
     // Check if the WeekName already exists in the array
     const existingWeek = organizedDataArray.find(obj => obj.WeekName === WeekName)
- 
-    
+
     if (!existingWeek) {
       // If WeekName doesn't exist, add a new object with the WeekName property
-      
+
       const newWeek = {
         WeekName,
+        WeekId,
         data: [item]
       }
-      
-      let WeekPoint = newWeek.data
-      WeekPoint.map(x => weektotalpoint += x.Point)
-      console.log("Exitsting Week => ",weektotalpoint, WeekPoint); 
+
+      console.log('Exitsting Week => ', item)
+      weektotalpoint = 0
 
       organizedDataArray.push(newWeek)
     } else {
       // If WeekName already exists, push the item to its data array
+      //   weektotalpoint += item.Point
+      // console.log("Total Week Point -> ",item)
+
       existingWeek.data.push(item)
     }
   })
@@ -75,12 +106,11 @@ const EcommerceStatistics = () => {
       {organizedDataArray.map((x, y) => (
         <>
           <Card key={y} sx={{ padding: '10px', marginBottom: '20px' }}>
+            <CardHeader title={`${x.WeekName}`} subheader={`Total Weekly Point: ${(x.WeekId == weekIdTotals[y].weekId)&&weekIdTotals[y].total}`} subheaderTypographyProps={{ sx: { color: `ORANGE !important`, fontWeight: 'BOLD' } }}  />  
             <CardContent
-              sx={{ pt: theme => `${theme.spacing(7)} !important`, pb: theme => `${theme.spacing(7.5)} !important` }}
+              sx={{ pt: theme => `${theme.spacing(1)} !important`, pb: theme => `${theme.spacing(1.5)} !important` }}
             >
-              <h3>{x.WeekName}</h3>
-
-              <Grid container spacing={6}>
+              <Grid container spacing={1}>
                 {renderStats(x.data)}
               </Grid>
             </CardContent>

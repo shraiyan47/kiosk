@@ -42,6 +42,7 @@ import {
   hachlatasList,
   submissionsList
 } from 'src/redux/weeklyduch/submissionSlice'
+import { ProcessLinearWithLabel } from 'src/views/components/progress/ProgressLinearWithLabel'
 // import { useRandomPassword } from 'src/hooks/useRandom'
 
 // import Counter from '../Counter/index'
@@ -136,6 +137,7 @@ const Home = () => {
   // WE TRIED TO UPDATE ALL THE USER EMAIL
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
+  const [CurrentWeek, setCurrentWeek] = useState(false)
   const [loading, setLoading] = useState(false)
   const auth = useAuth()
 
@@ -153,6 +155,7 @@ const Home = () => {
 
       if (response.status === 200) {
         const data = response.data
+        setCurrentWeek(data)
         console.log('Fetched Current Week data:', data) // Use a logger for informative messages
         setRunningWeek(data)
         dispatch(clearCurrentWeeklist())
@@ -451,15 +454,17 @@ const Home = () => {
         <Grid container spacing={6}>
           <Grid item xs={12} sx={{ pb: 4 }}>
             <Typography variant='h1'>
-              {' '}
               {userAllData?.fullname} Bas {userAllData?.MotherName}
             </Typography>
           </Grid>
           <Grid item xs={12} sx={{ pb: 4 }}>
-            <Typography variant='h4'>Current Program </Typography>
+             {/* {JSON.stringify(CurrentWeek)} */}
+            <Typography variant='h4'>Current Program : 
+            {CurrentWeek?.SessionStartDt?.replace('00:00:00', '') + " From "+CurrentWeek?.SessionEndDt?.replace('00:00:00', '')}  
+            </Typography>
           </Grid>
           <Grid item xs={12} md={8}>
-            <AnalyticsSupportTracker RunningWeekData={runningWeek} />
+            <AnalyticsSupportTracker RunningWeekData={runningWeek} CurrentWeekData={CurrentWeek} />
           </Grid>
           {/* <Grid item xs={12} md={6} lg={4}>
             <CrmProjectStatus />

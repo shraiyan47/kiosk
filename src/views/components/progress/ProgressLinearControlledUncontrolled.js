@@ -6,31 +6,41 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import LinearProgress from '@mui/material/LinearProgress'
 
-const ProgressLinearControlledUncontrolled = () => {
+const ProgressLinearControlledUncontrolled = param => {
   // ** State
-  const [progress, setProgress] = useState(0)
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress(oldProgress => {
-        if (oldProgress === 100) {
-          return 0
-        }
-        const diff = Math.random() * 10
+  console.log(' param.currentWD => ', param.currentWD)
+  const totalC = param.currentWD[0]?.TotalWeekCount
+  const progress = (param.currentWD[0]?.WeekCount / totalC) * 100
 
-        return Math.min(oldProgress + diff, 100)
-      })
-    }, 500)
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     setProgress(oldProgress => {
+  //       if (oldProgress === 100) {
+  //         return 0
+  //       }
+  //       const diff = Math.random() * 10
 
-    return () => {
-      clearInterval(timer)
-    }
-  }, [])
+  //       return Math.min(oldProgress + diff, 100)
+  //     })
+  //   }, 500)
+
+  //   return () => {
+  //     clearInterval(timer)
+  //   }
+  // }, [])
 
   return (
     <>
-      <Box sx={{ mb: 4 }}>
-        <Typography sx={{ fontWeight: 500, mb: 1.5 }}> Week: </Typography>
-        <LinearProgress variant='determinate' value={40} />
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ width: '100%', mr: 1 }}>
+          {/* <Typography sx={{ fontWeight: 500, mb: 1.5 }}> Week: {progress} </Typography> */}
+          <LinearProgress variant='buffer' value={progress} />
+        </Box>
+        <Box sx={{ minWidth: 150 }}>
+          <Typography variant='body2' color='text.secondary'>
+            {param.currentWD[0]?.WeekCount} Week Out of {totalC} Week
+          </Typography>
+        </Box>
       </Box>
     </>
   )

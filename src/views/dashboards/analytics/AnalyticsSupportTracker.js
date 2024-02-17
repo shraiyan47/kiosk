@@ -8,22 +8,21 @@ import CardContent from '@mui/material/CardContent'
 import CardSnippet from 'src/@core/components/card-snippet'
 
 // ** Custom Components Imports
-import Icon from 'src/@core/components/icon'
-import CustomAvatar from 'src/@core/components/mui/avatar'
-import ReactApexcharts from 'src/@core/components/react-apexcharts'
+// import Icon from 'src/@core/components/icon'
+// import CustomAvatar from 'src/@core/components/mui/avatar'
+// import ReactApexcharts from 'src/@core/components/react-apexcharts'
 import * as source from 'src/views/components/progress/ProgressSourceCode'
-import ProgressLinearControlledUncontrolled from 'src/views/components/progress/ProgressLinearControlledUncontrolled'
+// import ProgressLinearControlledUncontrolled from 'src/views/components/progress/ProgressLinearControlledUncontrolled'
 
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import { useSelector } from 'react-redux'
-import { useEffect } from 'react'
+import ProgressLinearControlledUncontrolled from 'src/views/components/progress/ProgressLinearControlledUncontrolled'
 
-
-const AnalyticsSupportTracker = (x) => {
+const AnalyticsSupportTracker = () => {
   // ** Hook
   const theme = useTheme()
-  
+
   const options = {
     chart: {
       sparkline: { enabled: true }
@@ -104,46 +103,46 @@ const AnalyticsSupportTracker = (x) => {
       }
     ]
   }
- 
+
   const pointSummeryProgram = useSelector(state => state.submissions.pointSummeryProgram)
   const CurrentWeekData = useSelector(state => state.weeklyduchs.currentWeek)
 
-  useEffect(() => {
-    console.log(pointSummeryProgram, CurrentWeekData)
-  }, [pointSummeryProgram, CurrentWeekData])
-  
+  // useEffect(() => {
+  //   console.log(pointSummeryProgram, CurrentWeekData)
+  // }, [pointSummeryProgram, CurrentWeekData])
+
   const data = [
     {
-      subtitle: pointSummeryProgram[0]?.BBCount+" times sumitted",
+      subtitle: pointSummeryProgram[0]?.BBCount + ' times sumitted',
       title: 'Back To Basic',
       avatarIcon: 'tabler:ticket'
     },
     {
-      subtitle: pointSummeryProgram[0]?.DDCount+" times sumitted",
+      subtitle: pointSummeryProgram[0]?.DDCount + ' times sumitted',
       avatarColor: 'info',
       title: 'Daughter of Dignity',
       avatarIcon: 'tabler:circle-check'
     },
     {
-      subtitle: pointSummeryProgram[0]?.MACount+" times sumitted",
+      subtitle: pointSummeryProgram[0]?.MACount + ' times sumitted',
       avatarColor: 'info',
       title: 'Maagalim',
       avatarIcon: 'tabler:circle-check'
     },
     {
-      subtitle: pointSummeryProgram[0]?.TCCount+" times sumitted",
+      subtitle: pointSummeryProgram[0]?.TCCount + ' times sumitted',
       avatarColor: 'info',
       title: 'Tech Check',
       avatarIcon: 'tabler:circle-check'
     },
     {
-      subtitle: pointSummeryProgram[0]?.MHCount+" times sumitted",
+      subtitle: pointSummeryProgram[0]?.MHCount + ' times sumitted',
       title: 'My Hachlata',
       avatarColor: 'warning',
       avatarIcon: 'tabler:clock'
-    }, 
+    },
     {
-      subtitle: pointSummeryProgram[0]?.GMCount+" times sumitted",
+      subtitle: pointSummeryProgram[0]?.GMCount + ' times sumitted',
       title: 'Geder Moments',
       avatarColor: 'warning',
       avatarIcon: 'tabler:clock'
@@ -151,28 +150,35 @@ const AnalyticsSupportTracker = (x) => {
   ]
 
   return (
-    <Card>
-      <Typography variant='h2' style={{padding:5}}> Running Week : {CurrentWeekData[0]?.WeekName}</Typography>
-      <CardSnippet
-          title={"This program Starting Date: "+CurrentWeekData[0]?.SessionStartDt.replace("00:00:00","")+" - End Date: "+CurrentWeekData[0]?.SessionEndDt.replace("00:00:00","")}
-          code={{
-            tsx: null,
-            jsx: source.ProgressLinearControlledUncontrolledJSXCode
-          }}
-        > 
-      </CardSnippet>
-      <CardContent>
-        <Grid container >
+    <>
+      <Card>
+        <Grid container padding={3}>
           <Grid item xs={12} sm={12}>
-            
-            <Typography variant='h3'> Submitted Week : {pointSummeryProgram[0]?.WeekCount}</Typography>
+            <ProgressLinearControlledUncontrolled currentWD={CurrentWeekData} />
+          </Grid>
+        </Grid>
 
-            {data.map((item, index) => (
-              <Box
-                key={index}
-                sx={{ display: 'flex', alignItems: 'center', mb: index !== data.length - 1 ? 4 : undefined }}
-              >
-                {/* <CustomAvatar
+        <CardContent>
+          <Grid container>
+            <Grid item xs={12} sm={12}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box sx={{ width: '100%', mr: 1 }}>
+              <Typography variant='h3'> Submitted Week : {pointSummeryProgram[0]?.WeekCount}</Typography>
+                  
+                </Box>
+                <Box sx={{ minWidth: 300 }}>
+                  <Typography variant='h3' color='text.secondary'>
+                    Total Points : {pointSummeryProgram[0]?.Point}
+                  </Typography>
+                </Box>
+              </Box>
+
+              {data.map((item, index) => (
+                <Box
+                  key={index}
+                  sx={{ display: 'flex', alignItems: 'center', mb: index !== data.length - 1 ? 4 : undefined }}
+                >
+                  {/* <CustomAvatar
                   skin='light'
                   variant='rounded'
                   color={item.avatarColor}
@@ -180,21 +186,22 @@ const AnalyticsSupportTracker = (x) => {
                 >
                   <Icon icon={item.avatarIcon} />
                 </CustomAvatar> */}
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                  <Typography variant='h6'>{item.title}</Typography>
-                  <Typography variant='body2' sx={{ color: 'text.disabled' }}>
-                    {item.subtitle}
-                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                    <Typography variant='h6'>{item.title}</Typography>
+                    <Typography variant='body2' sx={{ color: 'text.disabled' }}>
+                      {item.subtitle}
+                    </Typography>
+                  </Box>
                 </Box>
-              </Box>
-            ))}
-          </Grid>
-          {/* <Grid item xs={12} sm={7} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              ))}
+            </Grid>
+            {/* <Grid item xs={12} sm={7} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             TOTAL POINT: {pointSummeryProgram[0]?.Point}
           </Grid> */}
-        </Grid>
-      </CardContent>
-    </Card>
+          </Grid>
+        </CardContent>
+      </Card>
+    </>
   )
 }
 
