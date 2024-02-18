@@ -23,7 +23,6 @@ import * as yup from 'yup'
 import toast from 'react-hot-toast'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import Fade from '@mui/material/Fade'
 
 // ** Custom Components Imports
 import CustomTextField from 'src/@core/components/mui/text-field'
@@ -36,6 +35,8 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import { redirect } from 'next/navigation'
+
+import Fade from '@mui/material/Fade'
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />

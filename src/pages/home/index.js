@@ -464,7 +464,7 @@ const Home = () => {
             </Typography>
           </Grid>
           <Grid item xs={12} md={8}>
-            <AnalyticsSupportTracker RunningWeekData={runningWeek} CurrentWeekData={CurrentWeek} />
+            <AnalyticsSupportTracker />
           </Grid>
           {/* <Grid item xs={12} md={6} lg={4}>
             <CrmProjectStatus />

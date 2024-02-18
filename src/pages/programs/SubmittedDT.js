@@ -1,15 +1,25 @@
-import { Box, Divider, Grid, Select, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import { Box, Button, Dialog, Divider, Grid, Select, Typography } from '@mui/material'
+import React, { forwardRef, useEffect, useState } from 'react'
 // import TableHeader from '../masterdata/TableHeader'
 import { DataGrid } from '@mui/x-data-grid'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import CustomTextField from 'src/@core/components/mui/text-field'
+import EcommerceStatistics from './old_program'
+import { WeeklyPointsList, clearWeeklyPointsList } from 'src/redux/weeklyduch/submissionSlice'
+import Fade from '@mui/material/Fade'
 
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Fade ref={ref} {...props} />
+})
 function SubmittedDT() {
   const [allUsers, setAllUsers] = useState([])
+  const [ReportLoading, setReportLoading] = useState(false)
+  const [ReportData, setReportData] = useState([])
+
   const [LOADING, setLOADING] = useState(false)
-  const [filter, setFilter] = useState("")
+  const [viewReport, setViewReport] = useState(false)
+  const [filter, setFilter] = useState('')
   const [allUsers2, setAllUsers2] = useState([])
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
 
@@ -17,6 +27,8 @@ function SubmittedDT() {
   const [selectedWeek, setSelectedWeek] = useState(CurrentWeekData[0]?.WeekId)
   const allWeekOfProgram = useSelector(state => state.submissions.allWeekOfProgram)
   // console.log('allWeekOfProgram -> ', allWeekOfProgram[0])
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     setLOADING(true)
@@ -54,10 +66,9 @@ function SubmittedDT() {
 
     weeklyUserData(CurrentWeekData)
   }, [selectedWeek])
-  
 
   function handleFilter(para) {
-    console.log("Param ->", para)
+    console.log('Param ->', para)
     setFilter(para)
     const searchQuery = para
 
@@ -65,17 +76,17 @@ function SubmittedDT() {
     const filteredUsers = allUsers2.filter(user => {
       if (!user) return false
 
-      const { userId = ''} = user
+      const { userId = '', fullname = '' } = user
 
       const lowercaseQuery = searchQuery ? searchQuery.toLowerCase() : ''
 
       return (
-        (userId && userId.toLowerCase().includes(lowercaseQuery)) 
+        (fullname && fullname.toLowerCase().includes(lowercaseQuery)) ||
+        (userId && userId.toLowerCase().includes(lowercaseQuery))
       )
     })
 
     setAllUsers(filteredUsers)
-
   }
 
   const renderUserRoleOptions = () => {
@@ -90,6 +101,44 @@ function SubmittedDT() {
     console.log('allUsers ->', allUsers)
   }, [allUsers])
 
+  function handleFullReport(params) {
+    let x = params.split(',')
+    setReportData(x)
+    dispatchReportData(x)
+    async function dispatchReportData(xaram) {
+      setReportLoading(true)
+      //// POINT SUMMERY OF PROGRAM
+      try {
+        const resWeekPoints = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/GetPointSummaryByWeekList?UserAccountId=${xaram[0]}`
+        )
+
+        if (resWeekPoints.status === 200) {
+          const data = resWeekPoints.data
+
+          const allWeekPoints = {
+            weekPoints: data
+          }
+
+          dispatch(clearWeeklyPointsList())
+
+          dispatch(WeeklyPointsList(allWeekPoints))
+          // alert("LOL")
+          console.log('SUBMITTED WEEK POINT DETAILS :', allWeekPoints) // Use a logger for informative messages
+
+          setReportLoading(false)
+          setViewReport(true)
+        } else {
+          throw new Error(`API request failed with status ${response.status}`)
+        }
+      } catch (err) {
+        console.error('Error fetching ALL WEEK OF PROGRAM data:', err)
+
+        return { ok: false, err: err }
+      }
+    }
+  }
+
   const columns = [
     {
       flex: 0.25,
@@ -100,10 +149,27 @@ function SubmittedDT() {
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {/* {renderClient(row)} */}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
                 {row.userId}
+              </Typography>
+            </Box>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.25,
+      minWidth: 240,
+      field: 'fullname',
+      headerName: 'Full Name',
+
+      renderCell: ({ row }) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+              <Typography Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+                {row.fullname}
               </Typography>
             </Box>
           </Box>
@@ -118,16 +184,27 @@ function SubmittedDT() {
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {/* <CustomAvatar
-                  skin='light'
-                  sx={{ mr: 4, width: 30, height: 30 }}
-                  color={userRoleObj[row.role].color || 'primary'}
-                >
-                  <Icon icon={userRoleObj[row.role].icon} />
-                </CustomAvatar> */}
             <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
               {row.Point}
             </Typography>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.5,
+      field: 'Action',
+      minWidth: 80,
+      headerName: 'Action',
+      renderCell: ({ row }) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Button
+              onClick={x => handleFullReport(x.target.value)}
+              value={[row.UserAccountId, row.WeekId, CurrentWeekData[0]?.SessionId, row.fullname]}
+            >
+              VIEW FULL REPORT
+            </Button>
           </Box>
         )
       }
@@ -177,6 +254,26 @@ function SubmittedDT() {
           onPaginationModelChange={setPaginationModel}
           loading={LOADING}
         />
+      </Grid>
+
+      <Grid item xs={12}>
+        {viewReport && ReportLoading ? (
+          'LOADING'
+        ) : (
+          <Dialog
+            fullWidth
+            open={viewReport}
+            maxWidth='md'
+            scroll='body'
+            onClose={() => setViewReport(false)}
+            TransitionComponent={Transition}
+            // onBackdropClick={() => setShow(false)}
+            sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}
+          >
+            <Typography variant={'h1'} align={'center'} >{ReportData[3]}</Typography>
+            <EcommerceStatistics />
+          </Dialog>
+        )}
       </Grid>
     </Grid>
   )
