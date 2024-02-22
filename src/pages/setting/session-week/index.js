@@ -38,10 +38,11 @@ import DatePicker from 'react-datepicker'
 
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import { maxWidth } from '@mui/system'
+import { convertDate } from 'src/hooks/useDateConvertYMD'
 
 const index = () => {
   const [openAlert, setOpenAlert] = useState(true)
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
+  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 15 })
   const [AllWeek, setAllWeek] = useState([])
   const [AllWeek1, setAllWeek1] = useState([])
   const [AllSection, setAllSection] = useState([])
@@ -212,7 +213,7 @@ const index = () => {
       flex: 0.25,
       minWidth: 240,
       field: 'WeekName',
-      headerName: 'WeekName',
+      headerName: 'Week Name',
 
       renderCell: ({ row }) => {
         return (
@@ -228,23 +229,30 @@ const index = () => {
       }
     },
     {
-      flex: 0.175,
-      type: 'date',
+      flex: 0.175, 
       minWidth: 120,
-      headerName: 'Date',
-      field: 'start_date',
+      headerName: 'Start Date',
+      field: 'WeekStartDt',
       // valueGetter: params => new Date(params.value),
-      renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params?.row?.StartDt}
-        </Typography>
-      )
+      renderCell: ({ row }) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {/* {renderClient(row)} */}
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+              <Typography Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+                {row?.WeekStartDt}
+              </Typography>
+            </Box>
+          </Box>
+        )
+      }
+      
     },
     {
       flex: 0.25,
       minWidth: 120,
       field: 'EndDt',
-      headerName: 'EndDt',
+      headerName: 'End Date',
 
       renderCell: ({ row }) => {
         return (
@@ -252,32 +260,13 @@ const index = () => {
             {/* {renderClient(row)} */}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-                {row?.EndDt}
+                {row?.WeekEndDt}
               </Typography>
             </Box>
           </Box>
         )
       }
-    },
-    {
-      flex: 0.25,
-      minWidth: 120,
-      field: 'IsActive',
-      headerName: 'Active',
-
-      renderCell: ({ row }) => {
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {/* {renderClient(row)} */}
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-                {row?.IsActive}
-              </Typography>
-            </Box>
-          </Box>
-        )
-      }
-    },
+    }, 
     {
       flex: 0.15,
       minWidth: 120,
@@ -557,12 +546,12 @@ const index = () => {
     let data = {}
     data.name = name
     data.sessionid = Sessionid
-    // data.StartDt = WeekData.StartDt;
-    // data.EndDt = WeekData.EndDt;
+    data.StartDt = convertDate(WeekData.WeekStartDt);
+    data.EndDt = convertDate(WeekData.WeekEndDt);
 
     if (WeekId != 0) {
       data.Id = WeekId
-      data.UpdateBy = 'sysadmin'
+      // data.UpdateBy = 'sysadmin'
     } else {
       data.EntryBy = 'sysadmin'
     }
@@ -579,7 +568,7 @@ const index = () => {
     console.log('row', row)
     setWeekData(row)
     setName(row.WeekName)
-    setWeekId(row.Id)
+    setWeekId(row.WeekId)
     if (!adddialogopen) {
       setadddialogopen(true)
     }
@@ -707,7 +696,7 @@ const index = () => {
                 rows={AllWeek}
                 columns={columns}
                 disableRowSelectionOnClick
-                pageSizeOptions={[2, 3, 4, 10, 25, 50]}
+                pageSizeOptions={[10, 25, 50]}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
               />

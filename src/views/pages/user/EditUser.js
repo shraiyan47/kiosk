@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // ** React Imports
 import { useState, forwardRef, useEffect } from 'react'
 import { useRandomPassword, useRandomString } from 'src/hooks/useRandom'
@@ -63,6 +64,10 @@ const CustomCloseButton = styled(IconButton)(({ theme }) => ({
 const EditUserDrawer = param => {
   // const [data, setData] = useState(param?.data)
   const data = param?.data
+  const userRoleStateData = useSelector(state => state.userRoles.data)
+  const userProgramStateData = useSelector(state => state.userPrograms.programData[0])
+
+  console.log("param ---> ", data)
 
   const [show, setShow] = useState(param?.show)
 
@@ -90,8 +95,7 @@ const EditUserDrawer = param => {
     console.log(' Edit data -> ', data)
   }, [data])
 
-  const userRoleStateData = useSelector(state => state.userRoles.data)
-  const userProgramStateData = useSelector(state => state.userPrograms.programData[0])
+
 
   console.log("userProgramStateData --> ",userProgramStateData)
 
@@ -101,7 +105,7 @@ const EditUserDrawer = param => {
   // const userprogramSV = userProgramStateData[NOPS-1]
 
   const renderUserRoleOptions = () => {
-    return userroleSV.map(item => (
+    return userroleSV?.map(item => (
       <option key={item.Id} value={item.Name}>
         {item.Name}
       </option>
@@ -109,7 +113,7 @@ const EditUserDrawer = param => {
   }
 
   const renderUserProgramOptions = () => {
-    return userProgramStateData.map(item => (
+    return userProgramStateData?.map(item => (
       <option key={item.Id} value={item.Id}>
         {item.Name}
       </option>
@@ -146,10 +150,10 @@ const EditUserDrawer = param => {
 
     console.log('userAddData ===> ', userAddData)
 
-    postData(userAddData)
+    updateData(userAddData)
   }
 
-  const postData = async userUpdatedData => {
+  const updateData = async userUpdatedData => {
     const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'application/json')
 
@@ -207,6 +211,7 @@ const EditUserDrawer = param => {
         sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
+
           <DialogContent
             sx={{
               pb: theme => `${theme.spacing(8)} !important`,
@@ -214,14 +219,17 @@ const EditUserDrawer = param => {
               pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
             }}
           >
+
             <CustomCloseButton onClick={() => handleClose()}>
               <Icon icon='tabler:x' fontSize='1.25rem' />
             </CustomCloseButton>
+
             <Box sx={{ mb: 8, textAlign: 'center' }}>
               <Typography variant='h3' sx={{ mb: 3 }}>
                 Edit User {(data?.firstname==null)&&data?.fullname}
               </Typography>
             </Box>
+
             {!!data && (
               <>
                 <Grid container spacing={6}>

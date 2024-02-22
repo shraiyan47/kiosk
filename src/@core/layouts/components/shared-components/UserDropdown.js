@@ -1,8 +1,8 @@
 // ** React Imports
-import { useState, Fragment } from 'react'
+import { forwardRef, useState, Fragment } from 'react'
 
 // ** Next Import
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -19,6 +19,9 @@ import Icon from 'src/@core/components/icon'
 
 // ** Context
 import { useAuth } from 'src/hooks/useAuth'
+
+// Required For Edit Dialoge
+import EditUserDrawer from 'src/views/pages/user/EditUser'
 
 // ** Styled Components
 const BadgeContentSpan = styled('span')(({ theme }) => ({
@@ -41,10 +44,13 @@ const UserDropdown = props => {
 
   // ** States
   const [anchorEl, setAnchorEl] = useState(null)
+  const [viewProfile, setViewProfile] = useState(false)
+  const [ProfileLoading, setProfileLoading] = useState(false)
 
   // ** Hooks
-  const router = useRouter()
+  // const router = useRouter()
   const { logout } = useAuth()
+  const auth = useAuth()
 
   // ** Vars
   const { direction } = settings
@@ -54,11 +60,22 @@ const UserDropdown = props => {
   }
 
   const handleDropdownClose = url => {
-    if (url) {
-      router.push(url)
-    }
+    // if (url) {
+    //   router.push(url)
+    // }
     setAnchorEl(null)
   }
+
+  // function handleProfile(params) {
+  //   alert(params)
+
+  //   // if (params) {
+  //   //   router.push(params)
+  //   // }
+  //   setAnchorEl(null)
+
+  //   setViewProfile(true)
+  // }
 
   const styles = {
     px: 4,
@@ -79,67 +96,71 @@ const UserDropdown = props => {
     logout()
     handleDropdownClose()
   }
-  const auth = useAuth()
-  
+
+  const onSuccessHandler = x => {
+    alert(x)
+  }
+
   return (
-    <Fragment>
-      <Badge
-        overlap='circular'
-        onClick={handleDropdownOpen}
-        sx={{ ml: 2, cursor: 'pointer' }}
-        badgeContent={<BadgeContentSpan />}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right'
-        }}
-      >
-        <Avatar
-          alt='John Doe'
-          src='/images/avatars/admin.png'
+    <>
+      <Fragment>
+        <Badge
+          overlap='circular'
           onClick={handleDropdownOpen}
-          sx={{ width: 38, height: 38 }}
-        />
-      </Badge>
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={() => handleDropdownClose()}
-        sx={{ '& .MuiMenu-paper': { width: 230, mt: 4.75 } }}
-        anchorOrigin={{ vertical: 'bottom', horizontal: direction === 'ltr' ? 'right' : 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: direction === 'ltr' ? 'right' : 'left' }}
-      >
-        <Box sx={{ py: 1.75, px: 6 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Badge
-              overlap='circular'
-              badgeContent={<BadgeContentSpan />}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right'
-              }}
-            >
-              <Avatar alt='John Doe' src='/images/avatars/admin.png' sx={{ width: '2.5rem', height: '2.5rem' }} />
-            </Badge>
-            <Box sx={{ display: 'flex', ml: 2.5, alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 500 }}>{auth.user.username}</Typography>
-              <Typography variant='body2'>{auth.user.userrole}</Typography>
+          sx={{ ml: 2, cursor: 'pointer' }}
+          badgeContent={<BadgeContentSpan />}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right'
+          }}
+        >
+          <Avatar
+            alt='John Doe'
+            src='/images/avatars/admin.png'
+            onClick={handleDropdownOpen}
+            sx={{ width: 38, height: 38 }}
+          />
+        </Badge>
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={() => handleDropdownClose()}
+          sx={{ '& .MuiMenu-paper': { width: 230, mt: 4.75 } }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: direction === 'ltr' ? 'right' : 'left' }}
+          transformOrigin={{ vertical: 'top', horizontal: direction === 'ltr' ? 'right' : 'left' }}
+        >
+          <Box sx={{ py: 1.75, px: 6 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Badge
+                overlap='circular'
+                badgeContent={<BadgeContentSpan />}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right'
+                }}
+              >
+                <Avatar alt='John Doe' src='/images/avatars/admin.png' sx={{ width: '2.5rem', height: '2.5rem' }} />
+              </Badge>
+              <Box sx={{ display: 'flex', ml: 2.5, alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography sx={{ fontWeight: 500 }}>{auth.user.fullname}</Typography>
+                <Typography variant='body2'>{auth.user.userrole}</Typography>
+              </Box>
             </Box>
           </Box>
-        </Box>
-        <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} />
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <Icon icon='tabler:user-check' />
-            My Profile
-          </Box>
-        </MenuItemStyled>
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <Icon icon='tabler:settings' />
-            Settings
-          </Box>
-        </MenuItemStyled>
-        {/* <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+          <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} />
+          <MenuItemStyled sx={{ p: 0 }} onClick={() => setViewProfile(true)}>
+            <Box sx={styles}>
+              <Icon icon='tabler:user-check' />
+              Update Profile
+            </Box>
+          </MenuItemStyled>
+          <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+            <Box sx={styles}>
+              <Icon icon='tabler:settings' />
+              Settings
+            </Box>
+          </MenuItemStyled>
+          {/* <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
           <Box sx={styles}>
             <Icon icon='tabler:credit-card' />
             Billing
@@ -164,15 +185,17 @@ const UserDropdown = props => {
             Pricing
           </Box>
         </MenuItemStyled> */}
-        <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} />
-        <MenuItemStyled sx={{ p: 0 }} onClick={handleLogout}>
-          <Box sx={styles}>
-            <Icon icon='tabler:logout' />
-            Sign Out
-          </Box>
-        </MenuItemStyled>
-      </Menu>
-    </Fragment>
+          <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} />
+          <MenuItemStyled sx={{ p: 0 }} onClick={handleLogout}>
+            <Box sx={styles}>
+              <Icon icon='tabler:logout' />
+              Sign Out
+            </Box>
+          </MenuItemStyled>
+        </Menu>
+      </Fragment>
+      {viewProfile == true && <EditUserDrawer data={auth?.user} show={viewProfile} onSuccess={onSuccessHandler} />}
+    </>
   )
 }
 

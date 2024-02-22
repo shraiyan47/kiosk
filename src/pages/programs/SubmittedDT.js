@@ -7,11 +7,14 @@ import axios from 'axios'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import EcommerceStatistics from './old_program'
 import { WeeklyPointsList, clearWeeklyPointsList } from 'src/redux/weeklyduch/submissionSlice'
+
+// Required For Dialoge 
 import Fade from '@mui/material/Fade'
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
 })
+
 function SubmittedDT() {
   const [allUsers, setAllUsers] = useState([])
   const [ReportLoading, setReportLoading] = useState(false)
@@ -256,7 +259,6 @@ function SubmittedDT() {
         />
       </Grid>
 
-      <Grid item xs={12}>
         {viewReport && ReportLoading ? (
           'LOADING'
         ) : (
@@ -274,7 +276,6 @@ function SubmittedDT() {
             <EcommerceStatistics />
           </Dialog>
         )}
-      </Grid>
     </Grid>
   )
 }

@@ -43,6 +43,8 @@ import {
   submissionsList
 } from 'src/redux/weeklyduch/submissionSlice'
 import { ProcessLinearWithLabel } from 'src/views/components/progress/ProgressLinearWithLabel'
+import { userRolesList } from 'src/redux/user/userRoleSlice'
+import { userProgramsList } from 'src/redux/user/userProgramSlice'
 // import { useRandomPassword } from 'src/hooks/useRandom'
 
 // import Counter from '../Counter/index'
@@ -225,7 +227,7 @@ const Home = () => {
         } catch (err) {
           console.error('Error fetching active program data:', err)
 
-          return { ok: false, err: err }
+          // return { ok: false, err: err }
         }
 
         ///// All the weeks of running program with dates range
@@ -252,7 +254,7 @@ const Home = () => {
         } catch (err) {
           console.error('Error fetching ALL WEEK OF PROGRAM data:', err)
 
-          return { ok: false, err: err }
+          // return { ok: false, err: err }
         }
 
         //// POINT SUMMERY OF PROGRAM
@@ -279,7 +281,7 @@ const Home = () => {
         } catch (err) {
           console.error('Error fetching ALL WEEK OF PROGRAM data:', err)
 
-          return { ok: false, err: err }
+          // return { ok: false, err: err }
         }
 
         //// POINT SUMMERY OF PROGRAM
@@ -306,7 +308,7 @@ const Home = () => {
         } catch (err) {
           console.error('Error fetching ALL WEEK OF PROGRAM data:', err)
 
-          return { ok: false, err: err }
+          // return { ok: false, err: err }
         }
 
         // // // MasterSection // // //
@@ -380,7 +382,7 @@ const Home = () => {
       console.error('Error fetching active program data:', err)
       setLoading(false)
 
-      return { ok: false, err: err }
+      // return { ok: false, err: err }
     }
   }
 
@@ -431,11 +433,74 @@ const Home = () => {
     }
   }
 
+  const UserRoleURL = `${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?MasterId=2&Accesskey=UR` ////// All User Roles
+  const UserProgramURL = `${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?MasterId=1&Accesskey=TM` ////// All User Program
+
+  async function fetchUserRoles() {
+    const myHeaders = new Headers()
+    myHeaders.append('Content-Type', 'application/json')
+    // myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'))
+
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    }
+
+    const res = await fetch(UserRoleURL, requestOptions)
+    const data = await res.json()
+    if (res.ok) {
+      const userRoleDispatch = {
+        data: data
+      }
+
+      // console.log(" userRoleDispatch -> ", userRoleDispatch)
+      dispatch(userRolesList(userRoleDispatch))
+
+      return { ok: true, data }
+    } else {
+      constole.log('ERROR => ', data.error)
+
+      return { ok: false, err: res, data }
+    }
+  }
+
+  async function fetchUserPrograms() {
+    const myHeaders = new Headers()
+    myHeaders.append('Content-Type', 'application/json')
+    // myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'))
+
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    }
+
+    const res = await fetch(UserProgramURL, requestOptions)
+    const data = await res.json()
+    if (res.ok) {
+      const userProgramDispatch = {
+        programData: data
+      }
+      dispatch(userProgramsList(userProgramDispatch))
+
+      console.log('userProgramDispatch -> ', userProgramDispatch)
+
+      return { ok: true, data }
+    } else {
+      constole.log('ERROR => ', data.error)
+
+      return { ok: false, err: res, data }
+    }
+  }
+
   // Call fetchMasterSectionData function
   useEffect(() => {
     setLoading(true)
     fetchHachlataGedderMomentData()
     fetchActiveProgramData()
+    fetchUserRoles()
+    fetchUserPrograms()
   }, [])
 
   const Illustration = styled('img')(({ theme }) => ({
@@ -458,9 +523,12 @@ const Home = () => {
             </Typography>
           </Grid>
           <Grid item xs={12} sx={{ pb: 4 }}>
-             {/* {JSON.stringify(CurrentWeek)} */}
-            <Typography variant='h4'>Current Program : 
-            {CurrentWeek?.SessionStartDt?.replace('00:00:00', '') + " From "+CurrentWeek?.SessionEndDt?.replace('00:00:00', '')}  
+            {/* {JSON.stringify(CurrentWeek)} */}
+            <Typography variant='h4'>
+              Current Program :
+              {CurrentWeek?.SessionStartDt?.replace('00:00:00', '') +
+                ' From ' +
+                CurrentWeek?.SessionEndDt?.replace('00:00:00', '')}
             </Typography>
           </Grid>
           <Grid item xs={12} md={8}>
