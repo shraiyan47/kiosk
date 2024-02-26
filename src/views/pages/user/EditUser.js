@@ -63,7 +63,8 @@ const CustomCloseButton = styled(IconButton)(({ theme }) => ({
 
 const EditUserDrawer = param => {
   // const [data, setData] = useState(param?.data)
-  const data = param?.data
+  const userAllData = useSelector(state => state.userPrograms.userData[0])
+  const data = (param?.data?.password == null && param.show)?userAllData: param?.data
   const userRoleStateData = useSelector(state => state.userRoles.data)
   const userProgramStateData = useSelector(state => state.userPrograms.programData[0])
 

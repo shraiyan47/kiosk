@@ -76,13 +76,13 @@ export default function QrCodeScanner() {
         setStudentPassword(response?.data?.password)
         setSucc(true)
 
-        const userAllDispatch = {
-          userData: response?.data
-        }
+        // const userAllDispatch = {
+        //   userData: response?.data
+        // }
 
-        dispatch(userAllList(userAllDispatch))
+        // dispatch(userAllList(userAllDispatch))
   
-        console.log("User All Dispatch -> ",userAllDispatch)
+        // console.log("User All Dispatch -> ",userAllDispatch)
       })
  
     }
@@ -113,7 +113,7 @@ export default function QrCodeScanner() {
           type: 'manual',
           message: 'PIN is invalid'
         })
-      })
+      }) 
     } else {
       if (val.toString().length >= 4) {
         setSucc(false)

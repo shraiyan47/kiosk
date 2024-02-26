@@ -9,6 +9,8 @@ import axios from 'axios'
 
 // ** Config
 import authConfig from 'src/configs/auth'
+import { useDispatch } from 'react-redux'
+import { userAllList } from 'src/redux/user/userProgramSlice'
 
 // ** Defaults
 const defaultProvider = {
@@ -26,6 +28,7 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(defaultProvider.user)
   const [loading, setLoading] = useState(defaultProvider.loading)
   const [cleared, setCleared] = useState(false)
+  const dispatch = useDispatch()
 
   // ** Hooks
   const router = useRouter()
@@ -80,10 +83,19 @@ const AuthProvider = ({ children }) => {
         response.data.userData.Member = res.data.Member
         response.data.userData.fullname = res.data.fullname
         window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
+        res.data.ProfileId = response.data.userData.ProfileId
+        
+        const userAllDispatch = {
+          userData: res?.data
+        }
 
+        dispatch(userAllList(userAllDispatch))
+  
+        console.log("User All Dispatch -> ",userAllDispatch)
         const returnUrl = router.query.returnUrl
         setUser({ ...response.data.userData })
         window.localStorage.setItem('userData', JSON.stringify(response.data.userData))
+
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
 
         router.replace(redirectURL)

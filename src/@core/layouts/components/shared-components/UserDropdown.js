@@ -194,7 +194,7 @@ const UserDropdown = props => {
           </MenuItemStyled>
         </Menu>
       </Fragment>
-      {viewProfile == true && <EditUserDrawer data={auth?.user} show={viewProfile} onSuccess={onSuccessHandler} />}
+      {/* {viewProfile == true && <EditUserDrawer data={auth?.user} show={viewProfile} onSuccess={onSuccessHandler} />} */}
     </>
   )
 }

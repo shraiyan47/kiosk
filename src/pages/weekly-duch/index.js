@@ -178,14 +178,27 @@ const StepperLinearWithValidation = () => {
       setSelectedAns(updatedAns)
     } else {
       const foundObject = data.find(item => item.Id === value)
-
-      const newObject = {
-        // ...foundObject, // Copy properties from foundObject
-        SectionOption: foundObject.SectionOption,
-        Point: foundObject.Point,
-        EntryBy: foundObject.EntryBy,
-        Result: 'Yes' // Add the "Result: Yes" property
+      let newObject
+      if (foundObject.Id == 1 || foundObject.Id == 2 || foundObject.Id == 3 ) {
+        newObject = {
+          // ...foundObject, // Copy properties from foundObject
+          SectionOption: foundObject.SectionOption,
+          Point: 0,
+          SpecialPoint: 1,
+          EntryBy: foundObject.EntryBy,
+          Result: 'Yes' // Add the "Result: Yes" property
+        }
+      } else {
+        newObject = {
+          // ...foundObject, // Copy properties from foundObject
+          SectionOption: foundObject.SectionOption,
+          Point: foundObject.Point,
+          EntryBy: foundObject.EntryBy,
+          Result: 'Yes' // Add the "Result: Yes" property
+        }
       }
+
+      console.log("New Object BB--> ",newObject)
 
       setSelected([...selected, value])
       setSelectedAns([...selectedAns, newObject])
@@ -583,9 +596,10 @@ const StepperLinearWithValidation = () => {
     ])
   }
   const [totalPoints, setTotalPoints] = useState([])
-  
+
   useEffect(() => {
     setLoading(true)
+    alert(AnswerdData)
     console.log('Answer Data', AnswerdData)
     // const boo = data.SectionOptionList.find(option => option.SectionOption === "My Chavrusa")?.Result;
     // console.log("BOOO............................. )> ",boo)
@@ -857,11 +871,11 @@ const StepperLinearWithValidation = () => {
                 <label>{sectionAndOptionsData[0][2]?.SectionTitle}</label>
               </Grid>
               {
-              // WeekCount % 2 == 0 ? (
-              //   <Grid item xs={12} sx={{ marginLeft: '10px', display: 'flex', justifyContent: 'center' }}>
-              //     <b>NO MAAGALIM FOR THIS WEEK</b>
-              //   </Grid>
-              // ) : (
+                // WeekCount % 2 == 0 ? (
+                //   <Grid item xs={12} sx={{ marginLeft: '10px', display: 'flex', justifyContent: 'center' }}>
+                //     <b>NO MAAGALIM FOR THIS WEEK</b>
+                //   </Grid>
+                // ) : (
                 data3.map((item3, index3) => (
                   <CustomCheckboxBasic
                     key={index3}
@@ -874,7 +888,7 @@ const StepperLinearWithValidation = () => {
                     iconProps={icons3[index3] ? icons3[index3].iconProps : {}}
                   />
                 ))
-              // )
+                // )
               }
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 {/* <Button variant='step3' color='secondary' onClick={handleBack}>
@@ -958,7 +972,13 @@ const StepperLinearWithValidation = () => {
                     {hachlata && (
                       <>
                         <b>Choose Your Hachlata</b> <br />
-                        <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={handleChange5} name='hachlatalist' required>
+                        <CustomTextField
+                          select
+                          sx={{ mr: 4, mb: 2 }}
+                          onChange={handleChange5}
+                          name='hachlatalist'
+                          required
+                        >
                           {hachlataData[0].map((data, i) => (
                             <MenuItem key={i} value={data.Name}>
                               {data.Name}
@@ -1189,7 +1209,6 @@ const StepperLinearWithValidation = () => {
                   Next
                 </Button>
               </Grid>
-              
             </Grid>
           </form>
         )
@@ -1244,7 +1263,6 @@ const StepperLinearWithValidation = () => {
                   Proceed
                 </Button>
               </Grid>
-              
             </Grid>
           </form>
         )
@@ -1274,7 +1292,7 @@ const StepperLinearWithValidation = () => {
                       {x?.SectionOptionList?.map((option, idx) => (
                         <>
                           <li key={idx}>
-                            {option?.SectionOption} - &nbsp;Points:{option?.Point}
+                            {option?.SectionOption} - &nbsp; {(option?.SectionOption == 'I covered my elbows completely at all times.' || option?.SectionOption == 'I covered my collarbone completely at all times.' || option?.SectionOption == 'I covered my knees completely at all times') ?  `Special Points: ${option?.SpecialPoint}` :  `Points: ${option?.Point}`}
                           </li>
 
                           {(option?.SectionOption == 'My Chavrusa' ||
@@ -1389,10 +1407,9 @@ const StepperLinearWithValidation = () => {
                   </Box>
                 </Grid>
 
-                <Grid item xs={12} sx={{mt:2}}>
-                      <Typography variant='body2'>** Choose carefully. No edit or go back option right now.</Typography>
+                <Grid item xs={12} sx={{ mt: 2 }}>
+                  <Typography variant='body2'>** Choose carefully. No edit or go back option right now.</Typography>
                 </Grid>
-
 
                 {/* <Box sx={{ rowGap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
                 Active Program:
