@@ -771,7 +771,8 @@ const StepperLinearWithValidation = paraX => {
         ResetHandler()
         setSubmissionDone(true)
         if(paraX.from == 'admin'){
-          window.location.replace('/dashboard')
+          // window.location.replace('/dashboard')
+          paraX.wdSubmission(true)
         }else{
           window.location.replace('/home')
         }
