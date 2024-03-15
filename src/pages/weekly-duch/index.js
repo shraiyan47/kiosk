@@ -1440,7 +1440,7 @@ const StepperLinearWithValidation = paraX => {
                     </CustomAvatar>
                     <div>
                       <Typography variant='body2'>Active Program</Typography>
-                      <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{(paraX.from == 'admin')?paraX.userData[2] : ProgramName}</Typography>
+                      <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{(paraX.from == 'admin')? "Current Program" : ProgramName}</Typography>
                     </div>
                   </Box>
                 </Grid>
@@ -1452,7 +1452,7 @@ const StepperLinearWithValidation = paraX => {
                     </CustomAvatar>
                     <div>
                       <Typography variant='body2'>Current Week</Typography>
-                      <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{(paraX.from == 'admin')?paraX.userData[1] : WeekName}</Typography>
+                      <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{(paraX.from == 'admin')?paraX.userData[4] : WeekName}</Typography>
                     </div>
                   </Box>
                 </Grid>

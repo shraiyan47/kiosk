@@ -240,7 +240,7 @@ function SubmittedDT() {
   }
 
   function handleWeeklyDuchSubmission(params) {
-    console.log(typeof params)
+    console.log(" XXXXXXXXXX +> ", params)
     setWdSubForm(true)
     setWdSubData(params.split(','))
   }
@@ -308,7 +308,7 @@ function SubmittedDT() {
             {filterSubmitted === 'Not Submitted' && (
               <Button
                 onClick={x => handleWeeklyDuchSubmission(x.target.value)}
-                value={[row.UserAccountId, selectedWeek, CurrentWeekData[0]?.SessionId, row.fullname]}
+                value={[row.UserAccountId, selectedWeek, CurrentWeekData[0]?.SessionId, row.fullname,selectedWeekName]}
                 variant='contained'
                 sx={{ mx: 2 }}
                 color='success'
