@@ -50,9 +50,9 @@ const Img = styled('img')(({ theme }) => ({
 
 const CardHorizontalRatings = () => {
   return (
-    <Card> 
-            <EcommerceStatistics /> 
-    </Card>
+    <>
+      <EcommerceStatistics />
+    </>
   )
 }
 

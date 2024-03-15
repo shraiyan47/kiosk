@@ -166,11 +166,11 @@ const AnalyticsSupportTracker = () => {
               <Typography variant='h3'> Submitted Week : {pointSummeryProgram[0]?.WeekCount}</Typography>
                   
                 </Box>
-                <Box sx={{ minWidth: 300 }}>
+                {/* <Box sx={{ minWidth: 300 }}>
                   <Typography variant='h3' color='text.secondary'>
                     Total Points : {pointSummeryProgram[0]?.Point}
                   </Typography>
-                </Box>
+                </Box> */}
               </Box>
 
               {data.map((item, index) => (

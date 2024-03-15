@@ -43,8 +43,9 @@ import {
   submissionsList
 } from 'src/redux/weeklyduch/submissionSlice'
 import { ProcessLinearWithLabel } from 'src/views/components/progress/ProgressLinearWithLabel'
-import { userRolesList } from 'src/redux/user/userRoleSlice'
+import { ClearShopName, shopNameList, userRolesList } from 'src/redux/user/userRoleSlice'
 import { userProgramsList } from 'src/redux/user/userProgramSlice'
+import CrmProjectStatus from 'src/views/dashboards/crm/CrmProjectStatus'
 // import { useRandomPassword } from 'src/hooks/useRandom'
 
 // import Counter from '../Counter/index'
@@ -284,7 +285,7 @@ const Home = () => {
           // return { ok: false, err: err }
         }
 
-        //// POINT SUMMERY OF PROGRAM
+        //// POINT SUMMERY OF PROGRAM By Week list
         try {
           const resWeekPoints = await axios.get(
             `${process.env.NEXT_PUBLIC_BASE_URL}api/GetPointSummaryByWeekList?UserAccountId=${auth?.user?.Id}`
@@ -434,6 +435,7 @@ const Home = () => {
   }
 
   const UserRoleURL = `${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?MasterId=2&Accesskey=UR` ////// All User Roles
+  const shopURL = `${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?Accesskey=sp` ////// All Shop Names
   const UserProgramURL = `${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?MasterId=1&Accesskey=TM` ////// All User Program
 
   async function fetchUserRoles() {
@@ -456,6 +458,36 @@ const Home = () => {
 
       // console.log(" userRoleDispatch -> ", userRoleDispatch)
       dispatch(userRolesList(userRoleDispatch))
+
+      return { ok: true, data }
+    } else {
+      constole.log('ERROR => ', data.error)
+
+      return { ok: false, err: res, data }
+    }
+  }
+
+  async function fetchShopName() {
+    const myHeaders = new Headers()
+    myHeaders.append('Content-Type', 'application/json')
+    // myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'))
+
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    }
+
+    const res = await fetch(shopURL, requestOptions)
+    const data = await res.json()
+    if (res.ok) {
+      const shopNames = {
+        shopData: data
+      }
+
+      console.log(" shopNames -> ", shopNames)
+      dispatch(ClearShopName())
+      dispatch(shopNameList(shopNames))
 
       return { ok: true, data }
     } else {
@@ -500,6 +532,7 @@ const Home = () => {
     fetchHachlataGedderMomentData()
     fetchActiveProgramData()
     fetchUserRoles()
+    fetchShopName()
     fetchUserPrograms()
   }, [])
 
@@ -517,11 +550,13 @@ const Home = () => {
     <>
       {!loading ? (
         <Grid container spacing={6}>
+
           <Grid item xs={12} sx={{ pb: 4 }}>
             <Typography variant='h1'>
               {userAllData?.fullname} Bas {userAllData?.MotherName}
             </Typography>
           </Grid>
+
           <Grid item xs={12} sx={{ pb: 4 }}>
             {/* {JSON.stringify(CurrentWeek)} */}
             <Typography variant='h4'>
@@ -531,19 +566,24 @@ const Home = () => {
                 CurrentWeek?.SessionEndDt?.replace('00:00:00', '')}
             </Typography>
           </Grid>
-          <Grid item xs={12} md={8}>
+
+          <Grid item xs={12} md={6}>
             <AnalyticsSupportTracker />
           </Grid>
-          {/* <Grid item xs={12} md={6} lg={4}>
-            <CrmProjectStatus />
-          </Grid> */}
+
+          <Grid item xs={12} md={6}>
+            <CrmProjectStatus userData={userAllData} />
+          </Grid>
+
           <Grid item xs={12} sx={{ pb: 4 }}>
             <Typography variant='h4'>Week wise point calculation </Typography>
           </Grid>
+
           <Grid item xs={12} sm={12}>
             <CardHorizontalRatings />
             <br></br>
           </Grid>
+
         </Grid>
       ) : (
         <>

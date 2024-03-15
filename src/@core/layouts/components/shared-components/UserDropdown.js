@@ -22,6 +22,8 @@ import { useAuth } from 'src/hooks/useAuth'
 
 // Required For Edit Dialoge
 import EditUserDrawer from 'src/views/pages/user/EditUser'
+import { Button, Dialog, Grid } from '@mui/material'
+import CustomTextField from 'src/@core/components/mui/text-field'
 
 // ** Styled Components
 const BadgeContentSpan = styled('span')(({ theme }) => ({
@@ -38,12 +40,23 @@ const MenuItemStyled = styled(MenuItem)(({ theme }) => ({
   }
 }))
 
+// Required For Dialoge
+import Fade from '@mui/material/Fade'
+import { useSelector } from 'react-redux'
+import { Controller, useForm } from 'react-hook-form'
+
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Fade ref={ref} {...props} />
+})
+
 const UserDropdown = props => {
   // ** Props
   const { settings } = props
 
   // ** States
   const [anchorEl, setAnchorEl] = useState(null)
+  const [LOADING, setLOADING] = useState(false)
+
   const [viewProfile, setViewProfile] = useState(false)
   const [ProfileLoading, setProfileLoading] = useState(false)
 
@@ -51,13 +64,16 @@ const UserDropdown = props => {
   // const router = useRouter()
   const { logout } = useAuth()
   const auth = useAuth()
-
+  const userAllData = useSelector(state => state.userPrograms.userData[0])
   // ** Vars
   const { direction } = settings
 
   const handleDropdownOpen = event => {
     setAnchorEl(event.currentTarget)
   }
+
+  const userProgramStateData = useSelector(state => state.userPrograms.programData[0])
+
 
   const handleDropdownClose = url => {
     // if (url) {
@@ -99,6 +115,67 @@ const UserDropdown = props => {
 
   const onSuccessHandler = x => {
     alert(x)
+  }
+
+  const {
+    reset,
+    control,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+    watch,
+    setValue
+  } = useForm({
+    mode: 'onSubmit'
+  })
+
+  const onSubmit = x => {
+    const UpdateProfile = {
+      password: userAllData?.password,
+      PIN: auth?.user?.PIN,
+      UserId: auth?.user?.userId,
+      UpdateBy: auth?.user?.userId, 
+      UserName: auth?.user?.fullname,
+      MotherName: x.fullnameMother,
+      TargetMemberId: Number(x.Member)
+    }
+
+    console.log('Update Profile ===> ', UpdateProfile, auth)
+
+    postData(UpdateProfile)
+  }
+
+  const my_url_PIN_PASS = `${process.env.NEXT_PUBLIC_BASE_URL}api/User/PINPassword` //////
+
+  const postData = async param => {
+    const myHeaders = new Headers()
+    myHeaders.append('Content-Type', 'application/json')
+
+    // myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'))
+
+    const requestOptions = {
+      method: 'PUT',
+      headers: myHeaders,
+      body: JSON.stringify(param),
+      redirect: 'follow'
+    }
+
+    console.log(requestOptions)
+
+    const res = await fetch(my_url_PIN_PASS, requestOptions)
+    const data = await res.json()
+    if (res.ok) {
+      // dispatch(usersList(userDispatch))
+      // setShow(false)
+      // toggle(true)
+      alert(' Successfully Updated') 
+
+      return { ok: true, data }
+    } else {
+      console.log('ERROR => ', data.error)
+
+      return { ok: false, err: res, data }
+    }
   }
 
   return (
@@ -194,7 +271,91 @@ const UserDropdown = props => {
           </MenuItemStyled>
         </Menu>
       </Fragment>
-      {/* {viewProfile == true && <EditUserDrawer data={auth?.user} show={viewProfile} onSuccess={onSuccessHandler} />} */}
+      {/* {viewProfile == true &&  */}
+      {viewProfile && LOADING ? (
+        'LOADING'
+      ) : (
+        <Dialog
+          fullWidth
+          open={viewProfile}
+          maxWidth='sm'
+          scroll='body'
+          onClose={() => setViewProfile(false)}
+          TransitionComponent={Transition}
+          // onBackdropClick={() => setShow(false)}
+          sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}
+        >
+          <Typography variant={'h3'} align={'center'} sx={{ paddingTop: 4 }}>
+            Update Profile
+          </Typography>
+          <Box
+            sx={{
+              rowGap: 1,
+              columnGap: 4,
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              justifyContent: 'left',
+              padding: 3
+            }}
+          >
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Grid container>
+                <Grid item xs={5} sx={{ px: 4 }}>
+                  <Controller
+                    name='fullnameMother'
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field: { value, onChange } }) => (
+                      <CustomTextField
+                        fullWidth
+                        value={value}
+                        sx={{ mb: 4 }}
+                        label="Mother Full Name"
+                        onChange={onChange}
+                        type={'text'}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={5} sx={{ px: 4 }}> 
+                  <Controller
+                    name='Member'
+                    control={control}
+                    render={({ field: { value, onChange } }) => (
+                      <CustomTextField
+                        select
+                        fullWidth
+                        id='Member-select'
+                        label='Member'
+                        value={value}
+                        onChange={onChange}
+                        sx={{ mb: 4 }}
+                        error={Boolean(errors.Member)}
+                        aria-describedby='validation-Member-select'
+                        {...(errors.Member && { helperText: errors.Member.message })}
+                        SelectProps={{ native: true }}
+                      >
+                        {userProgramStateData.map(item => (
+                          <option key={item.Id} value={item.Id}>
+                            {item.Name}
+                          </option>
+                        ))}
+                      </CustomTextField>
+                    )}
+                  />
+                </Grid>
+
+                <Grid item xs={2} sx={{ px: 4, pt: 5 }}>
+                  <Button type='submit' variant='contained'>
+                    Update
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          </Box>
+        </Dialog>
+      )}
     </>
   )
 }

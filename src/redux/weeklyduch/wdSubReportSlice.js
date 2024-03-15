@@ -7,6 +7,8 @@ export const wdSubReportSlice = createSlice({
   initialState: {
     // value: 1,
     wdSubData: [],
+    wdSubWeeklyUserCount: [],
+    wdSubOptReport: [],
     newdata: []
   },
   reducers: {
@@ -17,14 +19,20 @@ export const wdSubReportSlice = createSlice({
       state.wdSubData = []
     }, 
     wdSubWeeklyUserCountList: (state = initialState, action) => {
-      state.wdSubData = [...state.wdSubData, action.payload.wdSubData]
+      state.wdSubWeeklyUserCount = [...state.wdSubWeeklyUserCount, action.payload.wdSubWeeklyUserCount]
     }, 
     clearWeeklyWdSubUserCountList: (state = initialState) => {
-      state.wdSubData = []
+      state.wdSubWeeklyUserCount = []
     },  
+    wdSubOptionsReport: (state = initialState, action) => {
+      state.wdSubOptReport = [...state.wdSubOptReport, action.payload.wdSubOptReport]
+    }, 
+    clearWdSubOptionsReport: (state = initialState) => {
+      state.wdSubOptReport = []
+    }, 
   }
 })
 
-export const { wdSubDataList , clearWdSubDataList, wdSubWeeklyUserCountList, clearWeeklyWdSubUserCountList } = wdSubReportSlice.actions
+export const { wdSubOptionsReport, clearWdSubOptionsReport, wdSubDataList , clearWdSubDataList, wdSubWeeklyUserCountList, clearWeeklyWdSubUserCountList } = wdSubReportSlice.actions
 
 export default wdSubReportSlice.reducer

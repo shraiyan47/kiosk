@@ -9,7 +9,6 @@ import { useSelector } from 'react-redux'
 import { useTheme } from '@mui/material'
 
 const renderStats = data => {
-
   return data.map(
     (sale, index) =>
       sale.SectionTitle !== 'Confirmation' && (
@@ -60,8 +59,8 @@ const EcommerceStatistics = () => {
 
     return result
   }
-  
-  const weekIdTotals = (WeekPoints[0])&&sumPointsByWeekId(WeekPoints[0])
+
+  const weekIdTotals = WeekPoints[0] && sumPointsByWeekId(WeekPoints[0])
   console.log('Total Week Point -> ', weekIdTotals)
 
   WeekPoints[0]?.forEach((item, index) => {
@@ -97,21 +96,29 @@ const EcommerceStatistics = () => {
 
   return (
     <>
-      {organizedDataArray.map((x, y) => (
-        <>
-          <Card key={y} sx={{ padding: '10px', marginBottom: '20px' }}>
-            <CardHeader title={`${x.WeekName}`} subheader={`Total Weekly Point: ${(x.WeekId == weekIdTotals[y].weekId)&&weekIdTotals[y].total}`} subheaderTypographyProps={{ sx: { color: `ORANGE !important`, fontWeight: 'BOLD' } }}  />  
-            <CardContent
-              sx={{ pt: theme => `${theme.spacing(1)} !important`, pb: theme => `${theme.spacing(1.5)} !important` }}
-            >
-              <Grid container spacing={1}>
-                {renderStats(x.data)}
-              </Grid>
-            </CardContent>
-          </Card>
-          {/* <br /> */}
-        </>
-      ))}
+      <Grid container spacing={6}>
+        {organizedDataArray.map((x, y) => (
+          <>
+            <Grid item xs={12} md={11}>
+            <Card key={y} sx={{ padding: '10px', marginBottom: '20px' }}>
+              <CardHeader
+                title={`${x.WeekName}`}
+                subheader={`Total Weekly Point: ${x.WeekId == weekIdTotals[y].weekId && weekIdTotals[y].total}`}
+                subheaderTypographyProps={{ sx: { color: `ORANGE !important`, fontWeight: 'BOLD' } }}
+              />
+              <CardContent
+                sx={{ pt: theme => `${theme.spacing(1)} !important`, pb: theme => `${theme.spacing(1.5)} !important` }}
+              >
+                <Grid container spacing={1}>
+                  {renderStats(x.data)}
+                </Grid>
+              </CardContent>
+            </Card>
+            </Grid>
+            {/* <br /> */}
+          </>
+        ))}
+      </Grid>
     </>
   )
 }

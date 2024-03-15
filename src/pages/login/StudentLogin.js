@@ -153,12 +153,10 @@ export default function QrCodeScanner() {
 
   const onSubmit = x => {
     const updatePINpass = {
-      password: x.password,
+      Password: x.password,
       PIN: x.PIN.toString().substr(0, 4),
       UserId: scanResult,
-      UpdateBy: scanResult,
-      email: data.email,
-      userrole: data.userrole,
+      UpdateBy: scanResult,  
       UserName: x.fullnameStudent,
       MotherName: x.fullnameMother,
       TargetMemberId: x.Member

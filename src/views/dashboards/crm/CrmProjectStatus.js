@@ -10,159 +10,215 @@ import CardContent from '@mui/material/CardContent'
 import Icon from 'src/@core/components/icon'
 import OptionsMenu from 'src/@core/components/option-menu'
 import CustomAvatar from 'src/@core/components/mui/avatar'
-import ReactApexcharts from 'src/@core/components/react-apexcharts'
 import Button from '@mui/material/Button'
+import { useSelector } from 'react-redux'
+import { useAuth } from 'src/hooks/useAuth'
+import { Dialog, Input, MenuItem } from '@mui/material'
+import { forwardRef, useState } from 'react'
 
+// Required For Dialoge
+import Fade from '@mui/material/Fade'
+import CustomTextField from 'src/@core/components/mui/text-field'
 
-const series = [
-  { data: [2000, 2000, 4000, 4000, 3050, 3050, 2050, 2050, 3050, 3050, 4700, 4700, 2750, 2750, 5700, 5700] }
-]
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Fade ref={ref} {...props} />
+})
 
 const data = [
   {
-    title: 'Donates',
+    title: 'Withdraw Amount',
     trend: 'negative',
-    amount: '$756.26',
-    trendDiff: 139.34
+    amount: '$756.26'
+    // trendDiff: 139.34
   },
   {
-    title: 'Podcasts',
-    trendDiff: 576.24,
-    amount: '$2,207.03'
-  },
-  {
-    title: 'Podcasts',
-    trendDiff: 576.24,
+    title: 'Remaining Balance',
+    // trendDiff: 576.24,
     amount: '$2,207.03'
   }
 ]
 
-const CrmProjectStatus = () => {
+const CrmProjectStatus = param => {
   // ** Hook
-  const theme = useTheme()
 
-  const options = {
-    chart: {
-      parentHeightOffset: 0,
-      toolbar: { show: false },
-      sparkline: { enabled: true }
-    },
-    tooltip: { enabled: false },
-    dataLabels: { enabled: false },
-    stroke: {
-      width: 4,
-      curve: 'straight'
-    },
-    fill: {
-      type: 'gradient',
-      gradient: {
-        opacityTo: 0,
-        opacityFrom: 1,
-        shadeIntensity: 1,
-        stops: [0, 100],
-        colorStops: [
-          [
-            {
-              offset: 0,
-              opacity: 0.4,
-              color: theme.palette.warning.main
-            },
-            {
-              offset: 100,
-              opacity: 0.1,
-              color: theme.palette.background.paper
-            }
-          ]
-        ]
-      }
-    },
-    theme: {
-      monochrome: {
-        enabled: true,
-        shadeTo: 'light',
-        shadeIntensity: 1,
-        color: theme.palette.warning.main
-      }
-    },
-    grid: {
-      show: false,
-      padding: {
-        top: 14,
-        right: 5,
-        bottom: 22
-      }
-    },
-    xaxis: {
-      labels: { show: false },
-      axisTicks: { show: false },
-      axisBorder: { show: false }
-    },
-    yaxis: { show: false }
+  const pointSummeryProgram = useSelector(state => state.submissions.pointSummeryProgram)
+  const shopName = useSelector(state => state.userRoles.shopData)
+  const shopName2 = shopName[0]
+
+  console.log(
+    'shopName CRMP-> ',
+    useSelector(state => state.userRoles.shopData)
+  )
+
+  const auth = param.userData
+  const [LOADING, setLOADING] = useState(false)
+  const [viewReport, setViewReport] = useState(false)
+  const [selectedShop, setSelectedShop] = useState('')
+
+  function redeemHandler() {
+    setViewReport(true)
+    // alert('REDEEM')
+  }
+
+  function submitVoucherHandler(params) {
+    alert("Request Sent")
+    setViewReport(false)
+
   }
 
   return (
-    <Card>
-      <CardHeader
-        title='Program Status'
-        action={
-          <OptionsMenu
-            options={['Share', 'Refresh', 'Update']}
-            iconButtonProps={{ size: 'small', sx: { color: 'text.disabled' } }}
-          />
-        }
-      />
-      <CardContent sx={{ pb: 0 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <CustomAvatar skin='light' color='warning' variant='rounded' sx={{ mr: 3, width: 34, height: 34 }}>
-            <Icon icon='tabler:currency-dollar' />
-          </CustomAvatar>
+    <>
+      <Card>
+        <CardHeader
+          title={'Point Status : ' + auth?.MemberId + ' - ' + auth?.Member}
+          action={
+            <OptionsMenu
+              options={['Share', 'Refresh', 'Update']}
+              iconButtonProps={{ size: 'small', sx: { color: 'text.disabled' } }}
+            />
+          }
+        />
+        <CardContent sx={{ pb: 0 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '15px' }}>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+              <CustomAvatar skin='light' color='warning' variant='rounded' sx={{ mr: 3, width: 34, height: 34 }}>
+                <Icon icon='tabler:star-filled' />
+              </CustomAvatar>
+              <Box
+                sx={{
+                  rowGap: 1,
+                  columnGap: 4,
+                  width: '100%',
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                  <Typography variant='h6'>{pointSummeryProgram[0]?.Point}</Typography>
+                  <Typography variant='body2' sx={{ color: 'text.disabled' }}>
+                    Total Points
+                  </Typography>
+                </Box>
+                {/* <Typography sx={{ fontWeight: 500, color: 'success.main' }}>+10.2%</Typography> */}
+              </Box>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+              <CustomAvatar skin='light' color='warning' variant='rounded' sx={{ mr: 3, width: 34, height: 34 }}>
+                <Icon icon='tabler:report-money' />
+              </CustomAvatar>
+              <Box
+                sx={{
+                  rowGap: 1,
+                  columnGap: 4,
+                  width: '100%',
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                  <Typography variant='h6'>
+                    {pointSummeryProgram[0]?.EarningValue == null
+                      ? auth?.user?.MemberId > 0 || auth?.user?.MemberId !== null
+                        ? '$0'
+                        : 'No Membership Choosed'
+                      : '$' + pointSummeryProgram[0]?.EarningValue}
+                  </Typography>
+                  <Typography variant='body2' sx={{ color: 'text.disabled' }}>
+                    Your Earnings
+                  </Typography>
+                </Box>
+                {/* <Typography sx={{ fontWeight: 500, color: 'success.main' }}>+10.2%</Typography> */}
+              </Box>
+            </Box>
+          </Box>
+          {data.map((item, index) => (
+            <Box
+              key={index}
+              sx={{
+                rowGap: 1,
+                columnGap: 4,
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                mb: index !== data.length - 1 ? 4 : undefined
+              }}
+            >
+              <Typography variant='h6'>{item.title}</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography sx={{ mr: 4, color: 'text.secondary' }}>{item.amount}</Typography>
+                {/* <Typography sx={{ fontWeight: 500, color: `${item.trend === 'negative' ? 'error' : 'success'}.main` }}>
+                  {`${item.trend === 'negative' ? '-' : '+'}${item.trendDiff}`}
+                </Typography> */}
+              </Box>
+            </Box>
+          ))}
+          <br></br>
+          <Button variant='contained' onClick={() => redeemHandler()}>
+            Redeem
+          </Button>
+        </CardContent>
+      </Card>
+
+      {viewReport && LOADING ? (
+        'LOADING'
+      ) : (
+        <Dialog
+          fullWidth
+          open={viewReport}
+          maxWidth='sm'
+          scroll='body'
+          onClose={() => setViewReport(false)}
+          TransitionComponent={Transition}
+          // onBackdropClick={() => setShow(false)}
+          sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}
+        >
+          <Typography variant={'h3'} align={'center'} sx={{paddingTop: 3}}>
+            Voucher Request
+          </Typography>
           <Box
             sx={{
               rowGap: 1,
               columnGap: 4,
-              width: '100%',
               display: 'flex',
               flexWrap: 'wrap',
               alignItems: 'center',
-              justifyContent: 'space-between'
+              justifyContent: 'left',
+              padding: 5
             }}
           >
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-              <Typography variant='h6'>$4,3742</Typography>
-              <Typography variant='body2' sx={{ color: 'text.disabled' }}>
-                Your Earnings
-              </Typography>
-            </Box>
-            <Typography sx={{ fontWeight: 500, color: 'success.main' }}>+10.2%</Typography>
+            <CustomTextField
+              select
+              sx={{ mr: 4, mb: 2 }}
+              onChange={x => setSelectedShop(x.target.value)}
+              required
+              label='Shop Name' 
+            > 
+              {shopName2?.map((data, i) => (
+                <MenuItem key={i + 1} value={data.Name}>
+                  {data.Name}
+                </MenuItem>
+              ))} 
+            </CustomTextField>
+
+            <CustomTextField
+              fullWidth
+              autoFocus
+              type='number'
+              label='Withdraw Amount'
+              sx={{ display: 'flex', mb: 4 }}
+              required
+            />
+
+            <Button type='button' variant='contained' onClick={() => submitVoucherHandler()}>Send Request</Button>
           </Box>
-        </Box>
-        <ReactApexcharts type='area' height={254} series={series} options={options} />
-        {data.map((item, index) => (
-          <Box
-            key={index}
-            sx={{
-              rowGap: 1,
-              columnGap: 4,
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              mb: index !== data.length - 1 ? 4 : undefined
-            }}
-          >
-            <Typography variant='h6'>{item.title}</Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Typography sx={{ mr: 4, color: 'text.secondary' }}>{item.amount}</Typography>
-              <Typography sx={{ fontWeight: 500, color: `${item.trend === 'negative' ? 'error' : 'success'}.main` }}>
-                {`${item.trend === 'negative' ? '-' : '+'}${item.trendDiff}`}
-              </Typography>
-            </Box>
-          </Box>
-        ))}
-        <br></br>
-        <Button variant='contained'>Details</Button>
-      </CardContent>
-    </Card>
+        </Dialog>
+      )}
+    </>
   )
 }
 

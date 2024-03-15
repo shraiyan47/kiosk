@@ -107,10 +107,11 @@ const App = props => {
           <title>{`${themeConfig.templateName}`}</title>
           <meta
             name='description'
-            content={`${themeConfig.templateName} – Material Design React Admin Dashboard Template – is the most developer friendly & highly customizable Admin Dashboard Template based on MUI v5.`}
+            content={`${themeConfig.templateName} – is a school app where studnets submit there weekly tasks.`}
           />
-          <meta name='keywords' content='Material Design, MUI, Admin Template, React Admin Template' />
+          <meta name='keywords' content={`${themeConfig.templateName}, vehayamachanechakadosh, School, weekly duch`} />
           <meta name='viewport' content='initial-scale=1, width=device-width' />
+          <meta name='author' content='Shahadat Hossain (https://github.com/shraiyan47), Momin, Mustafiz, Turza' />
         </Head>
 
         <AuthProvider>

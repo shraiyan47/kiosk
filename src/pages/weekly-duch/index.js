@@ -13,10 +13,10 @@ import StepLabel from '@mui/material/StepLabel'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
-import FormControlLabel from '@mui/material/FormControlLabel'
+// import FormControlLabel from '@mui/material/FormControlLabel'
 import TextField from '@mui/material/TextField'
-import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
+// import Radio from '@mui/material/Radio'
+// import RadioGroup from '@mui/material/RadioGroup'
 
 // ** Third Party Imports
 import * as yup from 'yup'
@@ -64,7 +64,7 @@ const aAZz = yup.object().shape({
   // google: yup.string().required(),
 })
 
-const StepperLinearWithValidation = () => {
+const StepperLinearWithValidation = paraX => {
   // // Reload prevention
   // window.addEventListener('beforeunload', event => {
   //   // Cancel the event as stated by the standard.
@@ -88,21 +88,27 @@ const StepperLinearWithValidation = () => {
   console.log(' geder moment Data ==> ', gedermomentData)
 
   useEffect(() => {
-    if (elegibleData[0] != 'Active') {
-      alert('INACTIVE!! You are not eligible for program.')
-      push('/home')
-    } else {
-      if (submissionData.length < 1 || submissionData[0] === 'ALREADY SUBMITTED') {
-        alert('SUBMITTED!! Weekly Duch already submitted.')
+    console.log('user data ===> ', paraX.form, paraX.userData)
+    if (paraX.from !== 'admin') {
+      if (elegibleData[0] != 'Active') {
+        alert('INACTIVE!! You are not eligible for program.')
         push('/home')
+      } else {
+        if (submissionData.length < 1 || submissionData[0] === 'ALREADY SUBMITTED') {
+          alert('SUBMITTED!! Weekly Duch already submitted.')
+          push('/home')
+        }
+        console.log('Eligible and not submitted!')
       }
-      console.log('Eligible and not submitted!')
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elegibleData, submissionData])
 
   if (sectionAndOptionsData.length < 1) {
-    window.location.replace('/home')
+    if (paraX.from !== 'admin') {
+      window.location.replace('/home')
+    }
     // push('/home')
   }
 
@@ -179,7 +185,7 @@ const StepperLinearWithValidation = () => {
     } else {
       const foundObject = data.find(item => item.Id === value)
       let newObject
-      if (foundObject.Id == 1 || foundObject.Id == 2 || foundObject.Id == 3 ) {
+      if (foundObject.Id == 1 || foundObject.Id == 2 || foundObject.Id == 3) {
         newObject = {
           // ...foundObject, // Copy properties from foundObject
           SectionOption: foundObject.SectionOption,
@@ -198,7 +204,7 @@ const StepperLinearWithValidation = () => {
         }
       }
 
-      console.log("New Object BB--> ",newObject)
+      console.log('New Object BB--> ', newObject)
 
       setSelected([...selected, value])
       setSelectedAns([...selectedAns, newObject])
@@ -599,7 +605,7 @@ const StepperLinearWithValidation = () => {
 
   useEffect(() => {
     setLoading(true)
-    alert(AnswerdData)
+    // alert(AnswerdData)
     console.log('Answer Data', AnswerdData)
     // const boo = data.SectionOptionList.find(option => option.SectionOption === "My Chavrusa")?.Result;
     // console.log("BOOO............................. )> ",boo)
@@ -654,6 +660,7 @@ const StepperLinearWithValidation = () => {
 
   const [resetModal, setResetModal] = useState(false)
   const [submitModal, setSubmitModal] = useState(false)
+  const [submitDisable, setSubmitDisable] = useState(false)
 
   const handleReset = () => {
     setResetModal(true)
@@ -722,7 +729,22 @@ const StepperLinearWithValidation = () => {
   }
 
   const submitWeeklyDuch = async () => {
-    console.log(' Submited Weekly Duch -> ', AnswerdData)
+    setSubmitDisable(true)
+    console.log(' Submited Weekly Duch -> ', AnswerdData, paraX?.userData)
+    let updatedData
+    if (paraX.from == 'admin') {
+      console.log('User Data from Admin => ', paraX.userData)
+
+      updatedData = AnswerdData.map(item => ({
+        ...item,
+        SessionId: Number(paraX.userData[2]),
+        WeekId:Number(paraX.userData[1]),
+        UserAccountId: Number(paraX?.userData[0])
+      }))
+    } else if (paraX.from != 'admin') {
+      updatedData = AnswerdData
+    }
+
     const my_url = `${process.env.NEXT_PUBLIC_BASE_URL}api/SectionMapUserlist` //////
 
     const myHeaders = new Headers()
@@ -733,11 +755,12 @@ const StepperLinearWithValidation = () => {
     const requestOptions = {
       method: 'POST',
       headers: myHeaders,
-      body: JSON.stringify(AnswerdData),
+      body: JSON.stringify(updatedData),
       redirect: 'follow'
     }
 
-    // console.log(requestOptions)
+    console.log(requestOptions)
+
     if (!SubmissionDone) {
       const res = await fetch(my_url, requestOptions)
       const data = await res.json()
@@ -747,7 +770,11 @@ const StepperLinearWithValidation = () => {
         setSubmitModal(false)
         ResetHandler()
         setSubmissionDone(true)
-        window.location.replace('/home')
+        if(paraX.from == 'admin'){
+          window.location.replace('/dashboard')
+        }else{
+          window.location.replace('/home')
+        }
 
         return { ok: true, data }
       } else {
@@ -1292,7 +1319,12 @@ const StepperLinearWithValidation = () => {
                       {x?.SectionOptionList?.map((option, idx) => (
                         <>
                           <li key={idx}>
-                            {option?.SectionOption} - &nbsp; {(option?.SectionOption == 'I covered my elbows completely at all times.' || option?.SectionOption == 'I covered my collarbone completely at all times.' || option?.SectionOption == 'I covered my knees completely at all times') ?  `Special Points: ${option?.SpecialPoint}` :  `Points: ${option?.Point}`}
+                            {option?.SectionOption} - &nbsp;{' '}
+                            {option?.SectionOption == 'I covered my elbows completely at all times.' ||
+                            option?.SectionOption == 'I covered my collarbone completely at all times.' ||
+                            option?.SectionOption == 'I covered my knees completely at all times'
+                              ? `Special Points: ${option?.SpecialPoint}`
+                              : `Points: ${option?.Point}`}
                           </li>
 
                           {(option?.SectionOption == 'My Chavrusa' ||
@@ -1367,6 +1399,7 @@ const StepperLinearWithValidation = () => {
         </Stepper>
       </CardContent>
       <Divider sx={{ m: '0 !important' }} />
+      {/* {paraX.userData[0]} */}
 
       <Grid container spacing={6}>
         <Grid item xs={12}>
@@ -1383,26 +1416,42 @@ const StepperLinearWithValidation = () => {
                   justifyContent: 'space-between'
                 }}
               >
-                <Grid item xs={6}>
+                {paraX.from == 'admin' && (
+                  <>
+                  <Grid item xs={4}>
+                    <Box sx={{ mr: 8, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                      <CustomAvatar skin='light' variant='rounded' sx={{ mr: 2.5, width: 38, height: 38 }}>
+                        <Icon fontSize='1.75rem' icon='tabler:checkbox' />
+                      </CustomAvatar>
+                      <div>
+                        <Typography variant='body2'>Student</Typography>
+                        <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{paraX.userData[3]}</Typography>
+                      </div>
+                    </Box>
+                  </Grid>
+                  
+                  </>
+                )}
+                <Grid item xs={4}>
                   <Box sx={{ mr: 8, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
                     <CustomAvatar skin='light' variant='rounded' sx={{ mr: 2.5, width: 38, height: 38 }}>
                       <Icon fontSize='1.75rem' icon='tabler:checkbox' />
                     </CustomAvatar>
                     <div>
                       <Typography variant='body2'>Active Program</Typography>
-                      <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{ProgramName}</Typography>
+                      <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{(paraX.from == 'admin')?paraX.userData[2] : ProgramName}</Typography>
                     </div>
                   </Box>
                 </Grid>
 
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <Box sx={{ mr: 8, display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                     <CustomAvatar skin='light' variant='rounded' sx={{ mr: 2.5, width: 38, height: 38 }}>
                       <Icon fontSize='1.75rem' icon='tabler:ad-2' />
                     </CustomAvatar>
                     <div>
                       <Typography variant='body2'>Current Week</Typography>
-                      <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{WeekName}</Typography>
+                      <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{(paraX.from == 'admin')?paraX.userData[1] : WeekName}</Typography>
                     </div>
                   </Box>
                 </Grid>
@@ -1460,7 +1509,7 @@ const StepperLinearWithValidation = () => {
             <b>Are you sure you want to Submit?</b> <br /> <br />
             If you Submit, you will not be able to edit or resubmit it again.
           </CardContent>
-          <Button onClick={() => submitWeeklyDuch()}>Continue</Button>
+          <Button onClick={() => submitWeeklyDuch()} disabled={submitDisable}>Continue</Button>
           <Button onClick={() => setSubmitModal(false)}>Cancel</Button>
           <br />
         </Card>

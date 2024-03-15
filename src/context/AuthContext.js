@@ -47,7 +47,15 @@ const AuthProvider = ({ children }) => {
           .then(async response => {
             response.data.role = response.data.userrole
             setLoading(false)
-            setUser({ ...response.data })
+            // setUser({ ...response.data })
+
+            const x = {
+              email: response.data.email,
+              password: response.data.password
+            }
+
+            handleLogin(x)
+            
           })
           .catch(() => {
             localStorage.removeItem('userData')
