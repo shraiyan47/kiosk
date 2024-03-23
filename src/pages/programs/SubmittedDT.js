@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Button, Card, CardContent, CardHeader, Dialog, Divider, Grid, Select, Typography } from '@mui/material'
 import React, { Fragment, forwardRef, useEffect, useRef, useState } from 'react'
 // import TableHeader from '../masterdata/TableHeader'
@@ -6,7 +7,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import EcommerceStatistics from './old_program'
-import { WeeklyPointsList, clearWeeklyPointsList, cleargedermomentsList, clearhachlatasList, gedermomentsList, hachlatasList } from 'src/redux/weeklyduch/submissionSlice'
+import {
+  WeeklyPointsList,
+  clearWeeklyPointsList,
+  cleargedermomentsList,
+  clearhachlatasList,
+  gedermomentsList,
+  hachlatasList
+} from 'src/redux/weeklyduch/submissionSlice'
 
 // Required For Dialoge
 import Fade from '@mui/material/Fade'
@@ -14,8 +22,8 @@ import { clearWdSubOptionsReport, wdSubOptionsReport } from 'src/redux/weeklyduc
 import StepperLinearWithValidation from '../weekly-duch'
 import { clearWeeklyduchlist, weeklyduchsList } from 'src/redux/weeklyduch/weeklyduchSlice'
 import { useAuth } from 'src/hooks/useAuth'
-import Print from 'react-to-print';  
-import * as ReactDOMServer from 'react-dom/server';
+import Print from 'react-to-print'
+import * as ReactDOMServer from 'react-dom/server'
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
@@ -25,6 +33,7 @@ function SubmittedDT() {
   const [allUsers, setAllUsers] = useState([])
   const [ReportLoading, setReportLoading] = useState(false)
   const [ReportData, setReportData] = useState([])
+  const [SelectedWeekData, setSelectedWeekData] = useState([])
 
   const [LOADING, setLOADING] = useState(false)
   const [viewReport, setViewReport] = useState(false)
@@ -42,7 +51,7 @@ function SubmittedDT() {
   const [wdSubConfirm, setWdSubConfirm] = useState(false)
   const [wdSubData, setWdSubData] = useState([])
   // console.log('allWeekOfProgram -> ', allWeekOfProgram[0])
-  const printRef = useRef();
+  const printRef = useRef()
 
   const dispatch = useDispatch()
   const auth = useAuth()
@@ -50,7 +59,6 @@ function SubmittedDT() {
     const x = { target: { value: filterSubmitted } }
     filterSubmissionHandler(x)
     console.log('allUsers ->', allUsers, selectedWeekName)
-
   }, [selectedWeek, wdSubConfirm])
 
   function filterSubmissionHandler(x) {
@@ -240,9 +248,11 @@ function SubmittedDT() {
   }
 
   function handleWeeklyDuchSubmission(params) {
-    console.log(" XXXXXXXXXX +> ", params)
+    console.log(' XXXXXXXXXX +> ', params)
+    let data = params.split(',')
+    setSelectedWeekData(allWeekOfProgram[0].find(x => x.WeekId == data[1]))
     setWdSubForm(true)
-    setWdSubData(params.split(','))
+    setWdSubData(data)
   }
 
   const columns = [
@@ -308,12 +318,12 @@ function SubmittedDT() {
             {filterSubmitted === 'Not Submitted' && (
               <Button
                 onClick={x => handleWeeklyDuchSubmission(x.target.value)}
-                value={[row.UserAccountId, selectedWeek, CurrentWeekData[0]?.SessionId, row.fullname,selectedWeekName]}
+                value={[row.UserAccountId, selectedWeek, CurrentWeekData[0]?.SessionId, row.fullname, selectedWeekName]}
                 variant='contained'
                 sx={{ mx: 2 }}
                 color='success'
               >
-                Submit WD  
+                Submit WD
               </Button>
             )}
             {filterSubmitted === 'Submitted' && (
@@ -329,7 +339,7 @@ function SubmittedDT() {
 
                 <Button
                   onClick={x => handleFullReport(x.target.value)}
-                  value={[row.UserAccountId, row.WeekId, CurrentWeekData[0]?.SessionId, row.fullname, 'details', ]}
+                  value={[row.UserAccountId, row.WeekId, CurrentWeekData[0]?.SessionId, row.fullname, 'details']}
                   variant='contained'
                 >
                   Full Report
@@ -457,40 +467,114 @@ function SubmittedDT() {
     }
   }, [filterSubmitted])
 
-  function printAllWDHandler(params) {
+  async function printAllWDHandler(params) {
     alert('UNDER DEVELOPMENT')
     console.log('Print All WD May Take Time')
+    //// POINT SUMMERY OF PROGRAM
+    try {
+      const resWeekPoints = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/SectionMapUserDetailsAll?WeekId=${xaram[1]}`
+      )
+
+      if (resWeekPoints.status === 200) {
+        const data = resWeekPoints.data
+      } else {
+        throw new Error(`API request failed with status ${response.status}`)
+      }
+    } catch (err) {
+      console.error('Error fetching ALL WEEK OF PROGRAM data:', err)
+
+      return { ok: false, err: err }
+    }
   }
 
   function wdSubmissionHandler(params) {
     // alert(params)
     setWdSubConfirm(params)
-    if(params == true){
+    if (params == true) {
       setWdSubForm(false)
     }
   }
 
-
   const handlePrint = () => {
-    const report = <> <Typography variant={'h1'} align={'center'} sx={{ p: 4 }}>{ReportData[3]} </Typography><Typography variant={'h6'} align={'center'} sx={{ p: 4 }}>{'PROGRAM NAME :'+CurrentWeekData[0]?.sessionname+' || WEEK : '+selectedWeekName} </Typography><Fragment><Grid container spacing={3} sx={{ p: 5 }}><Grid item xs={12}><div id="report-content" >{WDDataWithOptions?.map((x, index) => (<Card key={index} sx={{ mt: 3 }}><CardHeader title={`${index + 1}  - ${x?.SectionTitle}`} /><CardContent><b>Selected Options:</b><ul>  {x?.SectionOptionList?.map((option, idx) => (<>  <li key={idx}>    {option?.SectionOption} - &nbsp;    {option?.SectionOption == 'I covered my elbows completely at all times.' ||    option?.SectionOption == 'I covered my collarbone completely at all times.' ||    option?.SectionOption == 'I covered my knees completely at all times'      ? `Special Points: ${option?.SpecialPoint}`      : `Points: ${option?.Point}`}  </li>{(option?.SectionOption == 'My Chavrusa' ||    option?.SectionOption == 'Hachlata' ||    option?.SectionOption == 'Remarks' ||    option?.SectionOption == 'Geder Moment1' ||    option?.SectionOption == 'Geder Moment2' ||    option?.SectionOption == 'Geder Moment3') && (    <ul>      <li key={idx}>{option?.Result}</li>      {(option?.SectionOption == 'Geder Moment1' ||        option?.SectionOption == 'Geder Moment2' ||        option?.SectionOption == 'Geder Moment3') && (        <li key={idx}>Day of week : {option?.Remarks}</li>      )}    </ul>  )}</>  ))}</ul></CardContent></Card>))}</div> </Grid></Grid></Fragment> </>
-
-    // const script = <script>function printReport() {  const printContent = document.getElementById('report-content');  if (printContent) {window.print()  window.close()  }} window.onload = printReport;  </script>
+    const report = (
+      <>
+        {' '}
+        <Typography variant={'h1'} align={'center'} sx={{ p: 4 }}>
+          {' '}
+          {ReportData[3]}{' '}
+        </Typography>
+        <Typography variant={'h6'} align={'center'} sx={{ p: 4 }}>
+          {' '}
+          {'PROGRAM NAME :' + CurrentWeekData[0]?.sessionname + ' || WEEK : ' + selectedWeekName}{' '}
+        </Typography>
+        <Fragment>
+          {' '}
+          <Grid container spacing={3} sx={{ p: 5 }}>
+            {' '}
+            <Grid item xs={12}>
+              {' '}
+              <div id='report-content'>
+                {WDDataWithOptions?.map((x, index) => (
+                  <Card key={index} sx={{ mt: 3 }}>
+                    {' '}
+                    <CardHeader title={`${index + 1}  - ${x?.SectionTitle}`} />{' '}
+                    <CardContent>
+                      {' '}
+                      <b>Selected Options:</b>{' '}
+                      <ul>
+                        {' '}
+                        {x?.SectionOptionList?.map((option, idx) => (
+                          <>
+                            {' '}
+                            <li key={idx}>
+                              {' '}
+                              {option?.SectionOption} - &nbsp;{' '}
+                              {option?.SectionOption == 'I covered my elbows completely at all times.' ||
+                              option?.SectionOption == 'I covered my collarbone completely at all times.' ||
+                              option?.SectionOption == 'I covered my knees completely at all times'
+                                ? `Special Points: ${option?.SpecialPoint}`
+                                : `Points: ${option?.Point}`}{' '}
+                            </li>{' '}
+                            {(option?.SectionOption == 'My Chavrusa' ||
+                              option?.SectionOption == 'Hachlata' ||
+                              option?.SectionOption == 'Remarks' ||
+                              option?.SectionOption == 'Geder Moment1' ||
+                              option?.SectionOption == 'Geder Moment2' ||
+                              option?.SectionOption == 'Geder Moment3') && (
+                              <ul>
+                                {' '}
+                                <li key={idx}>{option?.Result}</li>{' '}
+                                {(option?.SectionOption == 'Geder Moment1' ||
+                                  option?.SectionOption == 'Geder Moment2' ||
+                                  option?.SectionOption == 'Geder Moment3') && (
+                                  <li key={idx}>Day of week : {option?.Remarks}</li>
+                                )}{' '}
+                              </ul>
+                            )}{' '}
+                          </>
+                        ))}{' '}
+                      </ul>{' '}
+                    </CardContent>{' '}
+                  </Card>
+                ))}{' '}
+              </div>{' '}
+            </Grid>{' '}
+          </Grid>
+        </Fragment>
+      </>
+    )
 
     const renderedHtml = ReactDOMServer.renderToString(report)
-    // const canvas = document.querySelector('canvas')
-    // const dataUrl = canvas.toDataURL('image/png')
-
-    // const img = new Image()
-    // img.src = dataUrl
-
-
-    console.log(" x --> ", renderedHtml+'<div onload="window.print();window.close()"></div>')
-
     const printWindow = window.open('', '_blank')
     printWindow.document.open()
-    printWindow.document.write('<div  id="report-content" width="1000" style="padding:30px">'+renderedHtml+'</div> <script> function printReport() {   const printContent = document.getElementById("report-content");   if (printContent) { window.print();  window.close();   } }window.onload = printReport; </script>')
+    printWindow.document.write(
+      '<div  id="report-content" width="1000" style="padding:30px">' +
+        renderedHtml +
+        '</div> <script> function printReport() {   const printContent = document.getElementById("report-content");   if (printContent) { window.print();  window.close();   } }window.onload = printReport; </script>'
+    )
     printWindow.document.close()
-  };
+  }
 
   return (
     <>
@@ -499,7 +583,10 @@ function SubmittedDT() {
           <CustomTextField
             select
             value={selectedWeek}
-            onChange={x => { setSelectedWeek(x.target.value); setSelectedWeekName(x.target.selectedOptions[0].text);}}
+            onChange={x => {
+              setSelectedWeek(x.target.value)
+              setSelectedWeekName(x.target.selectedOptions[0].text)
+            }}
             fullWidth
             id='userrole-select'
             label='Week List'
@@ -542,7 +629,6 @@ function SubmittedDT() {
         </Grid>
         <Grid item xs={2}>
           <Button variant='outlined' sx={{ mt: 5 }} size='small' onClick={() => printAllWDHandler()}>
-            
             Print All WD
           </Button>
         </Grid>
@@ -579,12 +665,15 @@ function SubmittedDT() {
             // onBackdropClick={() => setShow(false)}
             sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}
           >
-             
-
-            
             <Typography variant={'h1'} align={'center'} sx={{ p: 4 }}>
               {ReportData[3]}
-            <Button variant='contained' onClick={handlePrint} style={{ float: 'right' , marginRight: '0px', marginTop: '10px'}}>PRINT</Button>
+              <Button
+                variant='contained'
+                onClick={handlePrint}
+                style={{ float: 'right', marginRight: '0px', marginTop: '10px' }}
+              >
+                PRINT
+              </Button>
             </Typography>
             {ReportData[ReportData.length - 1] == 'summary' ? (
               <EcommerceStatistics />
@@ -593,11 +682,9 @@ function SubmittedDT() {
                 <>
                   <Fragment>
                     <Grid container spacing={3} sx={{ p: 5 }}>
-
                       <Grid item xs={12}>
                         {WDDataWithOptions?.map((x, index) => (
                           <Card key={index} sx={{ mt: 3 }}>
-                            
                             {/* <CardHeader
                             title={`${index + 1}  - ${x?.SectionTitle} - Total Points: 
                             ${totalPoints[index]?.TotalPoint}
@@ -644,7 +731,7 @@ function SubmittedDT() {
                   </Fragment>
                 </>
               )
-            )} 
+            )}
           </Dialog>
 
           <Dialog
@@ -657,7 +744,7 @@ function SubmittedDT() {
             // onBackdropClick={() => setShow(false)}
             sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}
           >
-            <StepperLinearWithValidation from={'admin'} userData={wdSubData} wdSubmission={wdSubmissionHandler}/>
+            <StepperLinearWithValidation from={'admin'} userData={wdSubData} wdSubmission={wdSubmissionHandler} weekData={SelectedWeekData} />
           </Dialog>
         </>
       )}

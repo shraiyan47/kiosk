@@ -14,6 +14,7 @@ const navigation = () => {
       action: 'read',
       subject: 'home-page'
     },
+    
     {
       title: 'User',
       path: '/users',
@@ -49,7 +50,7 @@ const navigation = () => {
         {
           title: 'Week Manage',
           icon: 'tabler:layout-grid',
-          path: '/setting/session-week',
+          path: '/setting/sessionWeek',
           action: 'read',
           subject: 'session-week'
         },
@@ -59,6 +60,13 @@ const navigation = () => {
           path: '/section',
           action: 'read',
           subject: 'section'
+        },
+        {
+          title: 'Bonus Section',
+          path: '/second-page',
+          icon: 'tabler:smart-home',
+          action: 'read',
+          subject: 'second-page'
         }
       ]
     }

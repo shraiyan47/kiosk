@@ -42,7 +42,7 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
 })
 
-const steps = [{}, {}, {}, {}, {}, {}, {}]
+const steps = [{}, {}, {}, {}, {}, {}, {}, {}]
 
 const defaultAccountValues = {
   // email: '',
@@ -88,7 +88,7 @@ const StepperLinearWithValidation = paraX => {
   console.log(' geder moment Data ==> ', gedermomentData)
 
   useEffect(() => {
-    console.log('user data ===> ', paraX.form, paraX.userData)
+    console.log('user data ===> ', paraX.from, paraX.userData, paraX.weekData)
     if (paraX.from !== 'admin') {
       if (elegibleData[0] != 'Active') {
         alert('INACTIVE!! You are not eligible for program.')
@@ -119,6 +119,7 @@ const StepperLinearWithValidation = paraX => {
   const data5 = sectionAndOptionsData[0][4]?.SectionOptionList
   const data6 = sectionAndOptionsData[0][5]?.SectionOptionList
   const data7 = sectionAndOptionsData[0][6]?.SectionOptionList
+  const data8 = sectionAndOptionsData[0][7]?.SectionOptionList
 
   const initialSelected = data?.filter(item => item.isSelected).map(item => item.value)
   const initialSelected2 = data2?.filter(item => item.isSelected).map(item => item.value)
@@ -127,6 +128,7 @@ const StepperLinearWithValidation = paraX => {
   const initialSelected5 = data5?.filter(item => item.isSelected).map(item => item.value)
   const initialSelected6 = data6?.filter(item => item.isSelected).map(item => item.value)
   const initialSelected7 = data7?.filter(item => item.isSelected).map(item => item.value)
+  const initialSelected8 = data8?.filter(item => item.isSelected).map(item => item.value)
 
   // ** State
   const [selected, setSelected] = useState(initialSelected)
@@ -143,6 +145,8 @@ const StepperLinearWithValidation = paraX => {
   const [selected6Ans, setSelected6Ans] = useState(initialSelected6)
   const [selected7, setSelected7] = useState(initialSelected7)
   const [selected7Ans, setSelected7Ans] = useState(initialSelected7)
+  const [selected8, setSelected8] = useState(initialSelected8)
+  const [selected8Ans, setSelected8Ans] = useState(initialSelected8)
   const [chavrusaChecked, setChavrusaChecked] = useState(true)
   const [techCheck, setTechCheck] = useState(true)
   const [hachlata, setHachlata] = useState(false)
@@ -576,6 +580,23 @@ const StepperLinearWithValidation = paraX => {
     }
   }
 
+  const handleChange8 = value => {
+    
+      const foundObject = data8.find(item => item.Id === value)
+
+      const newObject = {
+        // ...foundObject, // Copy properties from foundObject
+        SectionOption: foundObject.SectionOption,
+        Point: foundObject.Point,
+        EntryBy: foundObject.EntryBy,
+        Result: 'Yes' // Add the "Result: Yes" property
+      } 
+
+      setSelected8([...selected8, value])
+      setSelected8Ans([...selected8Ans, newObject])
+    
+  }
+
   const [AnswerdData, setAnswerdData] = useState([])
 
   // useEffect(() => {
@@ -598,7 +619,8 @@ const StepperLinearWithValidation = paraX => {
       { ...sectionAndOptionsData[0][3], SectionOptionList: selected4Ans },
       { ...sectionAndOptionsData[0][4], SectionOptionList: selected5Ans },
       { ...sectionAndOptionsData[0][5], SectionOptionList: selected6Ans },
-      { ...sectionAndOptionsData[0][6], SectionOptionList: selected7Ans }
+      { ...sectionAndOptionsData[0][6], SectionOptionList: selected7Ans },
+      { ...sectionAndOptionsData[0][7], SectionOptionList: selected8Ans }
     ])
   }
   const [totalPoints, setTotalPoints] = useState([])
@@ -687,6 +709,8 @@ const StepperLinearWithValidation = paraX => {
     setSelected6Ans([])
     setSelected7([])
     setSelected7Ans([])
+    setSelected8([])
+    setSelected8Ans([])
   }
 
   const onSubmit = () => {
@@ -698,6 +722,7 @@ const StepperLinearWithValidation = paraX => {
 
   const [ProgramName, setProgramName] = useState('')
   const [WeekName, setWeekName] = useState('')
+  const [BonusSectionAvailable, setBonusSectionAvailable] = useState((paraX.from == 'admin')?  (paraX.weekData.IsBonusSection == true)?paraX.weekData.IsBonusSection:false :false)
   const [SubmissionDone, setSubmissionDone] = useState(false)
   const [WeekCount, setWeekCount] = useState(0)
 
@@ -721,6 +746,9 @@ const StepperLinearWithValidation = paraX => {
       setProgramName(data.sessionname)
       setWeekName(data.WeekName)
       setWeekCount(data.WeekCount)
+      if(paraX.from !== 'admin'){
+        setBonusSectionAvailable(data.IsBonusSection)
+      }
 
       return { ok: true, data }
     } else {
@@ -738,7 +766,7 @@ const StepperLinearWithValidation = paraX => {
       updatedData = AnswerdData.map(item => ({
         ...item,
         SessionId: Number(paraX.userData[2]),
-        WeekId:Number(paraX.userData[1]),
+        WeekId: Number(paraX.userData[1]),
         UserAccountId: Number(paraX?.userData[0])
       }))
     } else if (paraX.from != 'admin') {
@@ -770,10 +798,10 @@ const StepperLinearWithValidation = paraX => {
         setSubmitModal(false)
         ResetHandler()
         setSubmissionDone(true)
-        if(paraX.from == 'admin'){
+        if (paraX.from == 'admin') {
           // window.location.replace('/dashboard')
           paraX.wdSubmission(true)
-        }else{
+        } else {
           window.location.replace('/home')
         }
 
@@ -1240,7 +1268,47 @@ const StepperLinearWithValidation = paraX => {
             </Grid>
           </form>
         )
-      case 6: /// Confermation
+      case 6: //// Bonus Section
+        return (
+          <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
+            <Grid container spacing={5}>
+              <Grid item xs={12}>
+                <label>{sectionAndOptionsData[0][7]?.SectionTitle}</label>
+              </Grid>
+              {/* {data4.map((item4, index4) => ( */}
+              
+              {
+                (BonusSectionAvailable == true && BonusSectionAvailable != null)?
+                <CustomCheckboxBasic
+                  key={0}
+                  data={data8[0]}
+                  selected={selected8}
+                  handleChange={handleChange8}
+                  name='custom-checkbox-basic'
+                  gridProps={{ sm: 6, xs: 12 }}
+                  icon={icons4[0] ? icons4[0].icon : ''}
+                  iconProps={icons4[0] ? icons4[0].iconProps : {}}
+                />
+                :
+                <Typography variant='p' sx={{padding:'30px'}}>
+                  Not available for this week.
+                </Typography>
+              }
+
+
+              {/* ))} */}
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                {/* <Button variant='step4' color='secondary' onClick={handleBack}>
+                  Back
+                </Button> */}
+                <Button type='submit' variant='contained'>
+                  Next
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        )
+      case 7: /// Confermation
         return (
           <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
             <Grid container spacing={5}>
@@ -1294,6 +1362,7 @@ const StepperLinearWithValidation = paraX => {
             </Grid>
           </form>
         )
+
       default:
         return null
     }
@@ -1419,18 +1488,17 @@ const StepperLinearWithValidation = paraX => {
               >
                 {paraX.from == 'admin' && (
                   <>
-                  <Grid item xs={4}>
-                    <Box sx={{ mr: 8, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                      <CustomAvatar skin='light' variant='rounded' sx={{ mr: 2.5, width: 38, height: 38 }}>
-                        <Icon fontSize='1.75rem' icon='tabler:checkbox' />
-                      </CustomAvatar>
-                      <div>
-                        <Typography variant='body2'>Student</Typography>
-                        <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{paraX.userData[3]}</Typography>
-                      </div>
-                    </Box>
-                  </Grid>
-                  
+                    <Grid item xs={4}>
+                      <Box sx={{ mr: 8, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                        <CustomAvatar skin='light' variant='rounded' sx={{ mr: 2.5, width: 38, height: 38 }}>
+                          <Icon fontSize='1.75rem' icon='tabler:checkbox' />
+                        </CustomAvatar>
+                        <div>
+                          <Typography variant='body2'>Student</Typography>
+                          <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{paraX.userData[3]}</Typography>
+                        </div>
+                      </Box>
+                    </Grid>
                   </>
                 )}
                 <Grid item xs={4}>
@@ -1440,7 +1508,9 @@ const StepperLinearWithValidation = paraX => {
                     </CustomAvatar>
                     <div>
                       <Typography variant='body2'>Active Program</Typography>
-                      <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{(paraX.from == 'admin')? "Current Program" : ProgramName}</Typography>
+                      <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>
+                        {paraX.from == 'admin' ? 'Current Program' : ProgramName}
+                      </Typography>
                     </div>
                   </Box>
                 </Grid>
@@ -1452,7 +1522,9 @@ const StepperLinearWithValidation = paraX => {
                     </CustomAvatar>
                     <div>
                       <Typography variant='body2'>Current Week</Typography>
-                      <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>{(paraX.from == 'admin')?paraX.userData[4] : WeekName}</Typography>
+                      <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>
+                        {paraX.from == 'admin' ? paraX.userData[4] : WeekName}
+                      </Typography>
                     </div>
                   </Box>
                 </Grid>
@@ -1510,7 +1582,9 @@ const StepperLinearWithValidation = paraX => {
             <b>Are you sure you want to Submit?</b> <br /> <br />
             If you Submit, you will not be able to edit or resubmit it again.
           </CardContent>
-          <Button onClick={() => submitWeeklyDuch()} disabled={submitDisable}>Continue</Button>
+          <Button onClick={() => submitWeeklyDuch()} disabled={submitDisable}>
+            Continue
+          </Button>
           <Button onClick={() => setSubmitModal(false)}>Cancel</Button>
           <br />
         </Card>
