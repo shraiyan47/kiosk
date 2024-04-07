@@ -11,11 +11,13 @@ const CustomCheckboxIcons = props => {
   // ** Props
   const { data, icon, name, selected, gridProps, iconProps, handleChange, color = 'primary' } = props
   // const { title, value, content } = data
-  const { SectionOption, Id, content } = data
+  const { SectionOption, Id, content, IsActive } = data
 
   const renderComponent = () => {
     return (
       <Grid item {...gridProps}>
+        {
+          (IsActive)?
         <Box
           onClick={() => handleChange(Id)}
           sx={{
@@ -65,6 +67,29 @@ const CustomCheckboxIcons = props => {
             sx={{ mb: -2, ...(!icon && !SectionOption && !content && { mt: -2 }) }}
           />
         </Box>
+        :
+        <Box sx={{
+          p: 4,
+          height: '100%',
+          display: 'flex',
+          borderRadius: 1,
+          cursor: 'pointer',
+          position: 'relative',
+          alignItems: 'center',
+          flexDirection: 'column',
+          border: theme => `1px solid ${theme.palette.divider}`,
+          ...(selected.includes(Id)
+            ? {
+                borderColor: `${color}.main`,
+                backgroundColor: '#fff4f4',
+                '& svg': { color: theme => `${theme.palette.primary.main} !important` }
+              }
+            : { '&:hover': { borderColor: theme => `rgba(${theme.palette.customColors.main}, 0.25)` } })
+        }}>
+          Not Active
+        </Box>
+        }
+
       </Grid>
     )
   }

@@ -335,6 +335,8 @@ const Home = () => {
 
           const response4Data = await Promise.all(requests)
 
+          console.log("response4Data ====================> ",response4Data)
+
           const combinedData = response4Data.map((res, index) => {
             const obj = {
               ...secData[index],
@@ -346,7 +348,8 @@ const Home = () => {
                 SectionOption: data.Name,
                 Point: data.Point,
                 EntryBy: auth?.user?.userId,
-                Id: data.Id
+                Id: data.Id,
+                IsActive: data.IsActive
               })
             })
 
