@@ -81,7 +81,8 @@ const StepperLinearWithValidation = paraX => {
   const hachlataData = useSelector(state => state.submissions.hachlata)
   const gedermomentData = useSelector(state => state.submissions.gedermoment)
 
-  console.log(' sectionAndOptionsData ==> ', sectionAndOptionsData.length)
+  console.log(' sectionAndOptionsData ==> ', sectionAndOptionsData)
+  console.log(' sectionAndOptionsData LENGTH ==> ', sectionAndOptionsData.length)
   console.log(' Submission Data ==> ', submissionData)
   console.log(' Elegiblity Data ==> ', elegibleData[0])
   console.log(' hachlata Data ==> ', hachlataData)
@@ -768,6 +769,7 @@ const StepperLinearWithValidation = paraX => {
         SessionId: Number(paraX.userData[2]),
         WeekId: Number(paraX.userData[1]),
         UserAccountId: Number(paraX?.userData[0])
+        // IsActive:1
       }))
     } else if (paraX.from != 'admin') {
       updatedData = AnswerdData
