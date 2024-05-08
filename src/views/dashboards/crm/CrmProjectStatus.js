@@ -24,19 +24,7 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
 })
 
-const data = [
-  {
-    title: 'Withdraw Amount',
-    trend: 'negative',
-    amount: '$756.26'
-    // trendDiff: 139.34
-  },
-  {
-    title: 'Remaining Balance',
-    // trendDiff: 576.24,
-    amount: '$2,207.03'
-  }
-]
+
 
 const CrmProjectStatus = param => {
   // ** Hook
@@ -66,17 +54,25 @@ const CrmProjectStatus = param => {
 
   }
 
+  const data = [
+    {
+      title: 'Withdraw Amount',
+      trend: 'negative',
+      amount: '$0'
+      // trendDiff: 139.34
+    },
+    {
+      title: 'Remaining Balance',
+      // trendDiff: 576.24,
+      amount: '$'+pointSummeryProgram[0]?.EarningValue
+    }
+  ]
+
   return (
     <>
       <Card>
         <CardHeader
-          title={'Point Status : ' + auth?.MemberId + ' - ' + auth?.Member}
-          action={
-            <OptionsMenu
-              options={['Share', 'Refresh', 'Update']}
-              iconButtonProps={{ size: 'small', sx: { color: 'text.disabled' } }}
-            />
-          }
+          title={'Membership Level : ' + pointSummeryProgram[0]?.Member}
         />
         <CardContent sx={{ pb: 0 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '15px' }}>

@@ -46,6 +46,7 @@ import { ProcessLinearWithLabel } from 'src/views/components/progress/ProgressLi
 import { ClearShopName, shopNameList, userRolesList } from 'src/redux/user/userRoleSlice'
 import { userProgramsList } from 'src/redux/user/userProgramSlice'
 import CrmProjectStatus from 'src/views/dashboards/crm/CrmProjectStatus'
+import BonusPoint from 'src/views/dashboards/crm/BonusPoint'
 // import { useRandomPassword } from 'src/hooks/useRandom'
 
 // import Counter from '../Counter/index'
@@ -141,6 +142,7 @@ const Home = () => {
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
   const [CurrentWeek, setCurrentWeek] = useState(false)
+  const [AllPrograms, setAllPrograms] = useState(false)
   const [loading, setLoading] = useState(false)
   const auth = useAuth()
 
@@ -231,86 +233,6 @@ const Home = () => {
           // return { ok: false, err: err }
         }
 
-        ///// All the weeks of running program with dates range
-        try {
-          const resAllWeekOfProgram = await axios.get(
-            `${process.env.NEXT_PUBLIC_BASE_URL}api/Week?SessionId=${data?.SessionId}`
-          )
-
-          if (resAllWeekOfProgram.status === 200) {
-            const data = resAllWeekOfProgram.data
-
-            const allWeekProgram = {
-              allWeekOfProgram: data
-            }
-
-            dispatch(clearallWeekOfProgramList())
-
-            dispatch(allWeekOfProgramList(allWeekProgram))
-            // alert("LOL")
-            console.log('Fetched ALL WEEK OF PROGRAM data:', allWeekProgram) // Use a logger for informative messages
-          } else {
-            throw new Error(`API request failed with status ${response.status}`)
-          }
-        } catch (err) {
-          console.error('Error fetching ALL WEEK OF PROGRAM data:', err)
-
-          // return { ok: false, err: err }
-        }
-
-        //// POINT SUMMERY OF PROGRAM
-        try {
-          const resWeekPoints = await axios.get(
-            `${process.env.NEXT_PUBLIC_BASE_URL}api/GetPointSummary?UserAccountId=${auth?.user?.Id}&SessionId=${data?.SessionId}`
-          )
-
-          if (resWeekPoints.status === 200) {
-            const data = resWeekPoints.data
-
-            const getPointSummeryProgram = {
-              pointSummeryProgram: data
-            }
-
-            dispatch(clearGetPointSummeryList())
-
-            dispatch(GetPointSummeryList(getPointSummeryProgram))
-            // alert("LOL")
-            console.log('SUBMITTED WEEK POINT SUMMERY :', getPointSummeryProgram) // Use a logger for informative messages
-          } else {
-            throw new Error(`API request failed with status ${response.status}`)
-          }
-        } catch (err) {
-          console.error('Error fetching ALL WEEK OF PROGRAM data:', err)
-
-          // return { ok: false, err: err }
-        }
-
-        //// POINT SUMMERY OF PROGRAM By Week list
-        try {
-          const resWeekPoints = await axios.get(
-            `${process.env.NEXT_PUBLIC_BASE_URL}api/GetPointSummaryByWeekList?UserAccountId=${auth?.user?.Id}`
-          )
-
-          if (resWeekPoints.status === 200) {
-            const data = resWeekPoints.data
-
-            const allWeekPoints = {
-              weekPoints: data
-            }
-
-            dispatch(clearWeeklyPointsList())
-
-            dispatch(WeeklyPointsList(allWeekPoints))
-            // alert("LOL")
-            console.log('SUBMITTED WEEK POINT DETAILS :', allWeekPoints) // Use a logger for informative messages
-          } else {
-            throw new Error(`API request failed with status ${response.status}`)
-          }
-        } catch (err) {
-          console.error('Error fetching ALL WEEK OF PROGRAM data:', err)
-
-          // return { ok: false, err: err }
-        }
 
         // // // MasterSection // // //
         try {
@@ -381,6 +303,109 @@ const Home = () => {
         console.log(' NO CURRENT WEEK / PROGRAM ACTIVE ')
       } else {
         throw new Error(`API request failed with status ${response.status}`)
+      }
+    } catch (err) {
+      console.error('Error fetching active program data:', err)
+      setLoading(false)
+
+      // return { ok: false, err: err }
+    }
+  }
+
+  async function fetchAllProgramList() {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/Session`)
+
+      if (response.status === 200) {
+        const data = response.data
+        setAllPrograms(data)
+        console.log('All Programs data:', data) // Use a logger for informative messages
+          
+        ///// All the weeks of running program with dates range
+        try {
+          const resAllWeekOfProgram = await axios.get(
+            `${process.env.NEXT_PUBLIC_BASE_URL}api/Week?SessionId=${data[0]?.Id}`
+          )
+
+          if (resAllWeekOfProgram.status === 200) {
+            const data = resAllWeekOfProgram.data
+
+            const allWeekProgram = {
+              allWeekOfProgram: data
+            }
+
+            dispatch(clearallWeekOfProgramList())
+
+            dispatch(allWeekOfProgramList(allWeekProgram))
+            // alert("LOL")
+            console.log('Fetched ALL WEEK OF PROGRAM data:', allWeekProgram) // Use a logger for informative messages
+          } else {
+            throw new Error(`API request failed with status ${response.status}`)
+          }
+        } catch (err) {
+          console.error('Error fetching ALL WEEK OF PROGRAM data:', err)
+
+          // return { ok: false, err: err }
+        }
+
+        //// POINT SUMMERY OF PROGRAM
+        try {
+          const resWeekPoints = await axios.get(
+            `${process.env.NEXT_PUBLIC_BASE_URL}api/GetPointSummary?UserAccountId=${auth?.user?.Id}&SessionId=${data[0]?.Id}`
+          )
+
+          if (resWeekPoints.status === 200) {
+            const data = resWeekPoints.data
+
+            const getPointSummeryProgram = {
+              pointSummeryProgram: data
+            }
+
+            dispatch(clearGetPointSummeryList())
+
+            dispatch(GetPointSummeryList(getPointSummeryProgram))
+            // alert("LOL")
+            console.log('SUBMITTED WEEK POINT SUMMERY :', getPointSummeryProgram) // Use a logger for informative messages
+          } else {
+            throw new Error(`API request failed with status ${response.status}`)
+          }
+        } catch (err) {
+          console.error('Error fetching ALL WEEK OF PROGRAM data:', err)
+
+          // return { ok: false, err: err }
+        }
+
+        //// POINT SUMMERY OF PROGRAM By Week list
+        try {
+          const resWeekPoints = await axios.get(
+            `${process.env.NEXT_PUBLIC_BASE_URL}api/GetPointSummaryByWeekList?UserAccountId=${auth?.user?.Id}`
+          )
+
+          if (resWeekPoints.status === 200) {
+            const data = resWeekPoints.data
+
+            const allWeekPoints = {
+              weekPoints: data
+            }
+
+            dispatch(clearWeeklyPointsList())
+
+            dispatch(WeeklyPointsList(allWeekPoints))
+            // alert("LOL")
+            console.log('SUBMITTED WEEK POINT DETAILS :', allWeekPoints) // Use a logger for informative messages
+          } else {
+            throw new Error(`API request failed with status ${response.status}`)
+          }
+        } catch (err) {
+          console.error('Error fetching ALL WEEK OF PROGRAM data:', err)
+
+          // return { ok: false, err: err }
+        }
+ 
+        return { ok: true, data }
+        
+      } else {
+        throw new Error(`ALL PROGRAM LIST API request failed with status ${response.status}`)
       }
     } catch (err) {
       console.error('Error fetching active program data:', err)
@@ -534,6 +559,7 @@ const Home = () => {
     setLoading(true)
     fetchHachlataGedderMomentData()
     fetchActiveProgramData()
+    fetchAllProgramList()
     fetchUserRoles()
     fetchShopName()
     fetchUserPrograms()
@@ -561,12 +587,17 @@ const Home = () => {
           </Grid>
 
           <Grid item xs={12} sx={{ pb: 4 }}>
-            {/* {JSON.stringify(CurrentWeek)} */}
+           {/* {JSON.stringify(CurrentWeek)}  */}
             <Typography variant='h4'>
               Current Program :
-              {CurrentWeek?.SessionStartDt?.replace('00:00:00', '') +
+              {
+              (CurrentWeek) ?
+              CurrentWeek?.SessionStartDt?.replace('00:00:00', '') +
                 ' From ' +
-                CurrentWeek?.SessionEndDt?.replace('00:00:00', '')}
+                CurrentWeek?.SessionEndDt?.replace('00:00:00', '')
+              :
+              <> No Current Program</>
+              }
             </Typography>
           </Grid>
 
@@ -576,6 +607,8 @@ const Home = () => {
 
           <Grid item xs={12} md={6}>
             <CrmProjectStatus userData={userAllData} />
+            <br/>
+            <BonusPoint userData={userAllData} />
           </Grid>
 
           <Grid item xs={12} sx={{ pb: 4 }}>

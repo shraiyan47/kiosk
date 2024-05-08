@@ -38,7 +38,7 @@ const ProgressLinearControlledUncontrolled = param => {
         </Box>
         <Box sx={{ minWidth: 150 }}>
           <Typography variant='body2' color='text.secondary'>
-            Week: {param.currentWD[0]?.WeekCount}  Out of {totalC} 
+            Week: {(param.currentWD[0])?`${param.currentWD[0]?.WeekCount}  Out of ${totalC}` : 'No Week Left'} 
           </Typography>
         </Box>
       </Box>
