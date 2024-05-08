@@ -49,77 +49,82 @@ const BonusPoint = param => {
     // setViewReport(false)
 
     if (Affirm && Signature.length > 2) {
-      const urls = `${process.env.NEXT_PUBLIC_BASE_URL}api/UserMapBonusPoint` //////
-      const urlMagalim = `${process.env.NEXT_PUBLIC_BASE_URL}api/SectionMapUserlist` //////
+      if (HolidayPoint > 144) {
+        alert('Point should be less then or equal to 144.')
+      } else {
+        const urls = `${process.env.NEXT_PUBLIC_BASE_URL}api/UserMapBonusPoint` //////
+        const urlMagalim = `${process.env.NEXT_PUBLIC_BASE_URL}api/SectionMapUserlist` //////
 
-      const param = {
-        SessionId: pointSummeryProgram.SessionId,
-        UserAccountId: pointSummeryProgram.UserAccountId,
-        BonusPoint: HolidayPoint,
-        MaagalimCount: MagalimCount,
-        EntryBy: pointSummeryProgram.userId
-      }
-
-      const myHeaders = new Headers()
-      myHeaders.append('Content-Type', 'application/json')
-
-      // myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'))
-
-      const requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: JSON.stringify(param),
-        redirect: 'follow'
-      }
-
-      console.log(requestOptions)
-
-      const res = await fetch(urls, requestOptions)
-      const data = await res.json()
-      if (res.ok) {
-        alert('Successfully POINT SUBMITTED')
-
-        const magalim = []
-
-        for (let i = 0; i < MagalimCount; i++) {
-          magalim.push({
-            SessionId: 11,
-            WeekId: 109 + i,
-            UserAccountId: LocalAuth.Id,
-            SectionTitle: 'Maagalim',
-            Point: 1,
-            EntryBy:  LocalAuth.userId,
-            SectionOptionList: [
-              {
-                SectionOption: 'I attended maagalim this week',
-                Point: 5,
-                EntryBy: LocalAuth.userId,
-                Result: 'Yes'
-              }
-            ]
-          })
-          // alert(JSON.stringify(magalim))
+        const param = {
+          SessionId: pointSummeryProgram.SessionId,
+          UserAccountId: pointSummeryProgram.UserAccountId,
+          BonusPoint: HolidayPoint,
+          MaagalimCount: MagalimCount,
+          EntryBy: pointSummeryProgram.userId
         }
 
-        const requestOptionsMagalim = {
+        const myHeaders = new Headers()
+        myHeaders.append('Content-Type', 'application/json')
+
+        // myHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('token'))
+
+        const requestOptions = {
           method: 'POST',
           headers: myHeaders,
-          body: JSON.stringify(magalim),
+          body: JSON.stringify(param),
           redirect: 'follow'
         }
 
-        const resMaga = await fetch(urlMagalim, requestOptionsMagalim)
-        const dataMaga = await resMaga.json()
+        console.log(requestOptions)
+
+        const res = await fetch(urls, requestOptions)
+        const data = await res.json()
         if (res.ok) {
-          alert('Successfully Magalim Submitted == '+JSON.stringify(dataMaga))
-          setViewReport(false)
+          alert('Successfully POINT SUBMITTED')
+
+          const magalim = []
+
+          for (let i = 0; i < MagalimCount; i++) {
+            magalim.push({
+              SessionId: 11,
+              WeekId: 109 + i,
+              UserAccountId: LocalAuth.Id,
+              SectionTitle: 'Maagalim',
+              Point: 1,
+              EntryBy: LocalAuth.userId,
+              SectionOptionList: [
+                {
+                  SectionOption: 'I attended maagalim this week',
+                  Point: 5,
+                  EntryBy: LocalAuth.userId,
+                  Result: 'Yes'
+                }
+              ]
+            })
+            // alert(JSON.stringify(magalim))
+          }
+
+          const requestOptionsMagalim = {
+            method: 'POST',
+            headers: myHeaders,
+            body: JSON.stringify(magalim),
+            redirect: 'follow'
+          }
+
+          const resMaga = await fetch(urlMagalim, requestOptionsMagalim)
+          const dataMaga = await resMaga.json()
+          if (res.ok) {
+            alert('Successfully Magalim Submitted == ' + JSON.stringify(dataMaga))
+            setViewReport(false)
+          }
+        } else {
+          console.log('ERROR => ', data.error)
+
+          return { ok: false, err: res, data }
         }
-
-      } else {
-        console.log('ERROR => ', data.error)
-
-        return { ok: false, err: res, data }
       }
+    } else {
+      alert('You have to make the signature and affirm.')
     }
   }
 

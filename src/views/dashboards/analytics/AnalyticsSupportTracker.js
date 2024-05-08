@@ -146,9 +146,21 @@ const AnalyticsSupportTracker = () => {
       title: 'Geder Moments',
       avatarColor: 'warning',
       avatarIcon: 'tabler:clock'
+    },
+    {
+      subtitle: (pointSummeryProgram[0]?.WeeklySpecialPoint&&1) + ' times sumitted',
+      title: 'Weekly Bonus Point',
+      avatarColor: 'warning',
+      avatarIcon: 'tabler:clock'
+    },
+    {
+      subtitle: (pointSummeryProgram[0]?.ProgramBonusPoint&&1) + ' times sumitted',
+      title: 'Program Bonus Point',
+      avatarColor: 'warning',
+      avatarIcon: 'tabler:clock'
     }
   ]
-
+  
   return (
     <>
       <Card>
