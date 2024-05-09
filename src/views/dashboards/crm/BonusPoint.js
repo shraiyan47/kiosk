@@ -36,6 +36,7 @@ const BonusPoint = param => {
   const [viewReport, setViewReport] = useState(false)
   const [HolidayPoint, setHolidayPoint] = useState(0)
   const [MagalimCount, setMagalimCount] = useState(0)
+  const [TotalMagalimCount, setTotalMagalimCount] = useState(0)
   const [Affirm, setAffirm] = useState(false)
   const [Signature, setSignature] = useState('')
 
@@ -45,7 +46,7 @@ const BonusPoint = param => {
   }
 
   async function submitHolidayPoint() {
-    alert([HolidayPoint, MagalimCount, Affirm, Signature])
+    console.log('Submission Data ---> ', [HolidayPoint, MagalimCount, TotalMagalimCount, Affirm, Signature])
     // setViewReport(false)
 
     if (Affirm && Signature.length > 2) {
@@ -56,11 +57,12 @@ const BonusPoint = param => {
         const urlMagalim = `${process.env.NEXT_PUBLIC_BASE_URL}api/SectionMapUserlist` //////
 
         const param = {
-          SessionId: pointSummeryProgram.SessionId,
-          UserAccountId: pointSummeryProgram.UserAccountId,
+          SessionId: 11,
+          UserAccountId: LocalAuth.Id,
           BonusPoint: HolidayPoint,
           MaagalimCount: MagalimCount,
-          EntryBy: pointSummeryProgram.userId
+          TotalMaagalimCount: TotalMagalimCount,
+          EntryBy: LocalAuth.userId
         }
 
         const myHeaders = new Headers()
@@ -183,6 +185,16 @@ const BonusPoint = param => {
               sx={{ display: 'flex', mb: 4 }}
               required
               onChange={x => setMagalimCount(x.target.value)}
+            />
+
+            <CustomTextField
+              fullWidth
+              autoFocus
+              type='number'
+              label='How many maagalim did your group have?'
+              sx={{ display: 'flex', mb: 4 }}
+              required
+              onChange={x => setTotalMagalimCount(x.target.value)}
             />
 
             <FormControlLabel

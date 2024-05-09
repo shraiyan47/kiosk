@@ -14,17 +14,16 @@ import Button from '@mui/material/Button'
 import { useSelector } from 'react-redux'
 import { useAuth } from 'src/hooks/useAuth'
 import { Dialog, Input, MenuItem } from '@mui/material'
-import { forwardRef, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 
 // Required For Dialoge
 import Fade from '@mui/material/Fade'
 import CustomTextField from 'src/@core/components/mui/text-field'
+import axios from 'axios'
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
 })
-
-
 
 const CrmProjectStatus = param => {
   // ** Hook
@@ -35,45 +34,128 @@ const CrmProjectStatus = param => {
 
   console.log(
     'shopName CRMP-> ',
-    useSelector(state => state.userRoles.shopData)
+    useSelector(state => state.userRoles.shopData),
+    shopName2
   )
 
   const auth = param.userData
+  const LocalAuth = JSON.parse(localStorage.getItem('userData'))
+
   const [LOADING, setLOADING] = useState(false)
   const [viewReport, setViewReport] = useState(false)
-  const [selectedShop, setSelectedShop] = useState('')
+  const [selectedShop, setSelectedShop] = useState(0)
+  const [selectedShopName, setSelectedShopName] = useState('')
+  const [WithdrawAmount, setWithdrawAmount] = useState(0)
+  const [withDrawHistory, setWithDrawHistory] = useState(0)
+
+  useEffect(() => {
+    fetchWithdrawAmount()
+  }, [])
+
+  async function fetchWithdrawAmount() {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/UserWithDrawAmountHistory?UserAccountId=${LocalAuth.Id}`
+      )
+
+      if (response.status === 200) {
+        const data = response.data
+        // alert(JSON.stringify(response.data))
+        console.log('WITHDRAW HISTORY -----> ', response.data)
+        let s = 0
+        data.map(x => {
+          s += x.WithDrawAmount
+        })
+
+        setWithDrawHistory(s)
+      }
+    } catch (err) {
+      console.error('Error fetching active program data:', err)
+      // setLoading(false)
+
+      // return { ok: false, err: err }
+    }
+  }
 
   function redeemHandler() {
     setViewReport(true)
     // alert('REDEEM')
   }
 
-  function submitVoucherHandler(params) {
-    alert("UNDER DEVELOPMENT")
+  const shopHandler = para => {
+    console.log(para)
+    setSelectedShop(para.target.value)
+    setSelectedShopName(shopName2.find(x => x.Id == para.target.value).Name)
+  }
+
+  async function submitVoucherHandler() {
+    // alert(['UNDER DEVELOPMENT', selectedShop, WithdrawAmount])
     setViewReport(false)
 
+    if (selectedShop > 0 && WithdrawAmount > 0) {
+      if (remainingBalance < WithdrawAmount) {
+        alert('You can not withdraw more than your remaining balance!')
+      } else {
+        const urls = `${process.env.NEXT_PUBLIC_BASE_URL}api/UserWithDrawAmount` //////
+        const date = new Date(Date.now())
+
+        const param = {
+          SessionId: 11,
+          UserAccountId: LocalAuth.Id,
+          ShopId: selectedShop,
+          ShopName: selectedShopName,
+          WithDrawAmount: Number(WithdrawAmount),
+          EntryBy: 'USER'
+        }
+
+        console.log('param ==> ', param)
+
+        const myHeaders = new Headers()
+        myHeaders.append('Content-Type', 'application/json')
+
+        const requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: JSON.stringify(param),
+          redirect: 'follow'
+        }
+
+        console.log(requestOptions)
+
+        const res = await fetch(urls, requestOptions)
+        const data = await res.json()
+        if (res.ok) {
+          alert('Successfully Point Withdraw')
+          fetchWithdrawAmount()
+        } else {
+          console.log('ERROR => ', data.error)
+
+          return { ok: false, err: res, data }
+        }
+      }
+    }
   }
+
+  const remainingBalance = pointSummeryProgram[0]?.EarningValue - withDrawHistory
 
   const data = [
     {
       title: 'Withdraw Amount',
       trend: 'negative',
-      amount: '$0'
+      amount: '$' + withDrawHistory
       // trendDiff: 139.34
     },
     {
       title: 'Remaining Balance',
       // trendDiff: 576.24,
-      amount: '$'+pointSummeryProgram[0]?.EarningValue
+      amount: '$' + remainingBalance
     }
   ]
 
   return (
     <>
       <Card>
-        <CardHeader
-          title={'Membership Level : ' + pointSummeryProgram[0]?.Member}
-        />
+        <CardHeader title={'Membership Level : ' + pointSummeryProgram[0]?.Member} />
         <CardContent sx={{ pb: 0 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '15px' }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
@@ -92,7 +174,7 @@ const CrmProjectStatus = param => {
                 }}
               >
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                  <Typography variant='h6'>{pointSummeryProgram[0]?.Point}</Typography>
+                  <Typography variant='h6'>{pointSummeryProgram[0]?.TotalPoint}</Typography>
                   <Typography variant='body2' sx={{ color: 'text.disabled' }}>
                     Total Points
                   </Typography>
@@ -173,7 +255,7 @@ const CrmProjectStatus = param => {
           // onBackdropClick={() => setShow(false)}
           sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}
         >
-          <Typography variant={'h3'} align={'center'} sx={{paddingTop: 3}}>
+          <Typography variant={'h3'} align={'center'} sx={{ paddingTop: 3 }}>
             Voucher Request
           </Typography>
           <Box
@@ -187,18 +269,12 @@ const CrmProjectStatus = param => {
               padding: 5
             }}
           >
-            <CustomTextField
-              select
-              sx={{ mr: 4, mb: 2 }}
-              onChange={x => setSelectedShop(x.target.value)}
-              required
-              label='Shop Name' 
-            > 
+            <CustomTextField select sx={{ mr: 4, mb: 2 }} onChange={x => shopHandler(x)} required label='Shop Name'>
               {shopName2?.map((data, i) => (
-                <MenuItem key={i + 1} value={data.Name}>
+                <MenuItem key={i + 1} value={data.Id}>
                   {data.Name}
                 </MenuItem>
-              ))} 
+              ))}
             </CustomTextField>
 
             <CustomTextField
@@ -208,9 +284,12 @@ const CrmProjectStatus = param => {
               label='Withdraw Amount'
               sx={{ display: 'flex', mb: 4 }}
               required
+              onChange={x => setWithdrawAmount(x.target.value)}
             />
 
-            <Button type='button' variant='contained' onClick={() => submitVoucherHandler()}>Send Request</Button>
+            <Button type='button' variant='contained' onClick={() => submitVoucherHandler()}>
+              Send Request
+            </Button>
           </Box>
         </Dialog>
       )}

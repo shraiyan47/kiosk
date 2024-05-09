@@ -147,6 +147,7 @@ const Home = () => {
   const auth = useAuth()
 
   const userAllData = useSelector(state => state.userPrograms.userData[0])
+  const pointSummeryProgram = useSelector(state => state.submissions.pointSummeryProgram)
 
   const dispatch = useDispatch()
 
@@ -233,7 +234,6 @@ const Home = () => {
           // return { ok: false, err: err }
         }
 
-
         // // // MasterSection // // //
         try {
           const response4 = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/MasterSection?Stauts=all`)
@@ -257,7 +257,7 @@ const Home = () => {
 
           const response4Data = await Promise.all(requests)
 
-          console.log("response4Data ====================> ",response4Data)
+          console.log('response4Data ====================> ', response4Data)
 
           const combinedData = response4Data.map((res, index) => {
             const obj = {
@@ -320,7 +320,7 @@ const Home = () => {
         const data = response.data
         setAllPrograms(data)
         console.log('All Programs data:', data) // Use a logger for informative messages
-          
+
         ///// All the weeks of running program with dates range
         try {
           const resAllWeekOfProgram = await axios.get(
@@ -401,9 +401,8 @@ const Home = () => {
 
           // return { ok: false, err: err }
         }
- 
+
         return { ok: true, data }
-        
       } else {
         throw new Error(`ALL PROGRAM LIST API request failed with status ${response.status}`)
       }
@@ -513,7 +512,7 @@ const Home = () => {
         shopData: data
       }
 
-      console.log(" shopNames -> ", shopNames)
+      console.log(' shopNames -> ', shopNames)
       dispatch(ClearShopName())
       dispatch(shopNameList(shopNames))
 
@@ -579,7 +578,6 @@ const Home = () => {
     <>
       {!loading ? (
         <Grid container spacing={6}>
-
           <Grid item xs={12} sx={{ pb: 4 }}>
             <Typography variant='h1'>
               {userAllData?.fullname} Bas {userAllData?.MotherName}
@@ -587,17 +585,16 @@ const Home = () => {
           </Grid>
 
           <Grid item xs={12} sx={{ pb: 4 }}>
-           {/* {JSON.stringify(CurrentWeek)}  */}
+            {/* {JSON.stringify(CurrentWeek)}  */}
             <Typography variant='h4'>
               Current Program :
-              {
-              (CurrentWeek) ?
-              CurrentWeek?.SessionStartDt?.replace('00:00:00', '') +
+              {CurrentWeek ? (
+                CurrentWeek?.SessionStartDt?.replace('00:00:00', '') +
                 ' From ' +
                 CurrentWeek?.SessionEndDt?.replace('00:00:00', '')
-              :
-              <> No Current Program</>
-              }
+              ) : (
+                <> No Current Program</>
+              )}
             </Typography>
           </Grid>
 
@@ -606,8 +603,8 @@ const Home = () => {
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <CrmProjectStatus userData={userAllData} />
-            <br/>
+            {pointSummeryProgram[0]?.ProgramBonusPoint > 0 && <CrmProjectStatus userData={userAllData} />}
+            <br />
             <BonusPoint userData={userAllData} />
           </Grid>
 
@@ -619,7 +616,6 @@ const Home = () => {
             <CardHorizontalRatings />
             <br></br>
           </Grid>
-
         </Grid>
       ) : (
         <>

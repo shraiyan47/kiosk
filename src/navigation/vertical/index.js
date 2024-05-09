@@ -67,6 +67,13 @@ const navigation = () => {
           icon: 'tabler:smart-home',
           action: 'read',
           subject: 'second-page'
+        },
+        {
+          title: 'Withdraw Report',
+          path: '/withdraw-report',
+          icon: 'tabler:smart-home',
+          action: 'read',
+          subject: 'withdraw-report'
         }
       ]
     }
