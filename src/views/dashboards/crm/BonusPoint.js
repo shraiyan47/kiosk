@@ -56,7 +56,7 @@ const BonusPoint = param => {
         const urls = `${process.env.NEXT_PUBLIC_BASE_URL}api/UserMapBonusPoint` //////
         const urlMagalim = `${process.env.NEXT_PUBLIC_BASE_URL}api/SectionMapUserlist` //////
 
-        const param = {
+        const dataSubmitted = {
           SessionId: 11,
           UserAccountId: LocalAuth.Id,
           BonusPoint: HolidayPoint,
@@ -73,7 +73,7 @@ const BonusPoint = param => {
         const requestOptions = {
           method: 'POST',
           headers: myHeaders,
-          body: JSON.stringify(param),
+          body: JSON.stringify(dataSubmitted),
           redirect: 'follow'
         }
 
@@ -117,6 +117,7 @@ const BonusPoint = param => {
           const dataMaga = await resMaga.json()
           if (res.ok) {
             alert('Successfully Magalim Submitted == ' + JSON.stringify(dataMaga))
+            param.x(HolidayPoint)
             setViewReport(false)
           }
         } else {

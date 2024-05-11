@@ -144,7 +144,10 @@ const Home = () => {
   const [CurrentWeek, setCurrentWeek] = useState(false)
   const [AllPrograms, setAllPrograms] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [PointSubmitted, setPointSubmitted] = useState(false)
   const auth = useAuth()
+  const [weekPointSummary, setWeekPointSummary] = useState({})
+
 
   const userAllData = useSelector(state => state.userPrograms.userData[0])
   const pointSummeryProgram = useSelector(state => state.submissions.pointSummeryProgram)
@@ -299,7 +302,7 @@ const Home = () => {
       } else if (response.status === 204) {
         setLoading(false)
 
-        alert(' NO CURRENT WEEK / PROGRAM ACTIVE ')
+        // alert(' NO CURRENT WEEK / PROGRAM ACTIVE ')
         console.log(' NO CURRENT WEEK / PROGRAM ACTIVE ')
       } else {
         throw new Error(`API request failed with status ${response.status}`)
@@ -356,6 +359,8 @@ const Home = () => {
 
           if (resWeekPoints.status === 200) {
             const data = resWeekPoints.data
+            console.log("week point  --- > ", data)
+            setWeekPointSummary(data)
 
             const getPointSummeryProgram = {
               pointSummeryProgram: data
@@ -374,6 +379,7 @@ const Home = () => {
 
           // return { ok: false, err: err }
         }
+
 
         //// POINT SUMMERY OF PROGRAM By Week list
         try {
@@ -562,7 +568,7 @@ const Home = () => {
     fetchUserRoles()
     fetchShopName()
     fetchUserPrograms()
-  }, [])
+  }, [PointSubmitted])
 
   const Illustration = styled('img')(({ theme }) => ({
     right: 20,
@@ -573,6 +579,12 @@ const Home = () => {
       width: 110
     }
   }))
+
+  function holidayCallback(x){
+    // if(!PointSubmitted){
+      setPointSubmitted(x)
+    // }
+  }
 
   return (
     <>
@@ -599,13 +611,17 @@ const Home = () => {
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <AnalyticsSupportTracker />
+            <AnalyticsSupportTracker lol={PointSubmitted} />
           </Grid>
 
           <Grid item xs={12} md={6}>
-            {pointSummeryProgram[0]?.ProgramBonusPoint > 0 && <CrmProjectStatus userData={userAllData} />}
+            {pointSummeryProgram[0]?.ProgramBonusPoint > 0 && <CrmProjectStatus userData={userAllData}  x={() => holidayCallback()} />}
             <br />
-            <BonusPoint userData={userAllData} />
+            {/* {weekPointSummary['MACount'] === 0 && (
+              <BonusPoint userData={userAllData} />
+            )} */}
+              <BonusPoint userData={userAllData} x={() => holidayCallback()} />
+
           </Grid>
 
           <Grid item xs={12} sx={{ pb: 4 }}>

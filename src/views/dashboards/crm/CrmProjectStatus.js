@@ -48,6 +48,24 @@ const CrmProjectStatus = param => {
   const [WithdrawAmount, setWithdrawAmount] = useState(0)
   const [withDrawHistory, setWithDrawHistory] = useState(0)
 
+  const remainingBalance = pointSummeryProgram[0]?.EarningValue - withDrawHistory
+
+  const data = [
+    {
+      title: 'Withdraw Amount',
+      trend: 'negative',
+      amount: '$' + withDrawHistory
+      // amount: '$' + pointSummeryProgram[0]?.WithDrawAmount
+      // trendDiff: 139.34
+    },
+    {
+      title: 'Remaining Balance',
+      // trendDiff: 576.24,
+      amount: '$' + remainingBalance
+      // amount: '$' + pointSummeryProgram[0]?.Balance
+    }
+  ]
+
   useEffect(() => {
     fetchWithdrawAmount()
   }, [])
@@ -99,7 +117,7 @@ const CrmProjectStatus = param => {
         const urls = `${process.env.NEXT_PUBLIC_BASE_URL}api/UserWithDrawAmount` //////
         const date = new Date(Date.now())
 
-        const param = {
+        const withdrawData = {
           SessionId: 11,
           UserAccountId: LocalAuth.Id,
           ShopId: selectedShop,
@@ -108,7 +126,7 @@ const CrmProjectStatus = param => {
           EntryBy: 'USER'
         }
 
-        console.log('param ==> ', param)
+        console.log('withdrawData ==> ', withdrawData)
 
         const myHeaders = new Headers()
         myHeaders.append('Content-Type', 'application/json')
@@ -116,7 +134,7 @@ const CrmProjectStatus = param => {
         const requestOptions = {
           method: 'POST',
           headers: myHeaders,
-          body: JSON.stringify(param),
+          body: JSON.stringify(withdrawData),
           redirect: 'follow'
         }
 
@@ -126,7 +144,8 @@ const CrmProjectStatus = param => {
         const data = await res.json()
         if (res.ok) {
           alert('Successfully Point Withdraw')
-          fetchWithdrawAmount()
+          fetchWithdrawAmount(remainingBalance)
+          param.x()
         } else {
           console.log('ERROR => ', data.error)
 
@@ -136,21 +155,7 @@ const CrmProjectStatus = param => {
     }
   }
 
-  const remainingBalance = pointSummeryProgram[0]?.EarningValue - withDrawHistory
-
-  const data = [
-    {
-      title: 'Withdraw Amount',
-      trend: 'negative',
-      amount: '$' + withDrawHistory
-      // trendDiff: 139.34
-    },
-    {
-      title: 'Remaining Balance',
-      // trendDiff: 576.24,
-      amount: '$' + remainingBalance
-    }
-  ]
+  
 
   return (
     <>

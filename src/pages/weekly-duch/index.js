@@ -179,6 +179,9 @@ const StepperLinearWithValidation = paraX => {
     return result
   }
 
+
+  ////////////////////////////////////////////// BACK TO BASICS ////////////////////////////////
+
   const handleChange = value => {
     // console.log("Handle Change Value => ", value)
     console.log('Back to basic -------> ', data)
@@ -192,7 +195,6 @@ const StepperLinearWithValidation = paraX => {
       let newObject
       if (foundObject.Id == 1 || foundObject.Id == 2 || foundObject.Id == 3) {
         newObject = {
-          // ...foundObject, // Copy properties from foundObject
           SectionOption: foundObject.SectionOption,
           Point: 0,
           SpecialPoint: 1,
@@ -217,6 +219,8 @@ const StepperLinearWithValidation = paraX => {
   }
 
   let ChavrusaName
+
+  ////////////////////////////////////////////// DAUGHTER OF DIGNITY ////////////////////////////////
 
   const handleChange2 = value => {
     console.log('data2 -> ', data2, value)
@@ -281,6 +285,8 @@ const StepperLinearWithValidation = paraX => {
     console.log('updated2Ans ---------------------------> ', updated2Ans)
   }, [selected2Ans])
 
+  ////////////////////////////////////////////// MAAGALIM ////////////////////////////////
+
   const handleChange3 = value => {
     if (selected3.includes(value)) {
       const updatedArr3 = selected3.filter(item => item !== value)
@@ -305,6 +311,8 @@ const StepperLinearWithValidation = paraX => {
       setSelected3Ans([...selected3Ans, newObject])
     }
   }
+
+  ////////////////////////////////////////////// TECH CHECK ////////////////////////////////
 
   const handleChange4 = value => {
     if (selected4.includes(value)) {
@@ -353,6 +361,8 @@ const StepperLinearWithValidation = paraX => {
   }
 
   const [otherhachlata, setOtherhachlata] = useState(false)
+
+  ////////////////////////////////////////////// MY HACHLATA ////////////////////////////////
 
   const handleChange5 = value => {
     console.log('Handle 5 -> ', value)
@@ -409,6 +419,8 @@ const StepperLinearWithValidation = paraX => {
     }
   }
 
+  ////////////////////////////////////////////// CONFIRMATION ////////////////////////////////
+
   const handleChange6 = value => {
     console.log(' CHECK 6 => ', data6, value)
 
@@ -453,6 +465,8 @@ const StepperLinearWithValidation = paraX => {
   const [otherGeder2, setOtherGeder2] = useState(false)
   const [Geder3, setGeder3] = useState(false)
   const [otherGeder3, setOtherGeder3] = useState(false)
+
+  ////////////////////////////////////////////// GEDER MOMENT ////////////////////////////////
 
   const handleChange7 = value => {
     console.log(' CHECK 7 => ', data7, value, selected7Ans)
@@ -580,6 +594,8 @@ const StepperLinearWithValidation = paraX => {
       }
     }
   }
+
+  ////////////////////////////////////////////// WD BONUS POINT ///////////////////////////////
 
   const handleChange8 = value => {
     

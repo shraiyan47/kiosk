@@ -24,7 +24,7 @@ import {
 } from '@mui/material'
 import axios from 'axios'
 import { DataGrid } from '@mui/x-data-grid'
-import { GridToolbar  } from '@mui/x-data-grid'
+import { GridToolbar } from '@mui/x-data-grid'
 
 const WithdrawReport = () => {
   const [AllWitdraw, setAllWitdraw] = useState([])
@@ -32,30 +32,11 @@ const WithdrawReport = () => {
   const [ShopNameList, setShopNameList] = useState('')
   const [SelectedShop, setSelectedShop] = useState('')
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     fetchWitdrawList()
-    fetchShopList()
-
-    async function fetchShopList() {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/MasterChild/GetAllByAccesskey?Accesskey=sp`
-        )
-
-        if (response.status === 200) {
-          const data = response.data
-          setShopNameList(data)
-          console.log('All Programs data:', data) // Use a logger for informative messages
-        } else {
-          throw new Error(`API request failed with status ${response.status}`)
-        }
-      } catch (err) {
-        console.error('Error fetching ALL WEEK OF PROGRAM data:', err)
-
-        return { ok: false, err: err }
-      }
-    }
+    setLoading(true)
 
     async function fetchWitdrawList() {
       try {
@@ -67,7 +48,7 @@ const WithdrawReport = () => {
           console.log('All Programs data:', data) // Use a logger for informative messages
           try {
             const responseWithdraw = await axios.get(
-              `${process.env.NEXT_PUBLIC_BASE_URL}api/UserWithDrawAmountRequest?ProgramId=${data[0]?.Id}&ShopId=${SelectedShop}`
+              `${process.env.NEXT_PUBLIC_BASE_URL}api/GetPointSummaryList?SessionId=${data[0]?.Id}`
             )
 
             if (responseWithdraw.status === 200) {
@@ -78,6 +59,7 @@ const WithdrawReport = () => {
                 data[i].id = i + 1
               }
               setAllWitdraw(data)
+              setLoading(false)
               // alert('LOL')
             } else {
               throw new Error(`API request failed with status ${response.status}`)
@@ -99,7 +81,7 @@ const WithdrawReport = () => {
   const columns = [
     {
       flex: 0.25,
-      minWidth: 40,
+      minWidth: 5,
       field: 'id',
       headerName: 'ID',
       renderCell: ({ row }) => {
@@ -107,7 +89,7 @@ const WithdrawReport = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-                {row.id}
+                {row.userId}
               </Typography>
             </Box>
           </Box>
@@ -116,16 +98,16 @@ const WithdrawReport = () => {
     },
     {
       flex: 0.25,
-      minWidth: 100,
-      field: 'UserName',
-      headerName: 'Full Name',
+      minWidth: 30,
+      field: 'fullname',
+      headerName: 'Student Name',
 
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-                {row.UserName}
+                {row.fullname}
               </Typography>
             </Box>
           </Box>
@@ -134,9 +116,69 @@ const WithdrawReport = () => {
     },
     {
       flex: 0.15,
-      field: 'WithDrawAmount',
-      minWidth: 500,
-      headerName: 'Withdraw Amount',
+      field: 'Member',
+      minWidth: 30,
+      headerName: 'Membership Level',
+      renderCell: ({ row }) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+              {row.Member}
+            </Typography>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.15,
+      field: 'Point',
+      minWidth: 30,
+      headerName: 'Weekly Duch Point',
+      renderCell: ({ row }) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+              {row.Point}
+            </Typography>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.15,
+      field: 'WeeklySpecialPoint',
+      minWidth: 30,
+      headerName: 'Weekly Special Point',
+      renderCell: ({ row }) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+              {row.WeeklySpecialPoint}
+            </Typography>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.15,
+      field: 'ConvertRate',
+      minWidth: 30,
+      headerName: 'Point Conversion Rate',
+      renderCell: ({ row }) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+              {row.ConvertRate}
+            </Typography>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.15,
+      field: 'EarningValue',
+      minWidth: 30,
+      headerName: 'Earning Value',
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -152,52 +194,27 @@ const WithdrawReport = () => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <Box
-          sx={{
-            rowGap: 1,
-            columnGap: 4,
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            justifyContent: 'left',
-            padding: 5
-          }}
-        >
-
-
-          <CustomTextField
-            select
-            sx={{ mr: 4, mb: 2 }}
-            onChange={x => setSelectedShop(x.target.value)}
-            required
-            label='Shop Name'
-          >
-
-
-            {Object.values(ShopNameList).map((data, i) => (
-              <MenuItem key={i + 1} value={data.Id}>
-                {data.Name}
-              </MenuItem>
-            ))}
-          </CustomTextField>
-        </Box>
         <Card>
-          <DataGrid
-            autoHeight
-            rowHeight={62}
-            rows={AllWitdraw}
-            columns={columns}
-            disableRowSelectionOnClick
-            pageSizeOptions={[10, 25, 50]}
-            paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
-            slots={{ toolbar: GridToolbar }}
+          {loading ? (
+            <>Data on the fly... take a deep breath!</>
+          ) : (
+            <DataGrid
+              autoHeight
+              rowHeight={62}
+              rows={AllWitdraw}
+              columns={columns}
+              disableRowSelectionOnClick
+              pageSizeOptions={[10, 25, 50]}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+              slots={{ toolbar: GridToolbar }}
               slotProps={{
                 toolbar: {
-                  showQuickFilter: true,
-                },
+                  showQuickFilter: true
+                }
               }}
-          />
+            />
+          )}
         </Card>
       </Grid>
     </Grid>

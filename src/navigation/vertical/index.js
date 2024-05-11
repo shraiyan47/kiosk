@@ -74,6 +74,13 @@ const navigation = () => {
           icon: 'tabler:smart-home',
           action: 'read',
           subject: 'withdraw-report'
+        },
+        {
+          title: 'Student Result',
+          path: '/student-result',
+          icon: 'tabler:smart-home',
+          action: 'read',
+          subject: 'withdraw-report'
         }
       ]
     }
