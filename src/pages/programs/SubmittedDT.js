@@ -25,6 +25,10 @@ import { useAuth } from 'src/hooks/useAuth'
 import Print from 'react-to-print'
 import * as ReactDOMServer from 'react-dom/server'
 
+// import { DataGrid } from '@mui/x-data-grid'
+import { GridToolbar  } from '@mui/x-data-grid'
+
+
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
 })
@@ -44,7 +48,7 @@ function SubmittedDT() {
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
 
   const CurrentWeekData = useSelector(state => state.weeklyduchs.currentWeek)
-  
+
   const allWeekOfProgram = useSelector(state => state.submissions.allWeekOfProgram)
   const [wdSubForm, setWdSubForm] = useState(false)
   const [wdSubConfirm, setWdSubConfirm] = useState(false)
@@ -188,21 +192,17 @@ function SubmittedDT() {
     ))
   }
 
-  async function allprogramListFromAPI() {   
-    
+  async function allprogramListFromAPI() {
     //// POINT SUMMERY OF PROGRAM
     try {
-      const resWeekPoints = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/Session`
-      )
+      const resWeekPoints = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/Session`)
 
       if (resWeekPoints.status === 200) {
-        console.log("Program List", resWeekPoints.data)
-         setAllProgramList(resWeekPoints.data)    
-         setSelectedProgram(resWeekPoints.data[0].Id)
-         setSelectedProgramName(resWeekPoints.data[0].sessionname)     
-         allWeekListFromAPI(resWeekPoints.data[0].Id)
-         
+        console.log('Program List', resWeekPoints.data)
+        setAllProgramList(resWeekPoints.data)
+        setSelectedProgram(resWeekPoints.data[0].Id)
+        setSelectedProgramName(resWeekPoints.data[0].sessionname)
+        allWeekListFromAPI(resWeekPoints.data[0].Id)
       } else {
         throw new Error(`API request failed with status ${response.status}`)
       }
@@ -213,20 +213,16 @@ function SubmittedDT() {
     }
   }
 
-  async function allWeekListFromAPI(SessionId) {   
-    
+  async function allWeekListFromAPI(SessionId) {
     //// POINT SUMMERY OF PROGRAM
     try {
-      const resWeekPoints = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/Week?SessionId=${SessionId}`
-      )
+      const resWeekPoints = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/Week?SessionId=${SessionId}`)
 
       if (resWeekPoints.status === 200) {
-        console.log("Week List", resWeekPoints.data)
-        setAllWeekList(resWeekPoints.data)    
+        console.log('Week List', resWeekPoints.data)
+        setAllWeekList(resWeekPoints.data)
         // setSelectedProgram(resWeekPoints.data[0].Id)
-        // setSelectedProgramName(resWeekPoints.data[0].sessionname)     
-         
+        // setSelectedProgramName(resWeekPoints.data[0].sessionname)
       } else {
         throw new Error(`API request failed with status ${response.status}`)
       }
@@ -238,20 +234,20 @@ function SubmittedDT() {
   }
 
   const renderAllProgramOptions = () => {
-    console.log("allprogram", allProgramList.length)
-    console.log("Program Name", selectedProgram, selectedProgramName)
+    console.log('allprogram', allProgramList.length)
+    console.log('Program Name', selectedProgram, selectedProgramName)
     // Check if allProgramList is an array and not null or undefined
-  if (Array.isArray(allProgramList) && allProgramList.length > 0) {
-    // Assuming allProgramList[0] is an array of objects
-    return allProgramList.map(item => (
-      <option key={item.Id} value={item.Id}>
-        {item.sessionname}
-      </option>
-    ));
-  } else {
-    // Handle the case where allProgramList is not valid
-    return null; // Or return some default options or an error message
-  }
+    if (Array.isArray(allProgramList) && allProgramList.length > 0) {
+      // Assuming allProgramList[0] is an array of objects
+      return allProgramList.map(item => (
+        <option key={item.Id} value={item.Id}>
+          {item.sessionname}
+        </option>
+      ))
+    } else {
+      // Handle the case where allProgramList is not valid
+      return null // Or return some default options or an error message
+    }
   }
 
   function handleFullReport(params) {
@@ -266,7 +262,7 @@ function SubmittedDT() {
 
     async function dispatchReportData(xaram) {
       setReportLoading(true)
-      
+
       //// POINT SUMMERY OF PROGRAM
       try {
         const resWeekPoints = await axios.get(
@@ -332,7 +328,6 @@ function SubmittedDT() {
         return { ok: false, err: err }
       }
     }
-
   }
 
   function handleWeeklyDuchSubmission(params) {
@@ -349,7 +344,7 @@ function SubmittedDT() {
   const columns = [
     {
       flex: 0.25,
-      minWidth: 240,
+      minWidth: 20,
       field: 'id',
       headerName: 'ID',
 
@@ -367,7 +362,7 @@ function SubmittedDT() {
     },
     {
       flex: 0.25,
-      minWidth: 240,
+      minWidth: 20,
       field: 'fullname',
       headerName: 'Full Name',
 
@@ -386,7 +381,7 @@ function SubmittedDT() {
     {
       flex: 0.15,
       field: 'Point',
-      minWidth: 100,
+      minWidth: 20,
       headerName: 'Point',
       renderCell: ({ row }) => {
         return (
@@ -401,7 +396,7 @@ function SubmittedDT() {
     {
       flex: 0.5,
       field: 'Action',
-      minWidth: 80,
+      minWidth: 20,
       headerName: 'Action',
       renderCell: ({ row }) => {
         return (
@@ -451,7 +446,7 @@ function SubmittedDT() {
         const response4 = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/MasterSection?Stauts=all`)
         const aaZara = response4.data
 
-        console.log("Master Section ====> ",aaZara)
+        console.log('Master Section ====> ', aaZara)
 
         const secData = aaZara.map(item => ({
           // ...item,
@@ -671,26 +666,25 @@ function SubmittedDT() {
     printWindow.document.close()
   }
 
-  const handleProgramChange = (event) => {
-    const selectedIndex = event.target.selectedIndex;
-    const selectedOption = event.target.options[selectedIndex];
-    const selectedProgramId = selectedOption.value;
-    const selectedProgramName = selectedOption.text;
-    console.log("selected Program", selectedProgram)
-    setSelectedProgram(selectedProgramId);
-    setSelectedProgramName(selectedProgramName);
+  const handleProgramChange = event => {
+    const selectedIndex = event.target.selectedIndex
+    const selectedOption = event.target.options[selectedIndex]
+    const selectedProgramId = selectedOption.value
+    const selectedProgramName = selectedOption.text
+    console.log('selected Program', selectedProgram)
+    setSelectedProgram(selectedProgramId)
+    setSelectedProgramName(selectedProgramName)
     allWeekListFromAPI(selectedOption.value)
-  };
+  }
 
   return (
     <>
       <Grid container spacing={6.5}>
-      <Grid item xs={2}>
+        <Grid item xs={2}>
           <CustomTextField
             select
             value={selectedProgram}
             onChange={handleProgramChange}
-
             // onChange={x => {
             //   setSelectedProgram(x.target.value)
             //   setSelectedProgramName(x.target.selectedOptions[0].text)
@@ -772,10 +766,16 @@ function SubmittedDT() {
             rows={allUsers}
             columns={columns}
             disableRowSelectionOnClick
-            pageSizeOptions={[2, 3, 4, 10, 25, 50]}
+            pageSizeOptions={[10, 25, 50]}
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
             loading={LOADING}
+            slots={{ toolbar: GridToolbar }}
+            slotProps={{
+              toolbar: {
+                showQuickFilter: true
+              }
+            }}
           />
         </Grid>
       </Grid>
@@ -875,7 +875,12 @@ function SubmittedDT() {
             // onBackdropClick={() => setShow(false)}
             sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}
           >
-            <StepperLinearWithValidation from={'admin'} userData={wdSubData} wdSubmission={wdSubmissionHandler} weekData={SelectedWeekData} />
+            <StepperLinearWithValidation
+              from={'admin'}
+              userData={wdSubData}
+              wdSubmission={wdSubmissionHandler}
+              weekData={SelectedWeekData}
+            />
           </Dialog>
         </>
       )}

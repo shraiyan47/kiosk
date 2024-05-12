@@ -107,7 +107,7 @@ const WithdrawReport = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-                {row.id}
+                {row.id} - {row.UserAccountId}
               </Typography>
             </Box>
           </Box>

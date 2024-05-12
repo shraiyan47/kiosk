@@ -89,7 +89,7 @@ const WithdrawReport = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-                {row.userId}
+                {row.userId}  - {row.UserAccountId}
               </Typography>
             </Box>
           </Box>
@@ -183,7 +183,52 @@ const WithdrawReport = () => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+              {row.EarningValue}
+            </Typography>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.15,
+      field: 'WithDrawAmount',
+      minWidth: 30,
+      headerName: 'Withdrawn',
+      renderCell: ({ row }) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
               {row.WithDrawAmount}
+            </Typography>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.15,
+      field: 'Balance',
+      minWidth: 30,
+      headerName: 'Balance',
+      renderCell: ({ row }) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+              {row.Balance}
+            </Typography>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.15,
+      field: 'ProgramBonusPoint',
+      minWidth: 30,
+      headerName: 'Program BP',
+      renderCell: ({ row }) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+              {row.ProgramBonusPoint}
             </Typography>
           </Box>
         )

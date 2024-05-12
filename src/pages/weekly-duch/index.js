@@ -88,6 +88,8 @@ const StepperLinearWithValidation = paraX => {
   console.log(' hachlata Data ==> ', hachlataData)
   console.log(' geder moment Data ==> ', gedermomentData)
 
+  ///////////////////////////////////////// RESTRICTIONS ///////////////////////
+
   useEffect(() => {
     console.log('user data ===> ', paraX.from, paraX.userData, paraX.weekData)
     if (paraX.from !== 'admin') {
@@ -807,35 +809,35 @@ const StepperLinearWithValidation = paraX => {
 
     console.log(requestOptions)
 
-    if (!SubmissionDone) {
-      const res = await fetch(my_url, requestOptions)
-      const data = await res.json()
-      if (res.ok) {
-        alert('Successfully Submitted')
-        // handleReset()
-        setSubmitModal(false)
-        ResetHandler()
-        setSubmissionDone(true)
-        if (paraX.from == 'admin') {
-          // window.location.replace('/dashboard')
-          paraX.wdSubmission(true)
-        } else {
-          window.location.replace('/home')
-        }
+    // if (!SubmissionDone) {
+    //   const res = await fetch(my_url, requestOptions)
+    //   const data = await res.json()
+    //   if (res.ok) {
+    //     alert('Successfully Submitted')
+    //     // handleReset()
+    //     setSubmitModal(false)
+    //     ResetHandler()
+    //     setSubmissionDone(true)
+    //     if (paraX.from == 'admin') {
+    //       // window.location.replace('/dashboard')
+    //       paraX.wdSubmission(true)
+    //     } else {
+    //       window.location.replace('/home')
+    //     }
 
-        return { ok: true, data }
-      } else {
-        console.log('ERROR => ', data.error)
-        // window.location.replace('/home')
-        redirect('/home')
+    //     return { ok: true, data }
+    //   } else {
+    //     console.log('ERROR => ', data.error)
+    //     // window.location.replace('/home')
+    //     redirect('/home')
 
-        return { ok: false, err: res, data }
-      }
-    } else {
-      alert('Already Submitted!')
-      // window.location.replace('/home')
-      redirect('/home')
-    }
+    //     return { ok: false, err: res, data }
+    //   }
+    // } else {
+    //   alert('Already Submitted!')
+    //   // window.location.replace('/home')
+    //   redirect('/home')
+    // }
   }
 
   const getStepContent = step => {

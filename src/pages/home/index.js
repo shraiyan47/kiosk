@@ -617,10 +617,10 @@ const Home = () => {
           <Grid item xs={12} md={6}>
             {pointSummeryProgram[0]?.ProgramBonusPoint > 0 && <CrmProjectStatus userData={userAllData}  x={() => holidayCallback()} />}
             <br />
-            {/* {weekPointSummary['MACount'] === 0 && (
-              <BonusPoint userData={userAllData} />
-            )} */}
-              <BonusPoint userData={userAllData} x={() => holidayCallback()} />
+            {weekPointSummary['MACount'] === 0 && (
+              <BonusPoint userData={userAllData}  x={() => holidayCallback()} />
+            )}
+              {/* <BonusPoint userData={userAllData} x={() => holidayCallback()} /> */}
 
           </Grid>
 
